@@ -195,7 +195,7 @@ class Graph {
         node = previous[node];
       }
 
-      //gets the starting node in there as well if there was a path from it
+      // gets the starting node in there as well if there was a path from it
       if (dist[node] === 0) {
         path.push(node);
       }
