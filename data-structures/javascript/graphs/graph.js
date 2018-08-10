@@ -150,6 +150,7 @@ class Graph {
 
   Dijkstra(source_node) {
     let djSet = new Set();
+    let shortestPaths = {};
     let dist = {};
     let prev = {};
 
@@ -157,28 +158,55 @@ class Graph {
       dist[vertex] = Infinity;
       prev[vertex] = undefined;
       djSet.add(vertex, this.vertexes[vertex]);
+      shortestPaths[vertex] = [];
     }
 
     dist[source_node] = 0;
+    let temp = [];
 
     while(djSet.size) {
-      let u = this.extractMin(djSet, dist)
+      let u = this.extractMin(djSet, dist);
 
       for (let neighbor in this.vertexes[u]) {
-        let alt = dist[u] + this.length(u, neighbor)
+        let alt = dist[u] + this.length(u, neighbor);
 
         if (alt < dist[neighbor]) {
           dist[neighbor] = alt;
           prev[neighbor] = u;
         }
-
       }
-
       djSet.delete(u);
     }
 
-    console.log(dist);
-    return dist;
+    this.getShortestPaths(prev, shortestPaths, source_node, dist)
+
+    return {
+      shortestDistances: dist,
+      shortestPaths
+    }
+  }
+
+  getShortestPaths(previous, shortestPaths, startVertex, dist) {
+    for (var node in shortestPaths) {
+      var path = shortestPaths[node];
+
+      while(previous[node]) {
+        path.push(node);
+        node = previous[node];
+      }
+
+      //gets the starting node in there as well if there was a path from it
+      if (dist[node] === 0) {
+        path.push(node);
+      }
+      path.reverse();
+    }
+  }
+
+  shortestDistanceToAndFrom(source_node, destination_node) {
+    const { shortestDistances } = this.Dijkstra(source_node)
+    let shortestDistance = shortestDistances[destination_node.toString()];
+    return shortestDistance;
   }
 }
 
@@ -200,6 +228,26 @@ g.addNode(6);
 g.addNode(100);
 g.forEachNode(squareNodes)
 console.log(zeNewGraph);
+/*
+  actual vertex->edge weights/costs will be randomly generated
+  each time. This just shows the structure it is generated in
+
+
+  Graph {
+    vertexes: {
+      '0': {},
+      '1': {},
+      '4': {},
+      '9': {},
+      '25': {},
+      '36': {},
+      '10000': {}
+    },
+    nodesArray: [ 0, 1, 4, 9, 25, 36, 10000 ]
+  }
+*/
+
+
 g.addEdge(0, 1);
 g.addEdge(0, 2);
 g.addEdge(1, 2);
@@ -211,6 +259,26 @@ g.addEdge(5, 1)
 g.addEdge(6, 2)
 g.addEdge(6, 5)
 console.log("\n\n", g, "\n\n")
+/*
+  actual vertex->edge weights/costs will be randomly generated
+  each time. This just shows the structure it is generated in
+
+
+  Graph {
+    vertexes: {
+      '0': { '1': 6, '2': 9, '100': 8 },
+      '1': { '0': 6, '2': 3, '5': 1 },
+      '2': { '0': 9, '1': 3, '3': 9, '6': 2 },
+      '3': { '2': 9 },
+      '5': { '1': 1, '6': 3 },
+      '6': { '2': 2, '5': 3 },
+      '100': { '0': 8 } },
+    nodesArray: [ 0, 1, 2, 3, 5, 6, 100 ]
+  }
+*/
+
+
+
 console.log(g.DFS(0));
 // 0 -> 1 -> 2 -> 3 -> 6 -> 5
 console.log(g.BFS(0));
@@ -239,5 +307,6 @@ console.log(g.DFS(100))
 // 100 -> 0 -> 1 -> 2 -> 3 -> 6 -> 5
 console.log(g.BFS(100))
 // 100 -> 0 -> 1 -> 2 -> 5 -> 3 -> 6
-g.Dijkstra(1)
-// { '0': 4, '1': 0, '2': 3, '3': 8, '5': 8, '6': 9, '100': 7 }
+
+console.log(g.Dijkstra(1))
+console.log(g.shortestDistanceToAndFrom(1, 5))
