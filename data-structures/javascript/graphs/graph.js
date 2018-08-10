@@ -265,9 +265,13 @@ class Graph {
   }
 
   getShortestPaths(previous, shortestPaths, startVertex, dist) {
+    // shortestPaths is initially an object with values being all empty arrays
     for (var node in shortestPaths) {
       var path = shortestPaths[node];
 
+      // while our prev object has a property with
+      // our Vertex/Node, we will push that to our path for
+      // the currently iterated Vertex/Node in our shortestPaths Object property
       while(previous[node]) {
         path.push(node);
         node = previous[node];
@@ -277,6 +281,7 @@ class Graph {
       if (dist[node] === 0) {
         path.push(node);
       }
+
       path.reverse();
     }
   }
