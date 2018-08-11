@@ -190,13 +190,12 @@ class Graph {
     return nodeWithMinimumDistance;
   }
 
-  Dijkstra(source_node) {
+  allDijkstra(source_node) {
     /**
       * A Famous algorithm by Edsger W. Dijkstra for finding the shortest paths
       * between nodes in a graph
       * https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
       */
-
     let djSet = new Set();
     let shortestPaths = {};
     let dist = {};
@@ -256,7 +255,7 @@ class Graph {
     }
 
     // Finds the shortest paths for all nodes in our Graph
-    this.getShortestPaths(prev, shortestPaths, source_node, dist);
+    this.getShortestPaths(prev, shortestPaths, dist);
 
     return {
       shortestDistances: dist,
@@ -264,7 +263,101 @@ class Graph {
     };
   }
 
-  getShortestPaths(previous, shortestPaths, startVertex, dist) {
+  Dijkstra(source_node, destination_node) {
+    /**
+      * A Famous algorithm by Edsger W. Dijkstra for finding the shortest paths
+      * between nodes in a graph
+      * https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+      */
+    let djSet = new Set();
+    let shortestPath = {};
+    shortestPath[destination_node] = [];
+    let dist = {};
+    let prev = {};
+
+    for (let vertex in this.vertexes) {
+      /**
+        * 1) Assign all distances to All Vertexes/Nodes to Infinity
+        *
+        * 2) Assign the previous Vertex/Node to undefined/null,
+        *    since we didn't calculate anything yet
+        *
+        * 3) Add Each Vertex/Node to our Set Data Structure
+        *
+        * 4) Initialize an empty array for each Vertex/Node in our graph
+        */
+      dist[vertex] = Infinity;
+      prev[vertex] = undefined;
+      djSet.add(vertex, this.vertexes[vertex]);
+    }
+
+    // Since we start off at our source_node, we know it takes 0 cost/weight/distance
+    // to get to where we already are
+    dist[source_node] = 0;
+
+
+    /**
+     * While there are items in our Set, we need to find the closest Vertex/Node
+     * and for each edge and it's associated cost/weight/distance of our found Vertex/Node
+     * we need to add the distance of our current closest Vertex/Node
+     * and add that to the length of it's neighbor (current iterated edge / edged Vertex/Node).
+     * Afterwards, we check to see if the current distance plus the previous distance
+     * is less than the distance at our neighbor, if so, then we make the neighbor's distance
+     * equal to the alt (accummulated distance)
+     * and we make the previous neighbor == u (closest Node/Vertex in our Set).
+     *
+     * After each iteration, we make sure to remove the closest Vertex/Node in our Set
+     * @param u
+     * @param neighbor
+     * @param alt
+     *
+     */
+    while(djSet.size) {
+      // Find Vertex/Node with minimumDistance
+      let u = this.extractMin(djSet, dist);
+
+      for (let neighbor in this.vertexes[u]) {
+        let alt = dist[u] + this.length(u, neighbor);
+
+        if (alt < dist[neighbor]) {
+          dist[neighbor] = alt;
+          prev[neighbor] = u;
+        }
+      }
+      djSet.delete(u);
+    }
+
+    // Finds the shortest path for a given node in our Graph
+    this.getShortestPath(prev, shortestPath, destination_node, dist);
+
+    return {
+      shortestDistance: dist[destination_node],
+      shortestPath
+    };
+  }
+
+  getShortestPath(previous, shortestPath, endVertex, dist) {
+    // shortestPath is initially an object with endVertex's/Node's being an empty array
+    let node = endVertex
+    var path = shortestPath[node];
+
+    // while our prev object has a property with
+    // our Vertex/Node, we will push that to our path for
+    // the currently iterated Vertex/Node in our shortestPaths Object property
+    while(previous[node]) {
+      path.push(node + "");
+      node = previous[node];
+    }
+
+    // gets the starting node in there as well if there was a path from it
+    if (dist[node] === 0) {
+      path.push(node);
+    }
+
+    path.reverse();
+  }
+
+  getShortestPaths(previous, shortestPaths, dist) {
     // shortestPaths is initially an object with values being all empty arrays
     for (var node in shortestPaths) {
       var path = shortestPaths[node];
@@ -287,7 +380,7 @@ class Graph {
   }
 
   shortestDistanceToAndFrom(source_node, destination_node) {
-    const { shortestDistances } = this.Dijkstra(source_node)
+    const { shortestDistances } = this.allDijkstra(source_node)
     let shortestDistance = shortestDistances[destination_node];
     return shortestDistance;
   }
@@ -391,5 +484,8 @@ console.log(g.DFS(100))
 console.log(g.BFS(100))
 // 100 -> 0 -> 1 -> 2 -> 5 -> 3 -> 6
 
-console.log(g.Dijkstra(1))
+console.log(g.Dijkstra(1, 5))
+console.log(g.allDijkstra(1))
 console.log(g.shortestDistanceToAndFrom(1, 5))
+console.log(g.allDijkstra(6))
+console.log(g.Dijkstra(6, 100))
