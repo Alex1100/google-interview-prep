@@ -58,16 +58,23 @@ class Graph {
       return;
     }
 
-    this.vertexes[fromNode][toNode] = null
-    this.vertexes[toNode][fromNode] = null;
+    this.vertexes[fromNode][toNode] = {}
+    this.vertexes[toNode][fromNode] = {};
     this.addEdgeWeights(...args);
+    this.addHeuristicCosts(...args);
   }
 
   addEdgeWeights(fromNode, toNode) {
     // Assign a random Weight/Cost/Distance between to Vertexes/Nodes
-    let weight = Math.floor(Math.random() * Math.floor(10) + 1);
-    this.vertexes[fromNode][toNode] = weight;
-    this.vertexes[toNode][fromNode] = weight;
+    let weight = Math.floor(Math.random() * Math.floor(100) + 1);
+    this.vertexes[fromNode][toNode]['weight'] = weight;
+    this.vertexes[toNode][fromNode]['weight'] = weight;
+  }
+
+  addHeuristicCosts(fromNode, toNode) {
+    let weight = Math.floor(Math.random() * Math.floor(this.vertexes[fromNode][toNode]['weight']/55) + 1);
+    this.vertexes[fromNode][toNode]['heuristic'] = weight;
+    this.vertexes[toNode][fromNode]['heuristic'] = weight;
   }
 
   removeEdge(fromNode, toNode){
@@ -159,12 +166,16 @@ class Graph {
     return this.BFSUtil(node.toString(), visited, visited_data, node_queue)
   }
 
-  length(u, v) {
+  costLength(u, v) {
     // Returns the cost/weight/distance at a given Vertexes/Nodes Edge
-    return this.vertexes[u][v];
+    return this.vertexes[u][v]['weight'];
   }
 
-  extractMin(djSet, dist) {
+  heuristicLength(u, v) {
+    return this.vertexes[u][v]['heuristic'];
+  }
+
+  extractDijkstraMin(djSet, dist) {
     // inintialize the minimumDistance to Infinity
     let minimumDistance = Infinity;
     let nodeWithMinimumDistance;
@@ -241,10 +252,10 @@ class Graph {
      */
     while(djSet.size) {
       // Find Vertex/Node with minimumDistance
-      let u = this.extractMin(djSet, dist);
+      let u = this.extractDijkstraMin(djSet, dist);
 
       for (let neighbor in this.vertexes[u]) {
-        let alt = dist[u] + this.length(u, neighbor);
+        let alt = dist[u] + this.costLength(u, neighbor);
 
         if (alt < dist[neighbor]) {
           dist[neighbor] = alt;
@@ -314,10 +325,10 @@ class Graph {
      */
     while(djSet.size) {
       // Find Vertex/Node with minimumDistance
-      let u = this.extractMin(djSet, dist);
+      let u = this.extractDijkstraMin(djSet, dist);
 
       for (let neighbor in this.vertexes[u]) {
-        let alt = dist[u] + this.length(u, neighbor);
+        let alt = dist[u] + this.costLength(u, neighbor);
 
         if (alt < dist[neighbor]) {
           dist[neighbor] = alt;
@@ -335,6 +346,159 @@ class Graph {
       shortestPath
     };
   }
+
+
+  each_A_Star_Search(source_node) {
+    /**
+      * A Famous algorithm by Peter Hart, Nils Nilsson and Bertram Raphael for finding the shortest paths
+      * between nodes in a graph. It is an extension of Edsger Dijkstra's 1959 algorithm.
+      * A* achieves better performance by using heuristics to guide its search.
+      * https://en.wikipedia.org/wiki/A*_search_algorithm
+      */
+    let djSet = new Set();
+    let shortestPaths = {};
+    let dist = {};
+    let prev = {};
+
+    for (let vertex in this.vertexes) {
+      /**
+        * 1) Assign all distances to All Vertexes/Nodes to Infinity
+        *
+        * 2) Assign the previous Vertex/Node to undefined/null,
+        *    since we didn't calculate anything yet
+        *
+        * 3) Add Each Vertex/Node to our Set Data Structure
+        *
+        * 4) Initialize an empty array for each Vertex/Node in our graph
+        */
+      dist[vertex] = Infinity;
+      prev[vertex] = undefined;
+      djSet.add(vertex, this.vertexes[vertex]);
+      shortestPaths[vertex] = [];
+    }
+
+    // Since we start off at our source_node, we know it takes 0 cost/weight/distance
+    // to get to where we already are
+    dist[source_node] = 0;
+
+
+    /**
+     * While there are items in our Set, we need to find the closest Vertex/Node
+     * and for each edge and it's associated cost/weight/distance of our found Vertex/Node
+     * we need to add the distance of our current closest Vertex/Node
+     * and add that to the length of it's neighbor (current iterated edge / edged Vertex/Node).
+     * Afterwards, we check to see if the current distance plus the previous distance
+     * is less than the distance at our neighbor, if so, then we make the neighbor's distance
+     * equal to the alt (accummulated distance)
+     * and we make the previous neighbor == u (closest Node/Vertex in our Set).
+     *
+     * After each iteration, we make sure to remove the closest Vertex/Node in our Set
+     * @param u
+     * @param neighbor
+     * @param alt
+     *
+     */
+    while(djSet.size) {
+      // Find Vertex/Node with minimumDistance
+      let u = this.extractDijkstraMin(djSet, dist);
+
+      for (let neighbor in this.vertexes[u]) {
+        let alt = dist[u] + this.length(u, neighbor) + this.heuristicLength(u, neighbor);
+
+        if (alt < dist[neighbor]) {
+          dist[neighbor] = alt;
+          prev[neighbor] = u;
+        }
+      }
+      djSet.delete(u);
+    }
+
+    // Finds the shortest paths for all nodes in our Graph
+    this.getShortestPaths(prev, shortestPaths, dist);
+
+    return {
+      shortestDistances: dist,
+      shortestPaths
+    };
+  }
+
+
+  // Work in progress
+  A_Star_Search(source_node, destination_node) {
+    /**
+      * A Famous algorithm by Peter Hart, Nils Nilsson and Bertram Raphael for finding the shortest paths
+      * between nodes in a graph. It is an extension of Edsger Dijkstra's 1959 algorithm.
+      * A* achieves better performance by using heuristics to guide its search.
+      * https://en.wikipedia.org/wiki/A*_search_algorithm
+      */
+    let aStarSet = new Set();
+    let shortestPath = {};
+    shortestPath[destination_node] = [];
+    let dist = {};
+    let prev = {};
+
+    for (let vertex in this.vertexes) {
+      /**
+        * 1) Assign all distances to All Vertexes/Nodes to Infinity
+        *
+        * 2) Assign the previous Vertex/Node to undefined/null,
+        *    since we didn't calculate anything yet
+        *
+        * 3) Add Each Vertex/Node to our Set Data Structure
+        *
+        * 4) Initialize an empty array for each Vertex/Node in our graph
+        */
+      dist[vertex] = Infinity;
+      prev[vertex] = undefined;
+      aStarSet.add(vertex, this.vertexes[vertex]);
+    }
+
+    // Since we start off at our source_node, we know it takes 0 cost/weight/distance
+    // to get to where we already are
+    dist[source_node] = 0;
+
+
+    /**
+     * While there are items in our Set, we need to find the closest Vertex/Node
+     * and for each edge and it's associated cost/weight/distance of our found Vertex/Node
+     * we need to add the distance of our current closest Vertex/Node
+     * and add that to the length of it's neighbor (current iterated edge / edged Vertex/Node).
+     * Afterwards, we check to see if the current distance plus the previous distance
+     * is less than the distance at our neighbor, if so, then we make the neighbor's distance
+     * equal to the alt (accummulated distance)
+     * and we make the previous neighbor == u (closest Node/Vertex in our Set).
+     *
+     * After each iteration, we make sure to remove the closest Vertex/Node in our Set
+     * @param u
+     * @param neighbor
+     * @param alt
+     *
+     */
+    while(aStarSet.size) {
+      // Find Vertex/Node with minimumDistance
+      let u = this.extractDijkstraMin(aStarSet, dist);
+
+      for (let neighbor in this.vertexes[u]) {
+        let alt = dist[u] + this.costLength(u, neighbor) + this.heuristicLength(u, neighbor);
+
+        if (alt < dist[neighbor]) {
+          dist[neighbor] = alt;
+          prev[neighbor] = u;
+        }
+      }
+      aStarSet.delete(u);
+    }
+
+    // Finds the shortest path for a given node in our Graph
+    this.getShortestPath(prev, shortestPath, destination_node, dist);
+
+    return {
+      shortestDistance: dist[destination_node],
+      shortestPath
+    };
+  }
+
+
 
   getShortestPath(previous, shortestPath, endVertex, dist) {
     // shortestPath is initially an object with endVertex's/Node's being an empty array
@@ -434,7 +598,7 @@ g.addEdge(0, 100)
 g.addEdge(5, 1)
 g.addEdge(6, 2)
 g.addEdge(6, 5)
-console.log("\n\n", g, "\n\n")
+console.log("\n\n", g.vertexes, "\n\n")
 /**
   * actual vertex->edge weights/costs/distances will be randomly generated
   * each time. This just shows the structure it is generated in
@@ -489,3 +653,9 @@ console.log(g.allDijkstra(1))
 console.log(g.shortestDistanceToAndFrom(1, 5))
 console.log(g.allDijkstra(6))
 console.log(g.Dijkstra(6, 100))
+console.log(g.A_Star_Search(6, 100))
+console.log(g.each_A_Star_Search(6))
+
+
+//Algos to implement for graph include
+//Minimum Spanning Tree
