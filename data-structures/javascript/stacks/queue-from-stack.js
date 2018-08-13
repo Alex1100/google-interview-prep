@@ -79,12 +79,12 @@ class QueueFromStacks {
 }
 
 
-let b = new QueueFromStacks();
-b.enqueue(10);
-b.enqueue(30);
-b.enqueue(150);
-console.log("OUR QUEUE IS: ", b.viewQueue())
-b.dequeue()
-console.log("NOW OUR QUEUE IS: ", b.viewQueue())
-b.enqueue(55);
-console.log("FINALLY OUR QUEUE IS: ", b.viewQueue())
+let a = new QueueFromStacks();
+a.enqueue(10);
+a.enqueue(30);
+a.enqueue(150);
+console.log("OUR QUEUE IS: ", a.viewQueue())
+a.dequeue()
+console.log("NOW OUR QUEUE IS: ", a.viewQueue())
+a.enqueue(55);
+console.log("FINALLY OUR QUEUE IS: ", a.viewQueue())
