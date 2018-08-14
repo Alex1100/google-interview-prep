@@ -171,12 +171,12 @@ class DisjointSet {
 
 
 
-let ST5 = new DisjointSetThree(5);
-let ST6 = new DisjointSetThree(6);
-let ST7 = new DisjointSetThree(7);
-let ST8 = new DisjointSetThree(8);
-let ST9 = new DisjointSetThree(9);
-let ST10 = new DisjointSetThree(10);
+let ST5 = new DisjointSet(5);
+let ST6 = new DisjointSet(6);
+let ST7 = new DisjointSet(7);
+let ST8 = new DisjointSet(8);
+let ST9 = new DisjointSet(9);
+let ST10 = new DisjointSet(10);
 
 console.log(ST5);
 console.log(ST6);
