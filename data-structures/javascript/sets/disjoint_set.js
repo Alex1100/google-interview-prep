@@ -1,5 +1,5 @@
 // Tree Based DisjointSet implementation #1
-class DisjointSet {
+class DisjointSetOne {
   constructor(data) {
     this.parent = data;
     this.node = data;
@@ -36,8 +36,8 @@ class DisjointSet {
   }
 }
 
-let S1 = new DisjointSet(1);
-let S3 = new DisjointSet(4);
+let S1 = new DisjointSetOne(1);
+let S3 = new DisjointSetOne(4);
 S1.addChild(2);
 S3.addChild(7);
 console.log(S1);
@@ -116,7 +116,7 @@ console.log(S6.listChildrenOfSet())
 
 
 //DisjointSet implementation #3 with a ranking strategy
-class DisjointSetThree {
+class DisjointSet {
   constructor(data) {
     this.parent = data;
     this.data = data;
@@ -206,7 +206,7 @@ console.log("\n\n\n\n\nCHILDREN FROM SET ST9 ARE: ", ST9.listChildrenOfSet())
 console.log("\n\n\n\n\nCHILDREN FROM SET ST10 ARE: ", ST10.listChildrenOfSet())
 
 module.exports = {
-  DisjointSetThree,
+  DisjointSetOne,
   DisjointSetTwo,
   DisjointSet
 }

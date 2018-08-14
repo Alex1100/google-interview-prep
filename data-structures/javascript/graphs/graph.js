@@ -1,3 +1,58 @@
+//DisjointSet implementation #3 with a ranking strategy
+class DisjointSet {
+  constructor(data) {
+    this.parent = data;
+    this.data = data;
+    this.children = {};
+    this.rank = 0;
+  }
+
+  find(node) {
+    if (this.parent === node) {
+      return node;
+    } else {
+      return this.find(this.parent)
+    }
+  }
+
+  setUnion(set) {
+    if (this.rank > set.rank) {
+      set.parent = this;
+      this.children[set.parent] = set;
+    } else if (this.rank < set.rank) {
+      set.children[this.parent] = this;
+      this.parent = set;
+    } else {
+      set.children[this.parent] = this;
+      this.parent = set;
+      set.rank++;
+    }
+  }
+
+  listChildrenOfSet() {
+    let temp = [];
+    let current = this.children[Object.keys(this.children)];
+    let counter = 0;
+
+    while(current) {
+      let collection = Object.keys(current.children);
+
+      if (collection.length > 0) {
+        temp.push(current.data)
+        current = current.children[collection[counter]];
+        counter++;
+      } else {
+        counter = 0;
+        temp.push(current.data)
+        current = current.children[collection[counter]];
+      }
+    }
+
+    return { parent: this.data, members: temp };
+  }
+}
+
+
 class Graph {
   constructor() {
     this.vertexes = {};
@@ -66,13 +121,13 @@ class Graph {
 
   addEdgeWeights(fromNode, toNode) {
     // Assign a random Weight/Cost/Distance between to Vertexes/Nodes
-    let weight = Math.floor(Math.random() * Math.floor(100) + 1);
+    let weight = Math.floor(Math.random() * Math.floor(200) + 1);
     this.vertexes[fromNode][toNode]['weight'] = weight;
     this.vertexes[toNode][fromNode]['weight'] = weight;
   }
 
   addHeuristicCosts(fromNode, toNode) {
-    let weight = Math.floor(Math.random() * Math.floor(this.vertexes[fromNode][toNode]['weight']/55) + 1);
+    let weight = Math.floor(Math.random() * Math.floor(100/3) + 1);
     this.vertexes[fromNode][toNode]['heuristic'] = weight;
     this.vertexes[toNode][fromNode]['heuristic'] = weight;
   }
@@ -403,7 +458,7 @@ class Graph {
       let u = this.extractDijkstraMin(djSet, dist);
 
       for (let neighbor in this.vertexes[u]) {
-        let alt = dist[u] + this.length(u, neighbor) + this.heuristicLength(u, neighbor);
+        let alt = dist[u] + this.costLength(u, neighbor) + this.heuristicLength(u, neighbor);
 
         if (alt < dist[neighbor]) {
           dist[neighbor] = alt;
@@ -548,7 +603,80 @@ class Graph {
     let shortestDistance = shortestDistances[destination_node];
     return shortestDistance;
   }
+
+  KruskalMST() {
+    // STILL A WORK IN PROGRESS MIGHT NEED TO ADJUST A FEW LINES
+    // OF CODE...
+
+    let MST = [];
+    let disjointSets = {};
+    let edges = [];
+
+    for (let vertex in this.vertexes) {
+      let currentVertex = Object.entries(this.vertexes[vertex]);
+      edges.push([vertex, ...currentVertex]);
+      disjointSets[vertex] = new DisjointSet({ vertex, edges: this.vertexes[vertex] });
+    }
+
+    edges.sort((a, b) => a[1][1].weight - b[1][1].weight);
+
+    for (let vertex in edges) {
+      let vertexEdges = edges[vertex].slice(1);
+
+
+      for (let i = 0; i < vertexEdges.length; i++) {
+        let root1 = disjointSets[edges[vertex][0]].find({ vertex: vertexEdges[i][0], edges: this.vertexes[vertexEdges[i][0]] })
+        let root2 = disjointSets[vertexEdges[i][0]].find({ vertex: vertex[0], edges: this.vertexes[edges[vertex][0]] })
+
+
+        if (root1.hasOwnProperty('parent') && root2.hasOwnProperty('parent')) {
+          if (JSON.stringify(root1.data) !== JSON.stringify(root2.data)) {
+            if (MST[MST.length - 1] !== edges[vertex][0]) {
+              MST.push(edges[vertex][0]);
+            }
+            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
+          }
+        } else if (root1.hasOwnProperty('parent') && !root2.hasOwnProperty('parent')) {
+          if (JSON.stringify(root1.data) !== JSON.stringify(root2)) {
+            if (MST[MST.length - 1] !== edges[vertex][0]) {
+              MST.push(edges[vertex][0]);
+            }
+            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
+          }
+        } else if (!root1.hasOwnProperty('parent') && root2.hasOwnProperty('parent')) {
+          if (JSON.stringify(root1) !== JSON.stringify(root2.data)) {
+            if (MST[MST.length - 1] !== edges[vertex][0]) {
+              MST.push(edges[vertex][0]);
+            }
+            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
+          }
+        } else {
+          if (JSON.stringify(root1) !== JSON.stringify(root2)) {
+            if (MST[MST.length - 1] !== edges[vertex][0]) {
+              MST.push(edges[vertex][0]);
+            }
+            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
+          }
+        }
+      }
+    }
+
+    return MST;
+  }
 }
+
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
 
 
 
@@ -655,6 +783,9 @@ console.log(g.allDijkstra(6))
 console.log(g.Dijkstra(6, 100))
 console.log(g.A_Star_Search(6, 100))
 console.log(g.each_A_Star_Search(6))
+
+
+console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
 
 
 //Algos to implement for graph include
