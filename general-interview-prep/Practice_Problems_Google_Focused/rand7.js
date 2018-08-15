@@ -1,17 +1,18 @@
 const rand7Float = (decimal_place) => {
   let c = Infinity;
+  let rounder = (10 ** decimal_place);
 
   while (c > 21) {
-    let a = ((Math.random() * (0.0, 5.0) * (10 ** decimal_place))/(10 ** decimal_place));
-    let b = ((Math.random() * (0.0, 5.0) * (10 ** decimal_place))/(10 ** decimal_place));
+    let a = ((Math.random() * (0.0, 5.0) * rounder)/rounder);
+    let b = ((Math.random() * (0.0, 5.0) * rounder)/rounder);
     if (a < 6.0 && b < 6.0) {
-      a += Math.round((Math.random() * (0.0, 1) * (10 ** decimal_place)) /(10 ** decimal_place));
-      b += Math.round((Math.random() * (0.0, 1) * (10 ** decimal_place))/(10 ** decimal_place))
+      a += Math.round((Math.random() * (0.0, 1) * rounder)/rounder);
+      b += Math.round((Math.random() * (0.0, 1) * rounder)/rounder)
     }
-    c = Math.round(((5 * a) + b) * (10 ** decimal_place))/(10 ** decimal_place);
+    c = Math.round(((5 * a) + b) * rounder)/rounder;
   }
 
-  return Math.round(((c % 7) + (1/(10 ** decimal_place))) * (10 ** decimal_place))/(10 ** decimal_place);
+  return Math.round(((c % 7) + (1/rounder)) * rounder)/rounder;
 }
 
 
