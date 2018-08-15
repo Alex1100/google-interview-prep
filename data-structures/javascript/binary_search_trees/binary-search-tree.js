@@ -26,6 +26,26 @@ class BinarySearchTree {
     }
   }
 
+  search(input) {
+    if (input === this.data) {
+      return this;
+    }
+
+    let result = null;
+
+    const traverse = function(node) {
+      if (input === node.data) {
+        result = node;
+      } else {
+        node.left && traverse(node.left);
+        node.right && traverse(node.right);
+      }
+    }
+
+    traverse(this);
+    return result;
+  }
+
   contains(input, reversed = false) {
     let result = false;
 
@@ -160,6 +180,7 @@ a.addNode(120);
 a.addNode(45);
 a.addNode(77);
 a.addNode(75);
+console.log("75 FOUND: ??: ", a.search(75));
 console.log("BFS: ", a.breadthFirstSearch());
 console.log("IN: ", a.depthFirstSearch('in_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
