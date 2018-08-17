@@ -10,9 +10,8 @@ class Stack {
   }
 
   pop() {
-    const popped = this.items.pop()
     this.size--;
-    return popped;
+    return this.items.pop();
   }
 
   peek() {

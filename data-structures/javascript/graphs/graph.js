@@ -127,7 +127,7 @@ class Graph {
   }
 
   addHeuristicCosts(fromNode, toNode) {
-    let weight = Math.floor(Math.random() * Math.floor(100/3) + 1);
+    let weight = Math.floor(Math.random() * (-400, 50) + 1);
     this.vertexes[fromNode][toNode]['heuristic'] = weight;
     this.vertexes[toNode][fromNode]['heuristic'] = weight;
   }
@@ -783,10 +783,7 @@ console.log(g.allDijkstra(6))
 console.log(g.Dijkstra(6, 100))
 console.log(g.A_Star_Search(6, 100))
 console.log(g.each_A_Star_Search(6))
-
-
 console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
 
-
-//Algos to implement for graph include
-//Minimum Spanning Tree
+// algos to implement
+// Prim's MST (Minimum Spanning Tree)
