@@ -24,9 +24,9 @@ function findPeaks(terrain) {
   if (terrain.length > 2) {
     let position = -1;
     for (let i = 1; i < terrain.length; i++) {
-      if (terrain[i] > terrain[i-1]) {
+      if (terrain[i] > terrain[i - 1]) {
         position = i;
-      } else if (terrain[i] < terrain[i-1] && position != -1) {
+      } else if (terrain[i] < terrain[i - 1] && position != -1) {
         result.positions.push(position);
         result.peaks.push(terrain[position]);
         position = -1;
@@ -41,6 +41,8 @@ let terrain1 = [3, 2, 3, 6, 4, 1, 2, 3, 2, 1, 2, 3]
 let terrain2 = [25, 8, 15, 5, 6, 10, 10, 3, 1, 20, 7]
 
 console.log(findPeaks(terrain1));
-console.log("\n\n",  findPeaks(terrain2));
+console.log("\n\n", findPeaks(terrain2));
+console.log("\n\n", findPeaks([1, 2, 2, 2, 3]));
+
 
 
