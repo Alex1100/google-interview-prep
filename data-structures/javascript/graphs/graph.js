@@ -1,3 +1,90 @@
+class Queue {
+  constructor() {
+    this.items = [];
+    this.size = 0;
+  }
+
+  enqueue(item) {
+    this.items.push(item);
+    this.size++;
+  }
+
+  dequeue(item) {
+    this.size--;
+    return this.items.shift();
+  }
+
+  contains(node) {
+    return this.items.includes(node);
+  }
+
+  front() {
+    return this.items[0];
+  }
+
+  back() {
+    return this.items[this.items.length - 1];
+  }
+
+  printQueue() {
+    return this.items;
+  }
+
+  queueSize() {
+    return this.size;
+  }
+
+  max() {
+    return Math.max(...this.items);
+  }
+
+  min() {
+    return Math.min(...this.items);
+  }
+
+  isEmpty() {
+    return this.size === 0;
+  }
+}
+
+class Stack {
+  constructor() {
+    this.items = [];
+    this.size = 0;
+  }
+
+  insert(item) {
+    this.items.push(item);
+    this.size++;
+  }
+
+  contains(node) {
+    return this.items.includes(node);
+  }
+
+  pop() {
+    this.size--;
+    return this.items.pop();
+  }
+
+  peek() {
+    this.items[this.size - 1];
+  }
+
+  getMin() {
+    return Math.min(...this.items);
+  }
+
+  getMax() {
+    return Math.max(...this.items)
+  }
+
+  isEmpty() {
+    return this.size === 0;
+  }
+}
+
+
 //DisjointSet implementation #3 with a ranking strategy
 class DisjointSet {
   constructor(data) {
@@ -146,8 +233,8 @@ class Graph {
   DFSUtil(node, visited, visited_data){
     visited[node] = true;
 
-    if(!visited_data.includes(node)){
-      visited_data.push(node);
+    if(!visited_data.contains(node)){
+      visited_data.insert(node);
     }
 
     for(let i_node in this.vertexes) {
@@ -162,23 +249,23 @@ class Graph {
   BFSUtil(node, visited, visited_data, node_queue){
     visited[node] = true;
 
-    if (visited_data.length  === this.nodesArray.length) {
+    if (visited_data.size  === this.nodesArray.length) {
       return visited_data
     }
 
-    if (node_queue.includes(node)) {
-      node_queue = node_queue.slice(1)
+    if (node_queue.contains(node)) {
+      node_queue.dequeue()
     }
 
-    if (!visited_data.includes(node)) {
-      visited_data.push(node)
+    if (!visited_data.contains(node)) {
+      visited_data.enqueue(node)
     }
 
     for (let i_node in this.vertexes[node]) {
-      node_queue.push(i_node)
+      node_queue.enqueue(i_node)
     }
 
-    node_queue.forEach((i_node, i) => {
+    node_queue.items.forEach((i_node, i) => {
       this.BFSUtil(i_node, visited, visited_data, node_queue)
     })
 
@@ -187,7 +274,7 @@ class Graph {
 
   DFS(node){
     let visited = Array.from(this.nodesArray, x => x = false);
-    let visited_data = [];
+    let visited_data = new Stack();
 
     /**
       * DFS checks a node and then jumps into the node it checked form it's parent
@@ -207,7 +294,7 @@ class Graph {
 
   BFS(node){
     let visited = Array.from(this.nodesArray, x => x = false);
-    let visited_data = [], node_queue = []
+    let visited_data = new Queue(), node_queue = new Queue();
 
     /**
       * BFS checks a node and immediately after, all of the nodes it has as edges
@@ -748,35 +835,35 @@ console.log("\n\n", g.vertexes, "\n\n")
 
 
 console.log(g.DFS(0));
-// 0 -> 1 -> 2 -> 3 -> 6 -> 5
+// 0 -> 1 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(0));
 // 0 -> 1 -> 2 -> 100 -> 5 -> 3 -> 6
 console.log(g.DFS(1))
-// 1 -> 0 -> 2 -> 3 -> 6 -> 5
+// 1 -> 0 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(1))
 // 1 -> 0 -> 2 -> 5 -> 100 -> 3 -> 6
 console.log(g.DFS(2))
-// 2 -> 0 -> 1 -> 5 -> 3 -> 6
+// 2 -> 0 -> 1 -> 3 -> 5 -> 6
 console.log(g.BFS(2))
 // 2 -> 0 -> 1 -> 3 -> 6 -> 100 -> 5
 console.log(g.DFS(3))
-// 3 -> 2 -> 0 -> 1 -> 5 -> 6
+// 3 -> 0 -> 1 -> 2 -> 5 -> 6
 console.log(g.BFS(3))
 // 3 -> 2 -> 0 -> 1 -> 6 -> 100 -> 5
 console.log(g.DFS(5))
-// 5 -> 1 -> 0 -> 2 -> 3 -> 6
+// 5 -> 0 -> 1 -> 2 -> 3 -> 6
 console.log(g.BFS(5))
 // 5 -> 1 -> 0 -> 2 -> 100 -> 3 -> 6
 console.log(g.DFS(6))
-// 6 -> 2 -> 0 -> 1 -> 5 -> 3
+// 6 -> 0 -> 1 -> 2 -> 3 -> 5
 console.log(g.BFS(6))
 // 6 -> 2 -> 0 -> 1 -> 3 -> 100 -> 5
 console.log(g.DFS(100))
-// 100 -> 0 -> 1 -> 2 -> 3 -> 6 -> 5
+// 100 -> 0 -> 1 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(100))
 // 100 -> 0 -> 1 -> 2 -> 5 -> 3 -> 6
 
-console.log(g.Dijkstra(1, 5))
+console.log("\n\n\n", g.Dijkstra(1, 5))
 console.log(g.allDijkstra(1))
 console.log(g.shortestDistanceToAndFrom(1, 5))
 console.log(g.allDijkstra(6))

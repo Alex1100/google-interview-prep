@@ -14,6 +14,10 @@ class Stack {
     return this.items.pop();
   }
 
+  contains(item) {
+    return this.items.includes(item);
+  }
+
   peek() {
     this.items[this.size - 1];
   }

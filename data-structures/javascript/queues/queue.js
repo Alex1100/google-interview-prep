@@ -14,6 +14,10 @@ class Queue {
     return this.items.shift();
   }
 
+  contains(node) {
+    return this.items.includes(node);
+  }
+
   front() {
     return this.items[0];
   }
