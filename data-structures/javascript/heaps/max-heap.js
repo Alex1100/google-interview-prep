@@ -80,6 +80,35 @@ class BinaryMaxHeap {
   shouldSwap(childData, parentData) {
     return childData > parentData;
   }
+
+  contains(data) {
+    // used a binary search but
+    // this is log n + log n because
+    // it's log n to sort and another log n to search
+
+    // A BinaryHeap should check if something is contained
+    // in itself in just log n time...
+
+    // work in progress
+
+    let sortedData = this.array.sort((a, b) => a - b);
+    let min = 0;
+    let max = sortedData.length - 1;
+
+    while(min <= max) {
+      let mid = Math.round(min + (max-min)/2);
+
+      if (data < sortedData[mid]) {
+        max = mid - 1;
+      } else if (data > sortedData[mid]) {
+        min = mid + 1;
+      } else {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 module.exports = BinaryMaxHeap;
