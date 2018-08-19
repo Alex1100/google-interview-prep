@@ -355,26 +355,23 @@ class BinaryMinHeap {
   }
 
   contains(data) {
-    // used a binary search but
-    // this is log n + log n because
-    // it's log n to sort and another log n to search
-
-    // A BinaryHeap should check if something is contained
-    // in itself in just log n time...
-
-    // work in progress
-
-    let sortedData = this.array.sort((a, b) => a - b);
+    let sortedData = this.array;
     let min = 0;
     let max = sortedData.length - 1;
 
     while(min <= max) {
-      let mid = Math.round(min + (max-min)/2);
+      let mid = sortedData.length % 2 !== 0 ? min + (max-min)/2 : Math.round(min + (max - min)/2);
 
       if (data < sortedData[mid]) {
-        max = mid - 1;
+        if (sortedData[mid - 1] === data || sortedData[mid + 1] === data || sortedData[mid - 2] === data || sortedData[mid + 2] === data) {
+          return true;
+        }
+        max = mid - 2 < 0 ? mid - 1 : mid - 2;
       } else if (data > sortedData[mid]) {
-        min = mid + 1;
+        if (sortedData[mid - 1] === data || sortedData[mid + 1] === data || sortedData[mid - 2] === data || sortedData[mid + 2] === data) {
+          return true;
+        }
+        min = mid + 2 >= sortedData.length ? mid + 1 : mid + 2;
       } else {
         return true;
       }
@@ -396,7 +393,10 @@ c.add(5);
 c.add(6);
 c.add(10);
 console.log("OUR NEW BinaryMinHeap IS: ", c);
-console.log(c.contains(1))
+console.log(c.contains(23))
+console.log(c.contains(5))
+console.log(c.contains(33))
+console.log(c.contains(9))
 
 module.exports = BinaryMinHeap;
 
