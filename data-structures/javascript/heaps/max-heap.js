@@ -1,6 +1,7 @@
 class BinaryMaxHeap {
   constructor(data = []) {
     this.array = [];
+    this.nodes = {};
     if (data && Array.isArray(data)) {
       this.array = data;
       const length = this.array.length;
@@ -28,6 +29,7 @@ class BinaryMaxHeap {
     }
     this.array.push(data);
     this.bubbleUp(this.array.length - 1, data);
+    this.nodes[data] = true;
   }
 
   removeHead() {
@@ -37,6 +39,7 @@ class BinaryMaxHeap {
       this.array[0] = tailNode;
       this.bubbleDown(0, tailNode);
     }
+    delete this.nodes[headNode];
     return headNode;
   }
 
@@ -79,6 +82,11 @@ class BinaryMaxHeap {
 
   shouldSwap(childData, parentData) {
     return childData > parentData;
+  }
+
+  hasNode(data) {
+    // O(1) Constant time complexity
+    return this.nodes[data] === true
   }
 
   contains(data) {
@@ -126,6 +134,10 @@ console.log(c.contains(23))
 console.log(c.contains(5))
 console.log(c.contains(33))
 console.log(c.contains(10))
+console.log(c.hasNode(23))
+console.log(c.hasNode(5))
+console.log(c.hasNode(33))
+console.log(c.hasNode(10))
 
 module.exports = BinaryMaxHeap;
 
