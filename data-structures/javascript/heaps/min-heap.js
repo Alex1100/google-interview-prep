@@ -269,6 +269,7 @@ console.log("HEAP IS NOW: ", heap.toArray(heap.heapify()))
 class BinaryMinHeap {
   constructor(data = []) {
     this.array = [];
+    this.nodes = {};
     if (data && Array.isArray(data)) {
       this.array = data;
       const length = this.array.length;
@@ -296,6 +297,7 @@ class BinaryMinHeap {
     }
     this.array.push(data);
     this.bubbleUp(this.array.length - 1, data);
+    this.nodes[data] = true;
   }
 
   removeHead() {
@@ -305,6 +307,7 @@ class BinaryMinHeap {
       this.array[0] = tailNode;
       this.bubbleDown(0, tailNode);
     }
+    delete this.nodes[headNode];
     return headNode;
   }
 
@@ -354,7 +357,13 @@ class BinaryMinHeap {
     return childData < parentData;
   }
 
+  hasNode(data) {
+    // O(1) Constant time complexity
+    return this.nodes[data] === true
+  }
+
   contains(data) {
+    // O(log n) Logarithmic time complexity
     let sortedData = this.array;
     let min = 0;
     let max = sortedData.length - 1;
@@ -397,7 +406,10 @@ console.log(c.contains(23))
 console.log(c.contains(5))
 console.log(c.contains(33))
 console.log(c.contains(9))
-
+console.log(c.hasNode(23))
+console.log(c.hasNode(5))
+console.log(c.hasNode(33))
+console.log(c.hasNode(9))
 module.exports = BinaryMinHeap;
 
 
