@@ -230,50 +230,25 @@ class Graph {
     this.nodesArray.forEach(node => cb(node));
   }
 
-  DFSUtil(node, visited, visited_data){
-    visited[node] = true;
-
-    if(!visited_data.contains(node)){
-      visited_data.insert(node);
+  DFSUtil(source_node, visited, visited_data){
+    if (visited_data.size === this.nodesArray.length) {
+      return;
     }
 
-    for(let i_node in this.vertexes) {
-      if(visited[i_node] === false){
-        this.DFSUtil(i_node, visited, visited_data);
+    if (!visited[source_node]) {
+      visited_data.insert(source_node);
+      visited[source_node] = true;
+    }
+
+    for(let node in this.vertexes) {
+      if(!visited[node]){
+        this.DFSUtil(node, visited, visited_data);
       }
     }
-
-    return visited_data;
-  }
-
-  BFSUtil(node, visited, visited_data, node_queue){
-    visited[node] = true;
-
-    if (visited_data.size  === this.nodesArray.length) {
-      return visited_data
-    }
-
-    if (node_queue.contains(node)) {
-      node_queue.dequeue()
-    }
-
-    if (!visited_data.contains(node)) {
-      visited_data.enqueue(node)
-    }
-
-    for (let i_node in this.vertexes[node]) {
-      node_queue.enqueue(i_node)
-    }
-
-    node_queue.items.forEach((i_node, i) => {
-      this.BFSUtil(i_node, visited, visited_data, node_queue)
-    })
-
-    return visited_data
   }
 
   DFS(node){
-    let visited = Array.from(this.nodesArray, x => x = false);
+    let visited = {};
     let visited_data = new Stack();
 
     /**
@@ -289,23 +264,53 @@ class Graph {
       */
 
 
-    return this.DFSUtil(node.toString(), visited, visited_data);
+    this.DFSUtil(node.toString(), visited, visited_data);
+    return visited_data.items;
   }
 
-  BFS(node){
-    let visited = Array.from(this.nodesArray, x => x = false);
-    let visited_data = new Queue(), node_queue = new Queue();
+  BFSUtil(source_node, result, visited, node_queue) {
+    if (result.size === this.nodesArray.length) {
+      return;
+    }
 
-    /**
+    if(!visited[source_node]) {
+      result.enqueue(source_node);
+      visited[source_node] = true;
+    }
+
+    if (node_queue.contains(source_node)) {
+      node_queue.dequeue();
+    }
+
+    for(let node in this.vertexes[source_node]) {
+      if (!visited[node]) {
+        visited[node] = true;
+        node_queue.enqueue(node);
+        result.enqueue(node);
+      }
+    }
+
+    node_queue.items.forEach((node, node_index) => {
+      this.BFSUtil(node, result, visited, node_queue);
+    })
+  }
+
+  BFS(source_node) {
+    /*
       * BFS checks a node and immediately after, all of the nodes it has as edges
       * once all nodes are exhausted for the parent node, it will move on to the
       * next unvisited edged node in the parent vertex/node
       * and it will also do the same for each node in our nodesArray array
       *
       * Typically we would use a Queue for a Breadth First Search (FIFO)
-      */
+    **/
 
-    return this.BFSUtil(node.toString(), visited, visited_data, node_queue)
+    let visited = {};
+    let result = new Queue, node_queue = new Queue();
+
+    this.BFSUtil(source_node.toString(), result, visited, node_queue);
+
+    return result.items;
   }
 
   costLength(u, v) {
@@ -501,6 +506,7 @@ class Graph {
     let shortestPaths = {};
     let dist = {};
     let prev = {};
+    let visitedNeighbors = {};
 
     for (let vertex in this.vertexes) {
       /**
@@ -547,10 +553,12 @@ class Graph {
       for (let neighbor in this.vertexes[u]) {
         let alt = dist[u] + this.costLength(u, neighbor) + this.heuristicLength(u, neighbor);
 
-        if (alt < dist[neighbor]) {
+        if (!visitedNeighbors[neighbor] && alt < dist[neighbor]) {
           dist[neighbor] = alt;
           prev[neighbor] = u;
         }
+        visitedNeighbors[neighbor] = true;
+
       }
       djSet.delete(u);
     }
@@ -578,6 +586,7 @@ class Graph {
     shortestPath[destination_node] = [];
     let dist = {};
     let prev = {};
+    let visitedNeighbors = {};
 
     for (let vertex in this.vertexes) {
       /**
@@ -622,11 +631,11 @@ class Graph {
 
       for (let neighbor in this.vertexes[u]) {
         let alt = dist[u] + this.costLength(u, neighbor) + this.heuristicLength(u, neighbor);
-
-        if (alt < dist[neighbor]) {
+        if (!visitedNeighbors[neighbor] && alt < dist[neighbor]) {
           dist[neighbor] = alt;
           prev[neighbor] = u;
         }
+        visitedNeighbors[neighbor] = true;
       }
       aStarSet.delete(u);
     }
@@ -692,65 +701,80 @@ class Graph {
   }
 
   KruskalMST() {
-    // STILL A WORK IN PROGRESS MIGHT NEED TO ADJUST A FEW LINES
-    // OF CODE...
-
-    let MST = [];
+    /*
+     * Only works with Directed Graphs
+     * https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+     *
+     * This algorithm was written by Joseph Kruskal and is a minimum-spanning-tree
+     * algorithm which finds an edge of the least possible weight that connects
+     * any two trees in the forest. It is a greedy algorithm in graph theory
+     * as it finds a minimum spanning tree for a connected weighted graph
+     * adding increasing cost arcs at each step. This means it finds a subset
+     * of the edges that forms a tree that includes every vertex, where the
+     * total weight of all the edges in the tree is minimized. If the graph
+     * is not connected, then it finds a minimum spanning forest
+     * (a minimum spanning tree for each connected component).
+     *
+    **/
+    let MST = new Graph();
     let disjointSets = {};
     let edges = [];
+    let edgesMap = {};
 
     for (let vertex in this.vertexes) {
-      let currentVertex = Object.entries(this.vertexes[vertex]);
-      edges.push([vertex, ...currentVertex]);
-      disjointSets[vertex] = new DisjointSet({ vertex, edges: this.vertexes[vertex] });
+      let currentEdges = [];
+
+      for (let edge in this.vertexes[vertex]) {
+        if (edgesMap[`${vertex}_${edge}`] === false && edgesMap[`${edge}_${vertex}`] === false) {
+          continue;
+        } else {
+          edgesMap[`${vertex}_${edge}`] = false;
+          edgesMap[`${edge}_${vertex}`] = false;
+
+          edges.push([`${vertex}_${edge}`, this.vertexes[vertex][edge]['weight']]);
+          currentEdges.push([`${vertex}_${edge}`, this.vertexes[vertex][edge]['weight']], [`${edge}_${vertex}`, this.vertexes[vertex][edge]['weight']]);
+        }
+      }
+
+      disjointSets[vertex] = new DisjointSet({ vertex, edges: currentEdges });
     }
 
-    edges.sort((a, b) => a[1][1].weight - b[1][1].weight);
+    edges.sort((a, b) => {
+      if (a[1] === b[1]) {
+        return 1;
+      } else {
+        return a[1] - b[1]
+      }
+    });
 
     for (let vertex in edges) {
-      let vertexEdges = edges[vertex].slice(1);
+      let current = edges[vertex][0];
+
+      let vertexesOfEdge = [
+        current.slice(0, current.indexOf("_")),
+        current.slice(current.indexOf("_") + 1)
+      ];
+
+      let root1 =
+        disjointSets[vertexesOfEdge[0]]
+          .find({ vertex: vertexesOfEdge[1], edges: this.vertexes[vertexesOfEdge[1]] });
 
 
-      for (let i = 0; i < vertexEdges.length; i++) {
-        let root1 = disjointSets[edges[vertex][0]].find({ vertex: vertexEdges[i][0], edges: this.vertexes[vertexEdges[i][0]] })
-        let root2 = disjointSets[vertexEdges[i][0]].find({ vertex: vertex[0], edges: this.vertexes[edges[vertex][0]] })
+      let root2 =
+        disjointSets[vertexesOfEdge[1]]
+          .find({ vertex: vertexesOfEdge[0], edges: this.vertexes[vertexesOfEdge[0]] });
 
-
-        if (root1.hasOwnProperty('parent') && root2.hasOwnProperty('parent')) {
-          if (JSON.stringify(root1.data) !== JSON.stringify(root2.data)) {
-            if (MST[MST.length - 1] !== edges[vertex][0]) {
-              MST.push(edges[vertex][0]);
-            }
-            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
-          }
-        } else if (root1.hasOwnProperty('parent') && !root2.hasOwnProperty('parent')) {
-          if (JSON.stringify(root1.data) !== JSON.stringify(root2)) {
-            if (MST[MST.length - 1] !== edges[vertex][0]) {
-              MST.push(edges[vertex][0]);
-            }
-            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
-          }
-        } else if (!root1.hasOwnProperty('parent') && root2.hasOwnProperty('parent')) {
-          if (JSON.stringify(root1) !== JSON.stringify(root2.data)) {
-            if (MST[MST.length - 1] !== edges[vertex][0]) {
-              MST.push(edges[vertex][0]);
-            }
-            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
-          }
-        } else {
-          if (JSON.stringify(root1) !== JSON.stringify(root2)) {
-            if (MST[MST.length - 1] !== edges[vertex][0]) {
-              MST.push(edges[vertex][0]);
-            }
-            disjointSets[edges[vertex][0]].setUnion(disjointSets[vertexEdges[i][0]]);
-          }
-        }
+      if (!(root1 && root1.parent) || !(root2 && root2.parent)) {
+        disjointSets[vertexesOfEdge[0]].setUnion(disjointSets[vertexesOfEdge[1]]);
+        MST.addNode(edges[vertex][0]);
+        MST.vertexes[edges[vertex][0]]['distance'] = edges[vertex][1]
       }
     }
 
-    return MST;
+    return MST
   }
 }
+
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -808,11 +832,11 @@ g.addEdge(0, 2);
 g.addEdge(1, 2);
 g.addEdge(2, 0);
 g.addEdge(2, 3);
-g.addEdge(3, 3);
-g.addEdge(0, 100)
-g.addEdge(5, 1)
-g.addEdge(6, 2)
-g.addEdge(6, 5)
+g.addEdge(3, 1);
+g.addEdge(1, 100);
+g.addEdge(5, 1);
+g.addEdge(6, 2);
+g.addEdge(6, 5);
 console.log("\n\n", g.vertexes, "\n\n")
 /**
   * actual vertex->edge weights/costs/distances will be randomly generated
@@ -835,41 +859,27 @@ console.log("\n\n", g.vertexes, "\n\n")
 
 
 console.log(g.DFS(0));
-// 0 -> 1 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(0));
-// 0 -> 1 -> 2 -> 100 -> 5 -> 3 -> 6
 console.log(g.DFS(1))
-// 1 -> 0 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(1))
-// 1 -> 0 -> 2 -> 5 -> 100 -> 3 -> 6
 console.log(g.DFS(2))
-// 2 -> 0 -> 1 -> 3 -> 5 -> 6
 console.log(g.BFS(2))
-// 2 -> 0 -> 1 -> 3 -> 6 -> 100 -> 5
 console.log(g.DFS(3))
-// 3 -> 0 -> 1 -> 2 -> 5 -> 6
 console.log(g.BFS(3))
-// 3 -> 2 -> 0 -> 1 -> 6 -> 100 -> 5
 console.log(g.DFS(5))
-// 5 -> 0 -> 1 -> 2 -> 3 -> 6
 console.log(g.BFS(5))
-// 5 -> 1 -> 0 -> 2 -> 100 -> 3 -> 6
 console.log(g.DFS(6))
-// 6 -> 0 -> 1 -> 2 -> 3 -> 5
 console.log(g.BFS(6))
-// 6 -> 2 -> 0 -> 1 -> 3 -> 100 -> 5
 console.log(g.DFS(100))
-// 100 -> 0 -> 1 -> 2 -> 3 -> 5 -> 6
 console.log(g.BFS(100))
-// 100 -> 0 -> 1 -> 2 -> 5 -> 3 -> 6
 
 console.log("\n\n\n", g.Dijkstra(1, 5))
 console.log(g.allDijkstra(1))
 console.log(g.shortestDistanceToAndFrom(1, 5))
 console.log(g.allDijkstra(6))
-console.log(g.Dijkstra(6, 100))
-console.log(g.A_Star_Search(6, 100))
-console.log(g.each_A_Star_Search(6))
+console.log("DIJKSTRA THO: ", g.Dijkstra(6, 100))
+console.log("A STAR THOU: ", g.A_Star_Search(6, 100))
+console.log("A STAREACH THOU: ", g.each_A_Star_Search(6))
 console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
 
 // algos to implement

@@ -353,7 +353,50 @@ class BinaryMinHeap {
   shouldSwap(childData, parentData) {
     return childData < parentData;
   }
+
+  contains(data) {
+    // used a binary search but
+    // this is log n + log n because
+    // it's log n to sort and another log n to search
+
+    // A BinaryHeap should check if something is contained
+    // in itself in just log n time...
+
+    // work in progress
+
+    let sortedData = this.array.sort((a, b) => a - b);
+    let min = 0;
+    let max = sortedData.length - 1;
+
+    while(min <= max) {
+      let mid = Math.round(min + (max-min)/2);
+
+      if (data < sortedData[mid]) {
+        max = mid - 1;
+      } else if (data > sortedData[mid]) {
+        min = mid + 1;
+      } else {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
+
+console.log("\n\n\n\n");
+let c = new BinaryMinHeap();
+c.add(3);
+c.add(9);
+c.add(33);
+c.add(1);
+c.add(2);
+c.add(4);
+c.add(5);
+c.add(6);
+c.add(10);
+console.log("OUR NEW BinaryMinHeap IS: ", c);
+console.log(c.contains(1))
 
 module.exports = BinaryMinHeap;
 
