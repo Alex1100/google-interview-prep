@@ -773,6 +773,31 @@ class Graph {
 
     return MST
   }
+
+  PrimMST() {
+    /*
+     * https://en.wikipedia.org/wiki/Prim%27s_algorithm
+     * Prim's algorithm
+     *
+     * A greedy algorithm that finds a minimum spanning tree
+     * for a weighted undirected graph. This means it finds
+     * a subset of the edges that forms a tree that includes
+     * every vertex, where the total weight of all the edges
+     * in the tree is minimized. The algorithm operates by building
+     * this tree one vertex at a time, from an arbitrary starting
+     * vertex, at each step adding the cheapest possible connection
+     * from the tree to another vertex.
+     *
+     *
+     * It was developed in 1930 by Czech mathematician Vojtěch Jarník
+     * and later rediscovered and republished by computer scientists
+     * Robert C. Prim in 1957 and Edsger W. Dijkstra in 1959. Therefore,
+     * it is also sometimes called the DJP algorithm, Jarník's algorithm,
+     * the Prim–Jarník algorithm, or the Prim–Dijkstra algorithm.
+    **/
+
+    // Work in Progress
+  }
 }
 
 
