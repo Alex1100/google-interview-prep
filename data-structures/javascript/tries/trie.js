@@ -56,12 +56,10 @@ class Trie {
 
   BFSUtil(child, result) {
     if(child.data) {
-      console.log("YOOOOOOOO: ", child)
       result.push(child.data);
     }
 
     if (child.data && child.children.length > 0) {
-      console.log("YOOO: ", child)
       for (let j = 0; j < child.children.length; j++) {
         this.BFSUtil(child.children[j], result);
       }

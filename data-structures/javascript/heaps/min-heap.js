@@ -297,18 +297,29 @@ class BinaryMinHeap {
     }
     this.array.push(data);
     this.bubbleUp(this.array.length - 1, data);
-    this.nodes[data] = true;
   }
 
   removeHead() {
     const headNode = this.array[0];
     const tailNode = this.array.pop();
+    let counter = 0;
+
     if (this.array.length) {
       this.array[0] = tailNode;
       this.bubbleDown(0, tailNode);
     }
+
     delete this.nodes[headNode];
+    this.decreaseMapIndexes();
+
     return headNode;
+  }
+
+  decreaseMapIndexes(counter = 0) {
+    for (let node in this.array) {
+      this.nodes[this.array[node]] = counter;
+      counter++;
+    }
   }
 
 
@@ -322,7 +333,7 @@ class BinaryMinHeap {
       const trySwap = (index, array, shouldSwap) => {
         if (index < array.length) {
           const data = array[index];
-          if (shouldSwap(data, targetData)) {
+          if (this.shouldSwap(data, targetData)) {
             targetIndex = index;
             targetData = data;
           }
@@ -348,7 +359,12 @@ class BinaryMinHeap {
       if (this.shouldSwap(childData, parentData)) {
         this.array[parentIndex] = childData;
         this.array[childIndex] = parentData;
+        this.nodes[this.array[childIndex]] = childIndex;
+        this.nodes[this.array[parentIndex]] = parentIndex;
         this.bubbleUp(parentIndex, childData);
+      } else {
+        this.nodes[this.array[childIndex]] = childIndex;
+        this.nodes[this.array[parentIndex]] = parentIndex;
       }
     }
   }
@@ -359,7 +375,7 @@ class BinaryMinHeap {
 
   hasNode(data) {
     // O(1) Constant time complexity
-    return this.nodes[data] === true
+    return this.nodes[data] >= 0;
   }
 
   contains(data) {
@@ -401,6 +417,7 @@ c.add(4);
 c.add(5);
 c.add(6);
 c.add(10);
+c.add(11);
 console.log("OUR NEW BinaryMinHeap IS: ", c);
 console.log(c.contains(23))
 console.log(c.contains(5))
@@ -410,6 +427,8 @@ console.log(c.hasNode(23))
 console.log(c.hasNode(5))
 console.log(c.hasNode(33))
 console.log(c.hasNode(9))
+console.log(c.removeHead())
+console.log("\n\nMINHEAP IS: ", c);
 module.exports = BinaryMinHeap;
 
 
