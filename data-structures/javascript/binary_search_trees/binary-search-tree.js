@@ -353,6 +353,52 @@ class BinarySearchTree {
       this.reverseTree(node.right);
     }
   }
+
+
+  findInOrderSuccessor(inputNode) {
+    let result = null;
+    console.log("INPUT NODE IS: ", inputNode)
+    if(inputNode.right){
+      if(inputNode.right.left && !inputNode.right.left.left){
+        return inputNode.right.left;
+      } else if(inputNode.right.left && inputNode.right.left.left) {
+        result = inputNode.right.left;
+        while(result.left){
+          result = result.left;
+        }
+      }
+    } else {
+      let rootInputNode = inputNode;
+      let targetInputNode = inputNode.parent;
+      while(targetInputNode.data <= rootInputNode.data){
+        if(targetInputNode.parent){
+          targetInputNode = targetInputNode.parent;
+        } else {
+          return;
+        }
+      }
+      return targetInputNode
+    }
+    return result;
+  }
+
+  lowestCommonAncestor(inputNode1, inputNode2) {
+    if (this.root === null) {
+      return null;
+    }
+
+    let result = null;
+
+    if (this.data > inputNode1 && this.data > inputNode2) {
+      return this.left.lowestCommonAncestor(inputNode1, inputNode2)
+    }
+
+    if (this.data < inputNode1 && this.data < inputNode2) {
+      return this.right.lowestCommonAncestor(inputNode1, inputNode2);
+    }
+
+    return this;
+  }
 }
 
 let a = new BinarySearchTree(100);
@@ -387,3 +433,5 @@ console.log(a.depthFirstSearch('in_order'));
 console.log(a.BFSIterative());
 console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
+console.log("HCA IS: ", a.findInOrderSuccessor(a.search(75)))
+console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
