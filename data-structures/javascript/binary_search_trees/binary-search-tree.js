@@ -357,7 +357,7 @@ class BinarySearchTree {
 
   findInOrderSuccessor(inputNode) {
     let result = null;
-    console.log("INPUT NODE IS: ", inputNode)
+
     if(inputNode.right){
       if(inputNode.right.left && !inputNode.right.left.left){
         return inputNode.right.left;
@@ -451,6 +451,6 @@ console.log(a.depthFirstSearch('in_order'));
 console.log(a.BFSIterative());
 console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
-console.log("HCA IS: ", a.findInOrderSuccessor(a.search(75)))
+console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
 console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
 console.log("MIN DEPTH IS: ", a.getMinDepth())
