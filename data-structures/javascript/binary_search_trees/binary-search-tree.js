@@ -399,6 +399,24 @@ class BinarySearchTree {
 
     return this;
   }
+
+  getMinDepth() {
+    if (!this.right && !this.left) {
+      return 1;
+    }
+
+    if (!this.left && this.right) {
+      return this.right.getMinDepth() + 1;
+    }
+
+    if(!this.right && this.left) {
+      return this.left.getMinDepth() + 1;
+    }
+
+    let left = this.left ? this.left : this;
+    let right = this.right ? this.right : this;
+    return Math.min(left.getMinDepth(), right.getMinDepth()) + 1;
+  }
 }
 
 let a = new BinarySearchTree(100);
@@ -435,3 +453,4 @@ console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
 console.log("HCA IS: ", a.findInOrderSuccessor(a.search(75)))
 console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
+console.log("MIN DEPTH IS: ", a.getMinDepth())
