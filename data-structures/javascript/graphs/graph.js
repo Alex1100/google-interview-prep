@@ -902,9 +902,9 @@ console.log("\n\n\n", g.Dijkstra(1, 5))
 console.log(g.allDijkstra(1))
 console.log(g.shortestDistanceToAndFrom(1, 5))
 console.log(g.allDijkstra(6))
-console.log("DIJKSTRA THO: ", g.Dijkstra(6, 100))
-console.log("A STAR THOU: ", g.A_Star_Search(6, 100))
-console.log("A STAREACH THOU: ", g.each_A_Star_Search(6))
+console.log(g.Dijkstra(6, 100))
+console.log(g.A_Star_Search(6, 100))
+console.log(g.each_A_Star_Search(6))
 console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
 
 // algos to implement
