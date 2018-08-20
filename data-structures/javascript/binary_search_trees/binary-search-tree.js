@@ -1,9 +1,61 @@
+class Queue {
+  constructor() {
+    this.items = [];
+    this.size = 0;
+  }
+
+  enqueue(item) {
+    this.items.push(item);
+    this.size++;
+  }
+
+  dequeue(item) {
+    this.size--;
+    return this.items.shift();
+  }
+
+  contains(node) {
+    return this.items.includes(node);
+  }
+
+  front() {
+    return this.items[0];
+  }
+
+  back() {
+    return this.items[this.items.length - 1];
+  }
+
+  printQueue() {
+    return this.items;
+  }
+
+  queueSize() {
+    return this.size;
+  }
+
+  max() {
+    return Math.max(...this.items);
+  }
+
+  min() {
+    return Math.min(...this.items);
+  }
+
+  isEmpty() {
+    return this.size === 0;
+  }
+}
+
+
 class BinarySearchTree {
   constructor(data) {
     this.data = data;
     this.left = null;
     this.right = null;
     this.parent = this;
+    this.size = 0;
+    this.reversed = false;
   }
 
   addNode(data) {
@@ -11,6 +63,7 @@ class BinarySearchTree {
       if (!this.left) {
         this.left = new BinarySearchTree(data);
         this.left.parent = this;
+        this.size++;
       } else {
         this.left.addNode(data)
       }
@@ -18,6 +71,7 @@ class BinarySearchTree {
       if (!this.right) {
         this.right = new BinarySearchTree(data);
         this.right.parent = this;
+        this.size++;
       } else {
         this.right.addNode(data);
       }
@@ -46,28 +100,110 @@ class BinarySearchTree {
     return result;
   }
 
-  contains(input, reversed = false) {
-    let result = false;
 
-    let inclusionCheck = function(input) {
-      if(!this) {
-        result = false;
-      } else if(input === this.data){
-        result = true;
-      } else if(!reversed && input < this.data){
-        inclusionCheck.call(this.left, input);
-      } else if(!reversed && input > this.data){
-        inclusionCheck.call(this.right, input);
-      } else if (reversed && input < this.data) {
-        inclusionCheck.call(this.right, input);
-      } else if (reversed && input > this.data) {
-        inclusionCheck.call(this.left, input);
-      }
-    };
 
-    inclusionCheck.call(this, input);
-    return result;
+  contains(input) {
+    return !!this.search(input)
   };
+
+  deleteNode(node) {
+    let searchedResult = this.search(node);
+
+    if (!searchedResult) {
+      return null;
+    } else {
+      let parent = searchedResult.parent;
+      let counter = 0;
+
+      if (this.size === 1) {
+        this.parent = null;
+        this.data = null;
+        this.left = null;
+        this.right = null;
+        this.size = 0;
+        return searchedResult;
+      } else if (!searchedResult.left && !searchedResult.right) {
+        if (searchedResult.data < parent.data) {
+          parent.left = null;
+        } else {
+          parent.right = null;
+        }
+      } else if (!searchedResult.left && searchedResult.right) {
+        if (searchedResult.data < parent.data) {
+          parent.left = searchedResult.right;
+        } else {
+          parent.right = searchedResult.right;
+        }
+      } else if (searchedResult.left && !searchedResult.right) {
+        if (searchedResult.data < parent.data) {
+          parent.left = searchedResult.left;
+        } else {
+          parent.right = searchedResult.left;
+        }
+      } else {
+        let largestValue = searchedResult.left;
+
+        while(largestValue.right) {
+          largestValue = largestValue.right;
+        }
+
+        let largestValuesParent = largestValue.parent.right = 0;
+        searchedResult.data = largestValue.data;
+      }
+    }
+    this.size--;
+    return true;
+  }
+
+  findMin() {
+    if (this.reversed) {
+      let rightLeaf = this.right;
+
+      if (rightLeaf) {
+        while(rightLeaf.right !== null) {
+          rightLeaf = rightLeaf.right;
+        }
+        return rightLeaf;
+      } else {
+        return rightLeaf;
+      }
+    } else {
+      let leftLeaf = this.left;
+      if (leftLeaf) {
+        while(leftLeaf.left !== null) {
+          leftLeaf = leftLeaf.left;
+        }
+        return leftLeaf;
+      } else {
+        return leftLeaf;
+      }
+    }
+  }
+
+  findMax() {
+    if (!this.reversed) {
+      let rightLeaf = this.right;
+
+      if (rightLeaf) {
+        while(rightLeaf.right !== null) {
+          rightLeaf = rightLeaf.right;
+        }
+        return rightLeaf;
+      } else {
+        return rightLeaf;
+      }
+    } else {
+      let leftLeaf = this.left;
+      if (leftLeaf) {
+        while(leftLeaf.left !== null) {
+          leftLeaf = leftLeaf.left;
+        }
+        return leftLeaf;
+      } else {
+        return leftLeaf;
+      }
+    }
+  }
 
   depthFirstSearch(order_type) {
     let result = [];
@@ -135,6 +271,32 @@ class BinarySearchTree {
     return result;
   }
 
+  BFSIterative() {
+    let root = this.parent;
+    let q = new Queue();
+    let result = new Queue();
+    result.enqueue(root);
+
+    while(root) {
+      if (root.left) {
+        q.enqueue(root.left);
+      }
+
+      if (root.right) {
+        q.enqueue(root.right);
+      }
+
+      if (!q.isEmpty()) {
+        root = q.dequeue();
+        result.enqueue(root);
+      } else {
+        root = null;
+      }
+    }
+
+    return result;
+  }
+
   breadthFirstForEach(cb) {
     let current = [this];
 
@@ -157,17 +319,27 @@ class BinarySearchTree {
   }
 
   reverseTree(node) {
-    if (node === null) {
+    if (!node) {
       return;
     }
 
-    let temp = node.right;
-    node.right = node.left;
-    node.left = temp;
+    if (this.reversed) {
+      let temp = node.left;
+      node.left = node.left;
+      node.right = temp;
+      node.reversed = !!node.reversed;
 
-    this.reverseTree(node.left);
+      this.reverseTree(node.left)
+      this.reverseTree(node.right);
+    } else {
+      let temp = node.right;
+      node.right = node.left;
+      node.left = temp;
+      node.reversed = !!node.reversed;
 
-    this.reverseTree(node.right)
+      this.reverseTree(node.left);
+      this.reverseTree(node.right);
+    }
   }
 }
 
@@ -190,4 +362,15 @@ console.log("REVERSED: ", a)
 console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"))
 console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"))
 console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"))
-console.log("CONTAINS 200: ", a.contains(200, true))
+console.log("CONTAINS 50: ", a.contains(50))
+a.deleteNode(50);
+console.log("CONTAINS 50: ", a.contains(50))
+console.log("A IS::::", a);
+console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"))
+
+a.reverseTree(a.parent);
+console.log("MAX IS: ", a.findMax());
+console.log("MIN IS: ", a.findMin());
+console.log(a.depthFirstSearch('in_order'))
+console.log(a.BFSIterative());
+console.log(a.breadthFirstSearch())
