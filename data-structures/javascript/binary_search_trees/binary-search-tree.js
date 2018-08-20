@@ -58,12 +58,11 @@ class BinarySearchTree {
     this.reversed = false;
   }
 
-  addNode(data) {
+  addNode(data, root = this) {
     if (data < this.data) {
       if (!this.left) {
         this.left = new BinarySearchTree(data);
         this.left.parent = this;
-        this.size++;
       } else {
         this.left.addNode(data)
       }
@@ -71,13 +70,14 @@ class BinarySearchTree {
       if (!this.right) {
         this.right = new BinarySearchTree(data);
         this.right.parent = this;
-        this.size++;
       } else {
         this.right.addNode(data);
       }
     } else {
       throw Error('Node Already Exists');
+      this.size--;
     }
+    this.size++;
   }
 
   search(input) {
@@ -228,6 +228,18 @@ class BinarySearchTree {
     return result
   }
 
+  getDepth() {
+    let size = this.BFSIterative().size;
+
+    if (size === 1) {
+      return 1;
+    } else if (size > 1) {
+      return Math.round(Math.log2(size - 2))
+    } else {
+      return 0;
+    }
+  }
+
   depthFirstForEach(order_type, cb) {
     const traverse = (node) => {
       if (order_type === "pre_order") {
@@ -358,19 +370,20 @@ console.log("IN: ", a.depthFirstSearch('in_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
 console.log("PRE: ", a.depthFirstSearch('pre_order'));
 a.reverseTree(a.parent);
-console.log("REVERSED: ", a)
-console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"))
-console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"))
-console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"))
-console.log("CONTAINS 50: ", a.contains(50))
+console.log("REVERSED: ", a);
+console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"));
+console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"));
+console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"));
+console.log("CONTAINS 50: ", a.contains(50));
 a.deleteNode(50);
-console.log("CONTAINS 50: ", a.contains(50))
+console.log("CONTAINS 50: ", a.contains(50));
 console.log("A IS::::", a);
-console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"))
+console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"));
 
 a.reverseTree(a.parent);
 console.log("MAX IS: ", a.findMax());
 console.log("MIN IS: ", a.findMin());
-console.log(a.depthFirstSearch('in_order'))
+console.log(a.depthFirstSearch('in_order'));
 console.log(a.BFSIterative());
-console.log(a.breadthFirstSearch())
+console.log(a.breadthFirstSearch());
+console.log("DEPTH IS: ", a.getDepth());
