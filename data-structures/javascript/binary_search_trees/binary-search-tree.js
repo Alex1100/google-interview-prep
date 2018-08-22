@@ -450,6 +450,24 @@ class BinarySearchTree {
     let right = this.right ? this.right : this;
     return Math.min(left.getMinDepth(), right.getMinDepth()) + 1;
   }
+
+  getMaxPathSum() {
+    let result = Number.NEGATIVE_INFINITY;
+
+    const max_sum = (node) => {
+      if (node == null){
+        return 0;
+      }
+
+      let left_sum = Math.max(0, max_sum(node.left));
+      let right_sum = Math.max(0, max_sum(node.right));
+      result = Math.max(result, left_sum + node.data + right_sum);
+      return Math.max(left_sum, right_sum) + node.data;
+    };
+
+    max_sum(this);
+    return result;
+  };
 }
 
 let a = new BinarySearchTree(10);
