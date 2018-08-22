@@ -330,7 +330,7 @@ class BinarySearchTree {
     }
   }
 
-  reverseTree(node) {
+  reverseTreeRecursive(node) {
     if (!node) {
       return;
     }
@@ -354,6 +354,39 @@ class BinarySearchTree {
     }
   }
 
+  reverseTree(node) {
+    if (!node) {
+      return;
+    }
+
+    const stack = [];
+
+    stack.push(node);
+    if (!node.reversed) {
+      while (stack.length > 0) {
+        const node = stack.pop();
+        if (node.left) { stack.push(node.left); }
+        if (node.right) { stack.push(node.right); }
+
+        const temp = node.left;
+        node.left = node.right;
+        node.right = temp;
+      }
+    } else {
+      while (stack.length > 0) {
+        const node = stack.pop();
+        if (node.left) { stack.push(node.left); }
+        if (node.right) { stack.push(node.right); }
+
+        const temp = node.right;
+        node.right = node.left;
+        node.left = temp;
+        node.reversed = !!node.reversed;
+      }
+    }
+
+    return node;
+  }
 
   findInOrderSuccessor(inputNode) {
     let result = null;
@@ -419,38 +452,39 @@ class BinarySearchTree {
   }
 }
 
-let a = new BinarySearchTree(100);
-a.addNode(50);
-a.addNode(200);
-a.addNode(150);
-a.addNode(300);
-a.addNode(120);
-a.addNode(45);
+let a = new BinarySearchTree(10);
+a.addNode(5);
+a.addNode(15);
+a.addNode(3);
+a.addNode(7);
+a.addNode(13);
+a.addNode(18);
 a.addNode(77);
 a.addNode(75);
-console.log("75 FOUND: ??: ", a.search(75));
-console.log("BFS: ", a.breadthFirstSearch());
-console.log("IN: ", a.depthFirstSearch('in_order'));
-console.log("POST: ", a.depthFirstSearch('post_order'));
-console.log("PRE: ", a.depthFirstSearch('pre_order'));
+// console.log("75 FOUND: ??: ", a.search(75));
+// console.log("BFS: ", a.breadthFirstSearch());
+// console.log("IN: ", a.depthFirstSearch('in_order'));
+// console.log("POST: ", a.depthFirstSearch('post_order'));
+// console.log("PRE: ", a.depthFirstSearch('pre_order'));
+console.log("NORMAL: ", a.breadthFirstSearch());
 a.reverseTree(a.parent);
-console.log("REVERSED: ", a);
-console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"));
-console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"));
-console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"));
-console.log("CONTAINS 50: ", a.contains(50));
-a.deleteNode(50);
-console.log("CONTAINS 50: ", a.contains(50));
-console.log("A IS::::", a);
-console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"));
+console.log("REVERSED: ", a.breadthFirstSearch());
+// console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"));
+// console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"));
+// console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"));
+// console.log("CONTAINS 50: ", a.contains(50));
+// a.deleteNode(50);
+// console.log("CONTAINS 50: ", a.contains(50));
+// console.log("A IS::::", a);
+// console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"));
 
-a.reverseTree(a.parent);
-console.log("MAX IS: ", a.findMax());
-console.log("MIN IS: ", a.findMin());
-console.log(a.depthFirstSearch('in_order'));
-console.log(a.BFSIterative());
-console.log(a.breadthFirstSearch());
-console.log("DEPTH IS: ", a.getDepth());
-console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
-console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
-console.log("MIN DEPTH IS: ", a.getMinDepth())
+// a.reverseTree(a.parent);
+// console.log("MAX IS: ", a.findMax());
+// console.log("MIN IS: ", a.findMin());
+// console.log(a.depthFirstSearch('in_order'));
+// console.log(a.BFSIterative());
+// console.log(a.breadthFirstSearch());
+// console.log("DEPTH IS: ", a.getDepth());
+// console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
+// console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
+// console.log("MIN DEPTH IS: ", a.getMinDepth())

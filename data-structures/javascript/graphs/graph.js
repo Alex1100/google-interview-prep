@@ -1,3 +1,150 @@
+class BinaryMinHeap {
+  constructor(data = []) {
+    this.array = [];
+    this.nodes = {};
+    this.weightsNode = {};
+    this.nodesWeight = {};
+    if (data && Array.isArray(data)) {
+      this.array = data;
+      const length = this.array.length;
+      for (let i = Math.floor((length - 1) / 2); i >= 0; i--) {
+        this.bubbleDown(i, this.array[i]);
+      }
+    }
+  }
+
+  getParentIndex(childIndex) {
+    return Math.floor((childIndex - 1) / 2);
+  }
+
+  getLeftChild(parentIndex) {
+    return (parentIndex * 2) + 1;
+  }
+
+  getRightChild(parentIndex) {
+    return (parentIndex * 2) + 2;
+  }
+
+  add(data, weight) {
+    if (data === undefined) {
+      throw new Error('data must be valid to add');
+    }
+    this.array.push(weight);
+    this.nodesWeight[weight - this.array.length] = data;
+    this.weightsNode[data] = weight - this.array.length;
+    this.bubbleUp(this.array.length - 1, weight - this.array.length);
+  }
+
+  removeHead() {
+    const headNode = this.array[0];
+    let headNodeWeight = this.nodesWeight[headNode];
+    const tailNode = this.array.pop();
+    let counter = 0;
+
+    if (this.array.length) {
+      this.array[0] = tailNode;
+      this.bubbleDown(0, tailNode);
+    }
+
+    delete this.nodes[headNode];
+    delete this.nodesWeight[headNode]
+    delete this.weightsNode[headNodeWeight];
+    this.decreaseMapIndexes();
+
+    return headNodeWeight;
+  }
+
+  decreaseMapIndexes(counter = 0) {
+    for (let node in this.array) {
+      this.nodes[this.array[node]] = counter;
+      counter++;
+    }
+  }
+
+
+  bubbleDown(parentIndex, parentData) {
+    if (parentIndex < this.array.length) {
+      let targetIndex = parentIndex;
+      let targetData = parentData;
+      const leftChildIndex = this.getLeftChild(parentIndex);
+      const rightChildIndex = this.getRightChild(parentIndex);
+
+      const trySwap = (index, array, shouldSwap) => {
+        if (index < array.length) {
+          const data = array[index];
+          if (this.shouldSwap(data, targetData)) {
+            targetIndex = index;
+            targetData = data;
+          }
+        }
+      };
+
+      trySwap(leftChildIndex, this.array, this.shouldSwap);
+      trySwap(rightChildIndex, this.array, this.shouldSwap);
+
+      if (targetIndex !== parentIndex) {
+        this.array[parentIndex] = targetData;
+        this.array[targetIndex] = parentData;
+        this.bubbleDown(targetIndex, parentData);
+      }
+    }
+  }
+
+  bubbleUp(childIndex, childData) {
+    if (childIndex > 0) {
+      const parentIndex = this.getParentIndex(childIndex);
+      const parentData = this.array[parentIndex];
+
+      if (this.shouldSwap(childData, parentData)) {
+        this.array[parentIndex] = childData;
+        this.array[childIndex] = parentData;
+        this.nodes[this.array[childIndex]] = childIndex;
+        this.nodes[this.array[parentIndex]] = parentIndex;
+        this.bubbleUp(parentIndex, childData);
+      } else {
+        this.nodes[this.array[childIndex]] = childIndex;
+        this.nodes[this.array[parentIndex]] = parentIndex;
+      }
+    }
+  }
+
+  shouldSwap(childData, parentData) {
+    return childData < parentData;
+  }
+
+  hasNode(data) {
+    // O(1) Constant time complexity
+    return this.nodes[data] >= 0;
+  }
+
+  contains(data) {
+    // O(log n) Logarithmic time complexity
+    let sortedData = this.array;
+    let min = 0;
+    let max = sortedData.length - 1;
+
+    while(min <= max) {
+      let mid = sortedData.length % 2 !== 0 ? min + (max-min)/2 : Math.round(min + (max - min)/2);
+
+      if (data < sortedData[mid]) {
+        if (sortedData[mid - 1] === data || sortedData[mid + 1] === data || sortedData[mid - 2] === data || sortedData[mid + 2] === data) {
+          return true;
+        }
+        max = mid - 2 < 0 ? mid - 1 : mid - 2;
+      } else if (data > sortedData[mid]) {
+        if (sortedData[mid - 1] === data || sortedData[mid + 1] === data || sortedData[mid - 2] === data || sortedData[mid + 2] === data) {
+          return true;
+        }
+        min = mid + 2 >= sortedData.length ? mid + 1 : mid + 2;
+      } else {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
 class Queue {
   constructor() {
     this.items = [];
@@ -774,7 +921,7 @@ class Graph {
     return MST
   }
 
-  PrimMST() {
+  PrimMST(source_node) {
     /*
      * https://en.wikipedia.org/wiki/Prim%27s_algorithm
      * Prim's algorithm
@@ -797,6 +944,30 @@ class Graph {
     **/
 
     // Work in Progress
+    let nodeHeap = new BinaryMinHeap();
+    let vertexEdgesMap = {};
+    let currentNode;
+
+    for (let vertex in this.nodesArray) {
+      if (`${vertex}` === `${source_node}`) {
+        nodeHeap.add(vertex, 0 + nodeHeap.array.length + 1);
+      } else {
+        nodeHeap.add(vertex, Number.MAX_SAFE_INTEGER);
+      }
+    }
+
+    while(nodeHeap.array.length) {
+      currentNode = nodeHeap.removeHead()
+      for (let edge in this.vertexes[currentNode]) {
+        if (this.vertexes[currentNode][edge].weight < nodeHeap.weightsNode[edge]) {
+          nodeHeap.nodesWeight[edge] = this.vertexes[currentNode][edge].weight;
+          nodeHeap.weightsNode[nodeHeap.nodesWeight[edge]] = edge;
+          vertexEdgesMap[edge] = `${currentNode}_${edge}`;
+        }
+      }
+    }
+
+    return Object.values(vertexEdgesMap);
   }
 }
 
@@ -853,15 +1024,17 @@ console.log(zeNewGraph);
 
 
 g.addEdge(0, 1);
+g.addEdge(0, 3);
 g.addEdge(0, 2);
 g.addEdge(1, 2);
-g.addEdge(2, 0);
-g.addEdge(2, 3);
-g.addEdge(3, 1);
+// g.addEdge(1, 3);
 g.addEdge(1, 100);
-g.addEdge(5, 1);
-g.addEdge(6, 2);
+g.addEdge(1, 5);
+g.addEdge(1, 3)
+g.addEdge(2, 3);
+g.addEdge(2, 6);
 g.addEdge(6, 5);
+g.addEdge(3, 5);
 console.log("\n\n", g.vertexes, "\n\n")
 /**
   * actual vertex->edge weights/costs/distances will be randomly generated
@@ -906,6 +1079,6 @@ console.log(g.Dijkstra(6, 100))
 console.log(g.A_Star_Search(6, 100))
 console.log(g.each_A_Star_Search(6))
 console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
-
+console.log("\n\n\n\nPRIM MST IS: ", g.PrimMST(100));
 // algos to implement
 // Prim's MST (Minimum Spanning Tree)
