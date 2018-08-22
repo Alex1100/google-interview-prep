@@ -77,6 +77,35 @@ class LinkedList {
     }
   }
 
+  removeHead() {
+    if (this.size) {
+      let originalHead = this.head;
+      this.head = this.head.next;
+      this.size--;
+      return originalHead;
+    }
+  }
+
+  removeTail() {
+    let originalTail = this.tail;
+    let currentNode = this.head;
+    if (originalTail === currentNode) {
+      this.head.next = null;
+      this.head = null;
+      this.tail = null;
+      this.size--;
+      return originalTail;
+    }
+    while(currentNode.next.data !== this.tail.data) {
+      currentNode = currentNode.next;
+    }
+
+    currentNode.next = null;
+    this.size--;
+    this.tail = currentNode;
+    return originalTail;
+  }
+
   appendToHead(node) {
     let temp = this.head.next;
     let newNode = new Node(node);
@@ -89,6 +118,7 @@ class LinkedList {
     let temp = new Node(node);
     let originalTail = this.tail;
     let currentNode = this.head;
+
     while(currentNode.next.data !== this.tail.data) {
       currentNode = currentNode.next;
     }
@@ -109,8 +139,55 @@ class LinkedList {
       newLinkedList.addNode(currentNode.data);
     }
 
-    newLinkedList.tail = this.tail;
-    return newLinkedList;
+    return { ll: newLinkedList };
+  }
+
+  mergeLinkedLists(lists) {
+    let sortedListNodes = {};
+    let sortedLinkedList = new LinkedList();
+
+    lists.forEach(list => {
+      while(list.head !== null) {
+        let removedFromBack;
+        let removedFromFront;
+
+        if (list.tail) {
+          console.log("YO")
+          removedFromBack = list.removeTail().data;
+          console.log('removed back :: ', removedFromBack)
+          sortedListNodes[removedFromBack] === undefined ? sortedListNodes[removedFromBack] = 1 : sortedListNodes[removedFromBack]++;
+        }
+        if (list.head) {
+          removedFromFront = list.removeHead().data;
+          sortedListNodes[removedFromFront] === undefined ? sortedListNodes[removedFromFront] = 1 : sortedListNodes[removedFromFront]++;
+        }
+      }
+    });
+
+    for (let node in sortedListNodes) {
+      console.log("COUNTER IS: ", node);
+      let counter = sortedListNodes[node];
+      while(counter > 0) {
+        console.log("NODE IS: ", node)
+        sortedLinkedList.addNode(node);
+        counter--;
+      }
+    }
+
+    return sortedLinkedList;
+  }
+
+  listToArray() {
+    let result = [this.head];
+
+    let current = this.head;
+
+    while(current.next !== null) {
+      current = current.next;
+      result.push(current);
+    }
+    result.push(this.tail);
+    return result;
   }
 }
 
@@ -130,9 +207,14 @@ a.addNode(10);
 a.removeNode(8);
 a.removeNode(10);
 a.removeNode(9);
-console.log("LL IS: ", a.tail);
+console.log(a.tail);
 a.prependToTail(10);
 a.appendToHead(11);
-console.log(a.cloneLinkedList().head.next)
+let b = a.cloneLinkedList().ll
+console.log(b);
 console.log(a.contains(11));
 console.log(a.contains(23));
+let c = b.cloneLinkedList().ll;
+console.log(c)
+let merged = a.mergeLinkedLists([a, b, c]);
+console.log(merged.listToArray());
