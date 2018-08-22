@@ -139,7 +139,7 @@ class LinkedList {
       newLinkedList.addNode(currentNode.data);
     }
 
-    return { ll: newLinkedList };
+    return newLinkedList;
   }
 
   mergeLinkedLists(lists) {
@@ -210,11 +210,11 @@ a.removeNode(9);
 console.log(a.tail);
 a.prependToTail(10);
 a.appendToHead(11);
-let b = a.cloneLinkedList().ll
+let b = a.cloneLinkedList()
 console.log(b);
 console.log(a.contains(11));
 console.log(a.contains(23));
-let c = b.cloneLinkedList().ll;
+let c = b.cloneLinkedList();
 console.log(c)
 let merged = a.mergeLinkedLists([a, b, c]);
 console.log(merged.listToArray());
