@@ -467,7 +467,7 @@ class BinarySearchTree {
 
     max_sum(this);
     return result;
-  };
+  }
 
 
   isValidBST(min = -Infinity, max = Infinity){
@@ -483,7 +483,71 @@ class BinarySearchTree {
     // Otherwise check the subtrees recursively
     // tightening the min or max constraint
     return (this.left.isValidBST(min, this.data -1) && this.right.isValidBST(this.data + 1, max))
-  };
+  }
+
+  closestValueRecursive(target, currentDistance = Infinity, closestNode = Infinity) {
+    if (this === null) {
+        return;
+    }
+
+    let tempDistance;
+
+    if (this.data > target) {
+        if (target > this.data) {
+            tempDistance = target - this.data;
+        } else {
+            tempDistance = this.data - target;
+        }
+
+        Math.min(currentDistance, tempDistance) !== currentDistance ?
+            closestNode = this.data :
+            closestNode = closestNode;
+
+        currentDistance = Math.min(currentDistance, tempDistance);
+
+        if (this.left) {
+            closestNode = this.left.closestValueRecursive(target, currentDistance, closestNode);
+        }
+    } else if (this.data < target) {
+        if (target > this.data) {
+            tempDistance = target - this.data;
+        } else {
+            tempDistance = this.data - target;
+        }
+
+        Math.min(currentDistance, tempDistance) !== currentDistance ?
+            closestNode = this.data :
+            closestNode = closestNode;
+
+        currentDistance = Math.min(currentDistance, tempDistance);
+
+        if (this.right) {
+            closestNode = this.right.closestValueRecursive(target, currentDistance, closestNode);
+        }
+    } else if (this.data === target) {
+        return target;
+    }
+
+    return closestNode;
+  }
+
+  closestValueIterative(target) {
+    let diff = Infinity;
+    let answer = null;
+    let root = this;
+    while (root) {
+      if (Math.abs(root.data - target) < diff) {
+        diff = Math.abs(root.data - target)
+        answer = root.data
+      }
+      if (target <= root.data) {
+        root = root.left
+      } else {
+        root = root.right
+      }
+    }
+    return answer;
+  }
 }
 
 let a = new BinarySearchTree(10);
