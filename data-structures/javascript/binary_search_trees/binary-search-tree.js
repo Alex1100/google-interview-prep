@@ -468,6 +468,22 @@ class BinarySearchTree {
     max_sum(this);
     return result;
   };
+
+
+  isValidBST(min = -Infinity, max = Infinity){
+    if (this === null) {
+      return true;
+    }
+
+    // false if this node violates min/max constraint
+    if (this.data < min || this.data > max) {
+      return false;
+    }
+
+    // Otherwise check the subtrees recursively
+    // tightening the min or max constraint
+    return (this.left.isValidBST(min, this.data -1) && this.right.isValidBST(this.data + 1, max))
+  };
 }
 
 let a = new BinarySearchTree(10);
