@@ -88,7 +88,7 @@ class BinarySearchTree {
     this.size++;
   }
 
-  search(input) {
+  findNode(input) {
     if (input === this.data) {
       return this;
     }
@@ -111,14 +111,14 @@ class BinarySearchTree {
 
 
   contains(input) {
-    return !!this.search(input)
+    return !!this.findNode(input)
   };
 
   deleteNode(root, node) {
     if (root.data === null) {
       return;
     }
-    let searchedResult = this.search(node);
+    let searchedResult = this.findNode(node);
 
     if (!searchedResult) {
       return false;
@@ -608,7 +608,7 @@ a.addNode(13);
 a.addNode(180);
 a.addNode(77);
 a.addNode(75);
-console.log("75 FOUND: ??: ", a.search(75));
+console.log("75 FOUND: ??: ", a.findNode(75));
 console.log("BFS: ", a.breadthFirstSearch());
 console.log("IN: ", a.depthFirstSearch('in_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
@@ -632,7 +632,7 @@ console.log(a.depthFirstSearch('in_order'));
 console.log(a.BFSIterative());
 console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
-console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
+console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.findNode(75)))
 console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
 console.log("MIN DEPTH IS: ", a.getMinDepth(), "\n\n\n\n");
 console.log("DELETING FIRST TIME: ", a.deleteNode(100, 100));
