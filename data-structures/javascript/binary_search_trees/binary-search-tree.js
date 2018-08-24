@@ -573,6 +573,30 @@ class BinarySearchTree {
     }
     return answer;
   }
+
+  findParent(node) {
+    if (node === this.data) {
+      return null;
+    }
+
+    if (node < this.data) {
+      if (this.left === null) {
+        return null;
+      } else if (node === this.left.data) {
+        return this;
+      } else {
+        return this.left.findParent(node);
+      }
+    } else {
+      if (this.right === null) {
+        return null;
+      } else if (this.right.data === node) {
+        return this;
+      } else {
+        return this.right.findParent(node);
+      }
+    }
+  }
 }
 
 let a = new BinarySearchTree(100);
@@ -636,3 +660,4 @@ a.addNode(78);
 a.addNode(73);
 a.addNode(71);
 console.log("WHAT:: ", a.breadthFirstSearch())
+console.log("78 PARENT IS: ", a.findParent(78));
