@@ -58,25 +58,33 @@ class BinarySearchTree {
     this.reversed = false;
   }
 
-  addNode(data, root = this) {
-    if (data < this.data) {
-      if (!this.left) {
-        this.left = new BinarySearchTree(data);
-        this.left.parent = this;
-      } else {
-        this.left.addNode(data)
-      }
-    } else if (data > this.data) {
-      if (!this.right) {
-        this.right = new BinarySearchTree(data);
-        this.right.parent = this;
-      } else {
-        this.right.addNode(data);
-      }
+  addNode(data) {
+    if (this.parent === null && this.data === null && !this.left && !this.right) {
+      this.data = data;
+      this.parent = this;
+      this.left = null;
+      this.right = null;
     } else {
-      throw Error('Node Already Exists');
-      this.size--;
+      if (data < this.data) {
+        if (!this.left) {
+          this.left = new BinarySearchTree(data);
+          this.left.parent = this;
+        } else {
+          this.left.addNode(data)
+        }
+      } else if (data > this.data) {
+        if (!this.right) {
+          this.right = new BinarySearchTree(data);
+          this.right.parent = this;
+        } else {
+          this.right.addNode(data);
+        }
+      } else {
+        throw Error('Node Already Exists');
+        this.size--;
+      }
     }
+
     this.size++;
   }
 
@@ -106,22 +114,35 @@ class BinarySearchTree {
     return !!this.search(input)
   };
 
-  deleteNode(node) {
+  deleteNode(root, node) {
+    if (root.data === null) {
+      return;
+    }
     let searchedResult = this.search(node);
 
     if (!searchedResult) {
-      return null;
+      return false;
     } else {
       let parent = searchedResult.parent;
       let counter = 0;
+
 
       if (this.size === 1) {
         this.parent = null;
         this.data = null;
         this.left = null;
         this.right = null;
-        this.size = 0;
-        return searchedResult;
+        return true;
+      } else if (this.size === 2) {
+        if (this.right) {
+          this.right = null;
+          this.size--;
+          return true;
+        } else if (this.left) {
+          this.left = null;
+          this.size--;
+          return true;
+        }
       } else if (!searchedResult.left && !searchedResult.right) {
         if (searchedResult.data < parent.data) {
           parent.left = null;
@@ -146,8 +167,7 @@ class BinarySearchTree {
         while(largestValue.right) {
           largestValue = largestValue.right;
         }
-
-        let largestValuesParent = largestValue.parent.right = 0;
+        let largestValuesParent = largestValue.parent.right = null;
         searchedResult.data = largestValue.data;
       }
     }
@@ -159,7 +179,7 @@ class BinarySearchTree {
     if (this.reversed) {
       let rightLeaf = this.right;
 
-      if (rightLeaf) {
+      if (rightLeaf && rightLeaf.right) {
         while(rightLeaf.right !== null) {
           rightLeaf = rightLeaf.right;
         }
@@ -169,7 +189,7 @@ class BinarySearchTree {
       }
     } else {
       let leftLeaf = this.left;
-      if (leftLeaf) {
+      if (leftLeaf && leftLeaf.left) {
         while(leftLeaf.left !== null) {
           leftLeaf = leftLeaf.left;
         }
@@ -341,20 +361,20 @@ class BinarySearchTree {
       node.right = temp;
       node.reversed = !!node.reversed;
 
-      this.reverseTree(node.left)
-      this.reverseTree(node.right);
+      this.reverseTreeRecursive(node.left)
+      this.reverseTreeRecursive(node.right);
     } else {
       let temp = node.right;
       node.right = node.left;
       node.left = temp;
       node.reversed = !!node.reversed;
 
-      this.reverseTree(node.left);
-      this.reverseTree(node.right);
+      this.reverseTreeRecursive(node.left);
+      this.reverseTreeRecursive(node.right);
     }
   }
 
-  reverseTree(node) {
+  reverseTreeIterative(node) {
     if (!node) {
       return;
     }
@@ -390,6 +410,11 @@ class BinarySearchTree {
 
   findInOrderSuccessor(inputNode) {
     let result = null;
+    if (inputNode === null) {
+      return null;
+    }
+
+    console.log("INPUT NODE IS: ", inputNode)
 
     if(inputNode.right){
       if(inputNode.right.left && !inputNode.right.left.left){
@@ -452,7 +477,7 @@ class BinarySearchTree {
   }
 
   getMaxPathSum() {
-    let result = Number.NEGATIVE_INFINITY;
+    let result = -Infinity;
 
     const max_sum = (node) => {
       if (node == null){
@@ -550,39 +575,64 @@ class BinarySearchTree {
   }
 }
 
-let a = new BinarySearchTree(10);
-a.addNode(5);
-a.addNode(15);
-a.addNode(3);
-a.addNode(7);
+let a = new BinarySearchTree(100);
+a.addNode(50);
+a.addNode(45);
+a.addNode(30);
+a.addNode(70);
 a.addNode(13);
-a.addNode(18);
+a.addNode(180);
 a.addNode(77);
 a.addNode(75);
-// console.log("75 FOUND: ??: ", a.search(75));
-// console.log("BFS: ", a.breadthFirstSearch());
-// console.log("IN: ", a.depthFirstSearch('in_order'));
-// console.log("POST: ", a.depthFirstSearch('post_order'));
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
+console.log("75 FOUND: ??: ", a.search(75));
+console.log("BFS: ", a.breadthFirstSearch());
+console.log("IN: ", a.depthFirstSearch('in_order'));
+console.log("POST: ", a.depthFirstSearch('post_order'));
+console.log("PRE: ", a.depthFirstSearch('pre_order'));
 console.log("NORMAL: ", a.breadthFirstSearch());
-a.reverseTree(a.parent);
+a.reverseTreeIterative(a.parent);
 console.log("REVERSED: ", a.breadthFirstSearch());
-// console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"));
-// console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"));
-// console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"));
-// console.log("CONTAINS 50: ", a.contains(50));
-// a.deleteNode(50);
-// console.log("CONTAINS 50: ", a.contains(50));
-// console.log("A IS::::", a);
-// console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"));
+console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("pre_order"));
+console.log("REVERSED DFS IN ORDER: ", a.depthFirstSearch("in_order"));
+console.log("REVERSED DFS POST ORDER: ", a.depthFirstSearch("post_order"));
+console.log("CONTAINS 50: ", a.contains(50));
+a.deleteNode(100, 55);
+console.log("CONTAINS 50: ", a.contains(50));
+console.log("A IS::::", a);
+console.log("\n\n\nREVERSED DFS PRE ORDER: ", a.depthFirstSearch("in_order"));
 
-// a.reverseTree(a.parent);
-// console.log("MAX IS: ", a.findMax());
-// console.log("MIN IS: ", a.findMin());
-// console.log(a.depthFirstSearch('in_order'));
-// console.log(a.BFSIterative());
-// console.log(a.breadthFirstSearch());
-// console.log("DEPTH IS: ", a.getDepth());
-// console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
-// console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
-// console.log("MIN DEPTH IS: ", a.getMinDepth())
+a.reverseTreeRecursive(a.parent);
+console.log("MAX IS: ", a.findMax());
+console.log("MIN IS: ", a.findMin());
+console.log(a.depthFirstSearch('in_order'));
+console.log(a.BFSIterative());
+console.log(a.breadthFirstSearch());
+console.log("DEPTH IS: ", a.getDepth());
+console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.search(75)))
+console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
+console.log("MIN DEPTH IS: ", a.getMinDepth(), "\n\n\n\n");
+console.log("DELETING FIRST TIME: ", a.deleteNode(100, 100));
+console.log("a is: ", a)
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.deleteNode(77, 77);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.deleteNode(50, 50);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.deleteNode(70, 180);
+console.log("WHAT:: ", a.breadthFirstSearch())
+console.log("A IS: ", a);
+a.deleteNode(70, 13);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.deleteNode(70, 30);
+console.log("WHAT:: ", a.breadthFirstSearch())
+console.log("a is: ", a)
+a.deleteNode(70, 45);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.deleteNode(70, 70);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.addNode(77);
+console.log("WHAT:: ", a.breadthFirstSearch())
+a.addNode(78);
+a.addNode(73);
+a.addNode(71);
+console.log("WHAT:: ", a.breadthFirstSearch())
