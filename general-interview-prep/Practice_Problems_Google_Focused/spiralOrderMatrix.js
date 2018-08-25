@@ -1,3 +1,96 @@
+let matrixA =
+  [
+    [1, 2, 4],
+    [7, 9, 0],
+    [9, 8, 5]
+  ];
+
+
+// n x n matrix only
+const spiralTraversal = (arr) => {
+  if (arr.length < 1) {
+    return arr;
+  }
+
+  let resultArray = [];
+  let count = arr[0].length - 1; // signifies n
+  let rowCount = 0; // row
+  let columnCount = 0; // column
+  let currentDirection = 'right';
+
+  while(resultArray.length < arr.length * arr.length) {
+    if (currentDirection === 'right') {
+      if (resultArray.length < arr.length * arr.length) {
+        if (columnCount <= count) {
+          resultArray.push(arr[rowCount][columnCount]);
+          columnCount++;
+        }
+
+        if (columnCount > count) {
+          // change direction to 'down'
+          // increment our rowCounter
+          currentDirection = 'down';
+          rowCount++;
+          columnCount--;
+        }
+      }
+    }
+    if (currentDirection === 'down') {
+      if (resultArray.length < arr.length * arr.length) {
+        if (rowCount <= count) {
+          resultArray.push(arr[rowCount][columnCount]);
+          rowCount++;
+        }
+
+        if (rowCount > count) {
+          // change direction to 'left'
+          // decrement our columnCount
+          currentDirection = 'left';
+          columnCount--;
+          rowCount--;
+        }
+      }
+    }
+    if (currentDirection === 'left') {
+      if (resultArray.length < arr.length * arr.length) {
+        if (columnCount > -1) {
+          resultArray.push(arr[rowCount][columnCount]);
+          columnCount--;
+        }
+
+        if (columnCount === -1) {
+          // change direction to 'up'
+          // decrement our rowCount
+          // columnCount = 0;
+          currentDirection = 'up';
+          rowCount--;
+          columnCount = 0;
+        }
+      }
+    }
+    if (currentDirection === 'up') {
+      // we need to reset count or n to be n - 1 or count - 1;
+      if (resultArray.length < arr.length * arr.length) {
+        if (columnCount < (count - 1)) {
+          resultArray.push(arr[rowCount][columnCount]);
+          columnCount++;
+        }
+
+        if (columnCount === (count - 1)) {
+          count--;
+          currentDirection = 'right';
+        }
+      }
+    }
+  }
+
+  return resultArray;
+}
+
+console.log("\n", spiralTraversal(matrixA));
+
+
+// m x n  and n x n matrix
 const spiralOrder = (matrix) => {
   const solution = [];
   if(!matrix.length) return solution;
@@ -48,3 +141,6 @@ const spiralOrder = (matrix) => {
   }
   return solution;
 };
+
+console.log("\n", spiralOrder(matrixA));
+

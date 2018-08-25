@@ -17,13 +17,13 @@ const solution = function(read4) {
 
   /**
    * @param {character[]} buf Destination buffer
-   * @param {number} n Maximum number of characters to read
+   * @param {number} x Maximum number of characters to read
    * @return {number} The number of characters read
    */
 
-  return function(buf = a, n = b) {
+  return function(buf, x) {
       let readChars = 0;
-      while(n>0) {
+      while(x>0) {
         if(internalBuf.length === 0) {
           if(read4(internalBuf) === 0) {
             return readChars;
@@ -32,7 +32,7 @@ const solution = function(read4) {
 
         buf.push(internalBuf.shift());
         readChars++;
-        n--;
+        x--;
       }
 
     return readChars;
@@ -40,7 +40,7 @@ const solution = function(read4) {
 };
 
 let buf = "abcdefghijklmnopqrst1234567890".split('');
-let n = 11;
+let x = 13;
 
 const read4 = (buf) => {
   let temp = 4;
@@ -56,4 +56,4 @@ const read4 = (buf) => {
   return temp;
 }
 
-console.log(buf.slice(0, solution(read4, buf, n)(buf, n)).join(''));
+console.log(buf.slice(0, solution(read4)(buf, x)).join(''));

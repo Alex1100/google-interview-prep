@@ -61,13 +61,7 @@ const buildGraph = (equations, values) => {
   return adjList;
 };
 const calcEquation = (equations, values, queries) => {
-    // b = 4
-    // a = 8
-    // 0.75
-    // e = undefined so -1
-    // x = undefined so -1
-
-    const result = [];
+  const result = [];
 
   // Step 1. Build the undirected graph with adjacency list
   const adjList = buildGraph(equations, values);

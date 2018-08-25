@@ -309,13 +309,13 @@ class Graph {
   removeNode(node){
     // Removes a Vertex/Node only if it exists
     if (this.contains(node)) {
-      let refsToRemove = this.vertexes[node];
+      let edgesToRemove = this.vertexes[node];
       delete this.vertexes[node];
-      refsToRemove.forEach(ref => {
-        if(this.vertexes[ref].includes(node)){
-          delete this.vertexes[ref]
+      for (let edge in edgesToRemove) {
+        if(this.vertexes[edge][node] !== null){
+          delete this.vertexes[edge][node];
         }
-      });
+      };
 
 
       const idxToRemove =
@@ -1080,5 +1080,7 @@ console.log(g.A_Star_Search(6, 100))
 console.log(g.each_A_Star_Search(6))
 console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
 console.log("\n\n\n\nPRIM MST IS: ", g.PrimMST(100));
-// algos to implement
-// Prim's MST (Minimum Spanning Tree)
+
+console.log("GRAPH BEFORE REMOVING: ", g);
+console.log(g.removeNode(5));
+console.log('GRAPH AFTER REMOVING: ', g);

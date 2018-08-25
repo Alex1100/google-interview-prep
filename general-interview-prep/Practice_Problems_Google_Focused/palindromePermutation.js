@@ -44,8 +44,6 @@
  // jumps from 3 repeating chars and one solo === 6
  // jumps from 4 repeating chars and one solo === 24
  // jumps from 5 repeating chars and one solo === 120
- // jumps from 6 repeating chars and one solo === and it crashes because we aren't storing values in a heap
- // and instead saving it to memory where our call stack in javascript exceeds it's limit.
  console.log(palindromePermutation('rort').filter(el => el === el.split('').reverse().join('')));
  console.log(palindromePermutation('taco cat').filter(el => el === el.split('').reverse().join('')));
  console.log(palindromePermutation('Abra Cdb Cr').filter(el => el === el.split('').reverse().join('')));
