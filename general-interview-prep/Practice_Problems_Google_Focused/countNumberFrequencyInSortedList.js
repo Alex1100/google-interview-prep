@@ -1,3 +1,9 @@
+// Example of Divide And Conquer
+// O(log n) Time Complexity
+
+// Count number of occurrences
+// (or frequency) in a sorted array
+
 const binarySearchFirst = (arr, value) => {
   let begin = 0;
   let end = arr.length-1;
