@@ -1,6 +1,23 @@
 // Inputs: arr = [5, -4, -1], arr = [5, -5, -1]
 // Outputs: true, false
 
+const improvedIsCycle = (arr) => {
+ let index = 0;
+
+ for (let i = 0; i < arr.length; i++) {
+   index = ((index + arr[index]) % arr.length + arr.length) % arr.length;
+
+   if(index === 0 && i < arr.length - 1) {
+     return false;
+   }
+ }
+
+ return index === 0;
+}
+
+console.log(improvedIsCycle([5, -5, -1]))
+console.log(improvedIsCycle([5, -4, -1]))
+
 const isCycle = (arr) => {
   let current = arr[0];
   let start = arr[0];
@@ -9,7 +26,7 @@ const isCycle = (arr) => {
   let counter = 0;
   // ask edge cases (empty array), (input doesn’t fit in memory)
 
-  while(counter <= arr.length) {
+  while(counter < arr.length + 1) {
     currentIndex = Math.abs(((currentIndex + current) % arr.length + arr.length) % arr.length);
     // ((0 + 5) % (3 + 3) % 3)
     // ((2 - 1) % (3 + 3) % 3)
