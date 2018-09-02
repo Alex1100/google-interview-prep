@@ -11,12 +11,13 @@
 
     window.onload = function(){
       var http = new XMLHttpRequest();
+      let content;
 
       http.onreadystatechange = () => {
         if (http.readyState === 2) {
           console.log(http);
           console.log("REQUEST HAS BEEN SENT. READY STATE 2");
-          var node = document.createElement("h1");
+          let node = document.createElement("h1");
           node.id = "sent";
           node.appendChild(document.createTextNode("Request sent."));
           document.body.appendChild(node);
@@ -27,7 +28,7 @@
 
       http.onloadstart = () => {
         console.log("REQUEST HAS BEEN SET UP. READY STATE 1.");
-        var node = document.createElement("h1");
+        let node = document.createElement("h1");
         node.id = "set_up";
         node.appendChild(document.createTextNode("Request has been set up."));
         document.body.appendChild(node);
@@ -35,7 +36,7 @@
 
       http.onprogress = () => {
         console.log("REQUEST IS IN PROCESS. READY STATE 3");
-        var node = document.createElement("h1");
+        let node = document.createElement("h1");
         node.id = "in_process";
         node.appendChild(document.createTextNode("Request is in process."));
         document.body.appendChild(node);
@@ -43,11 +44,41 @@
 
       http.onloadend = () => {
         console.log("LOADED AND AT READY STATE 4. REQUEST IS COMPLETED");
-        var node = document.createElement("h1");
+        let node = document.createElement("h1");
         node.id = "done";
         node.appendChild(document.createTextNode("Request has been loaded."));
         document.body.appendChild(node);
+        let content =
+          http.response.slice(
+            http.response.indexOf(`<div class="content">`),
+            http.response.indexOf('<span>')
+          ).toDOM();
+
+        addToDOM(content);
       }
+
+      const addToDOM = (domContent) => {
+        setTimeout(() => {
+          window.document.body.appendChild(domContent);
+        }, 1000)
+
+      }
+
+
+      String.prototype.toDOM = function(){
+        let d = document;
+        let i;
+        let a = d.createElement("div");
+        let b = d.createDocumentFragment();
+
+        a.innerHTML=this;
+
+        while(i = a.firstChild){
+          b.appendChild(i);
+        }
+
+        return b;
+      };
 
       http.open("GET", "http://alex1100.software", true);
       http.send();
