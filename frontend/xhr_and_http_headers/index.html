@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XML Request States</title>
+</head>
+<body>
+  <h1 id="header">Request Status In Order of States</h1>
+  <h1 id="initial">Request not initialized</h1>
+  <script type="text/javascript">
+
+    window.onload = function(){
+      var http = new XMLHttpRequest();
+
+      http.onreadystatechange = () => {
+        if (http.readyState === 2) {
+          console.log(http);
+          console.log("REQUEST HAS BEEN SENT. READY STATE 2");
+          var node = document.createElement("h1");
+          node.id = "sent";
+          node.appendChild(document.createTextNode("Request sent."));
+          document.body.appendChild(node);
+        } else {
+          console.log(http);
+        }
+      }
+
+      http.onloadstart = () => {
+        console.log("REQUEST HAS BEEN SET UP. READY STATE 1.");
+        var node = document.createElement("h1");
+        node.id = "set_up";
+        node.appendChild(document.createTextNode("Request has been set up."));
+        document.body.appendChild(node);
+      }
+
+      http.onprogress = () => {
+        console.log("REQUEST IS IN PROCESS. READY STATE 3");
+        var node = document.createElement("h1");
+        node.id = "in_process";
+        node.appendChild(document.createTextNode("Request is in process."));
+        document.body.appendChild(node);
+      }
+
+      http.onloadend = () => {
+        console.log("LOADED AND AT READY STATE 4. REQUEST IS COMPLETED");
+        var node = document.createElement("h1");
+        node.id = "done";
+        node.appendChild(document.createTextNode("Request has been loaded."));
+        document.body.appendChild(node);
+      }
+
+      http.open("GET", "http://alex1100.software", true);
+      http.send();
+    };
+
+
+    /*
+
+      0 - Request not initialized
+      1 - Request has been set up
+      2 - Request has been sent
+      3 - Request is in process
+      4 - Request is complete
+
+     */
+  </script>
+</body>
+</html>

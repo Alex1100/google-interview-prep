@@ -35,4 +35,4 @@ function permut(string) {
   return permutations;
 }
 
-console.log(permut("abc"))
+console.log(permut("LEADER").length)

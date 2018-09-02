@@ -598,51 +598,6 @@ class BinarySearchTree {
     }
   }
 }
-// let a = new BinarySearchTree(50);
-// a.addNode(3);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(4);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(2);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(101);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(0);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(20);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(-10)
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(100);
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
-
-// a.addNode(105)
-// console.log("BFS: ", a.breadthFirstSearch());
-
-// console.log("PRE: ", a.depthFirstSearch('pre_order'));
 
 let a = new BinarySearchTree(100);
 a.addNode(50);
