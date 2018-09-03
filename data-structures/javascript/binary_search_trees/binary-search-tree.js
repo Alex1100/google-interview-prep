@@ -134,8 +134,6 @@ class BinarySearchTree {
     return result;
   }
 
-
-
   contains(input) {
     return !!this.findNodeRecursive(input)
   };
