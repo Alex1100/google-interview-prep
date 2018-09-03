@@ -1,3 +1,31 @@
+/*
+ * Adjacency Matrices are only good
+ * when our graph is dense, meaning if
+ * the number of edges is close to
+ * the number of vertexes^2, or
+ * the number of vertexes^2 is too less
+ * to matter
+ *
+ * In the real world, i.e (Social Network,
+ * Web Crawlers, etc...), Adjacency
+ * Matrices are inefficient. We are
+ * better off using an Edge List,
+ * or in other words, objects and
+ * pointers, to represent our Graph
+ *
+ * Drawback could be that
+ * we use an inefficient amount of
+ * space with Adjacency Matrix
+ * All the non edge indeces where
+ * we have either Weight Infinity,
+ * or a zero to signify it's not
+ * a connected edge at the current
+ * index, will take up more space
+ * relative to the amount of actual
+ * weighted/1-valued indeces in
+ * our Ajacency Matrix
+ */
+
 class Stack {
   constructor() {
     this.items = [];
