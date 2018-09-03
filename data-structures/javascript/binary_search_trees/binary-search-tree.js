@@ -88,7 +88,33 @@ class BinarySearchTree {
     this.size++;
   }
 
-  findNode(input) {
+  containsIterative(input) {
+    let currentNode = this;
+
+    while(currentNode) {
+      if (currentNode.data === input) {
+        return true;
+      } else if (currentNode.data >= input) {
+        if(currentNode.data === input) {
+          return true;
+        }
+
+        if(currentNode.left === null) {
+          return false;
+        } else {
+          currentNode = currentNode.left;
+        }
+      } else if (currentNode.data < input) {
+        if (currentNode.right === null) {
+          return false;
+        } else {
+          currentNode = currentNode.right;
+        }
+      }
+    }
+  }
+
+  findNodeRecursive(input) {
     if (input === this.data) {
       return this;
     }
@@ -111,7 +137,7 @@ class BinarySearchTree {
 
 
   contains(input) {
-    return !!this.findNode(input)
+    return !!this.findNodeRecursive(input)
   };
 
   deleteNode(root, node) {
