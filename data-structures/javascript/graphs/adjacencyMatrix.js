@@ -271,15 +271,17 @@ adjList.addEdge('H', 'F');
 adjList.addEdge('B', 'E');
 adjList.addEdge('E', 'H');
 adjList.addEdge('F', 'B');
-console.log("\nADJ MATRIX IS: ", adjList.adjacencyMatrix);
+console.log("\nADJ MATRIX IS: ", adjList);
+console.log("\n\nSHOULD BE: [ 'E', 'B', 'C', 'D', 'A', 'F', 'G', 'H' ]");
 console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
-adjList.removeVertex('A');
-console.log("\nADJ MATRIX IS: ", adjList.adjacencyMatrix);
-console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
-adjList.removeEdge('C', 'G');
-console.log("\n\nADJ MATRIX IS: ", adjList);
-console.log(adjList.hasEdge('H', 'E'))
-console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+// console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+// adjList.removeVertex('A');
+// console.log("\nADJ MATRIX IS: ", adjList.adjacencyMatrix);
+// console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
+// console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+// adjList.removeEdge('C', 'G');
+// console.log("\n\nADJ MATRIX IS: ", adjList);
+// console.log(adjList.hasEdge('H', 'E'))
+// console.log(`should be [ 'E', 'F', 'G', 'H', 'B', 'D' ]`);
+// console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
+// console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));

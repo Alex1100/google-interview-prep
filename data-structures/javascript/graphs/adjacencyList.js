@@ -269,15 +269,15 @@ class LinkedList {
   }
 
   listToArray() {
-    let result = [this.head];
+    let result = [this.head.data];
 
     let current = this.head;
 
     while(current.next !== null) {
       current = current.next;
-      result.push(current);
+      result.push(current.data);
     }
-    result.push(this.tail);
+    // result.push(this.tail);
     return result;
   }
 }
@@ -357,29 +357,70 @@ class Graph {
     this.adjacencyList[toVertex].removeNode(fromVertex);
   }
 
-  // depthFirstSearch(source_node) {
+  DFSUtil(source_node, visited, stack){
+    if (stack.size === this.nodesList.length) {
+      return;
+    }
 
-  // }
+    if (!visited[source_node]) {
+      stack.insert(source_node);
+      visited[source_node] = true;
+    }
 
-  // breadthFirstSearch(source_node) {
+    this.adjacencyList[source_node]
+    .listToArray()
+    .forEach((node, index) => {
+      if(!visited[node]){
+        this.DFSUtil(node, visited, stack);
+      }
+    });
+  }
 
-  // }
+  depthFirstSearch(source_node) {
+    let visited = {},
+        stack   = new Stack();
+
+    this.DFSUtil(source_node, visited, stack);
+    return stack.items;
+  }
+
+
+  BFSUtil(source_node, visited, queue, result_queue) {
+
+  }
+
+  breadthFirstSearch(source_node) {
+    let visited      = {},
+        queue        = new Queue(),
+        result_queue = new Queue();
+
+    this.BFSUtil(source_node, visited, queue, result_queue);
+    return result_queue.items;
+  }
 }
 
 
 let adjList = new Graph();
 
-adjList.addVertex(100);
-adjList.addVertex(200);
-adjList.addVertex(45);
-adjList.addVertex(73);
-adjList.addVertex(23);
-adjList.addVertex(1000);
-
-adjList.addEdge(100, 73);
-adjList.addEdge(1000, 45);
-adjList.addEdge(200, 100);
-
-console.log(adjList.adjacencyList);
-
-
+adjList.addVertex('A');
+adjList.addVertex('B');
+adjList.addVertex('C');
+adjList.addVertex('D');
+adjList.addVertex('E');
+adjList.addVertex('F');
+adjList.addVertex('G');
+adjList.addVertex('H');
+// console.log("ADJ MATRIX IS: ", adjList.adjacencyList);
+adjList.addEdge('A', 'B');
+adjList.addEdge('A', 'C');
+adjList.addEdge('A', 'D');
+adjList.addEdge('C', 'G');
+adjList.addEdge('G', 'H');
+adjList.addEdge('D', 'H');
+adjList.addEdge('H', 'F');
+adjList.addEdge('B', 'E');
+adjList.addEdge('E', 'H');
+adjList.addEdge('F', 'B');
+// console.log("\n\nADJJJ IS: ", adjList.adjacencyList)
+console.log("\n\n\nADJ DFS IS: ", adjList.depthFirstSearch('E'));
+console.log(adjList.nodesList);
