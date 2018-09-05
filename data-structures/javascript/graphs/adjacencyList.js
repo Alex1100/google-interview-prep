@@ -243,9 +243,7 @@ class LinkedList {
         let removedFromFront;
 
         if (list.tail) {
-          console.log("YO")
           removedFromBack = list.removeTail().data;
-          console.log('removed back :: ', removedFromBack)
           sortedListNodes[removedFromBack] === undefined ? sortedListNodes[removedFromBack] = 1 : sortedListNodes[removedFromBack]++;
         }
         if (list.head) {
@@ -256,10 +254,8 @@ class LinkedList {
     });
 
     for (let node in sortedListNodes) {
-      console.log("COUNTER IS: ", node);
       let counter = sortedListNodes[node];
       while(counter > 0) {
-        console.log("NODE IS: ", node)
         sortedLinkedList.addNode(node);
         counter--;
       }
@@ -277,7 +273,7 @@ class LinkedList {
       current = current.next;
       result.push(current.data);
     }
-    // result.push(this.tail);
+
     return result;
   }
 }
@@ -386,7 +382,32 @@ class Graph {
 
 
   BFSUtil(source_node, visited, queue, result_queue) {
+    if (result_queue.size === this.nodesList.length) {
+      return;
+    }
 
+    if (!visited[source_node]) {
+      visited[source_node] = true;
+      result_queue.enqueue(source_node);
+    }
+
+    if (queue.contains(source_node)) {
+      queue.dequeue();
+    }
+
+    this.adjacencyList[source_node]
+    .listToArray()
+    .forEach((node, index) => {
+      if (!visited[node]) {
+        visited[node] = true;
+        queue.enqueue(node);
+        result_queue.enqueue(node);
+      }
+    });
+
+    queue.items.forEach(node => {
+      this.BFSUtil(node, visited, queue, result_queue);
+    });
   }
 
   breadthFirstSearch(source_node) {
@@ -410,7 +431,7 @@ adjList.addVertex('E');
 adjList.addVertex('F');
 adjList.addVertex('G');
 adjList.addVertex('H');
-// console.log("ADJ MATRIX IS: ", adjList.adjacencyList);
+console.log("ADJ LIST IS: ", adjList.adjacencyList);
 adjList.addEdge('A', 'B');
 adjList.addEdge('A', 'C');
 adjList.addEdge('A', 'D');
@@ -421,6 +442,17 @@ adjList.addEdge('H', 'F');
 adjList.addEdge('B', 'E');
 adjList.addEdge('E', 'H');
 adjList.addEdge('F', 'B');
-// console.log("\n\nADJJJ IS: ", adjList.adjacencyList)
-console.log("\n\n\nADJ DFS IS: ", adjList.depthFirstSearch('E'));
-console.log(adjList.nodesList);
+console.log("\nADJ LIST IS: ", adjList);
+console.log("\n\nSHOULD BE: [ 'E', 'B', 'C', 'D', 'A', 'F', 'G', 'H' ]");
+console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
+console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+adjList.removeVertex('A');
+console.log("\nADJ LIST IS: ", adjList.adjacencyList);
+console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
+console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+adjList.removeEdge('C', 'G');
+console.log("\n\nADJ LIST IS: ", adjList);
+console.log(adjList.hasEdge('H', 'E'))
+console.log(`should be [ 'E', 'F', 'G', 'H', 'B', 'D' ]`);
+console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
+console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
