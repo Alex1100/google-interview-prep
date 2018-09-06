@@ -322,14 +322,7 @@ class Graph {
 
     let removed = this.adjacencyList[vertex];
     delete this.adjacencyList[vertex];
-
-    for (let vertexIndex = 0; vertexIndex < this.nodesList.length; vertexIndex++) {
-      if (this.adjacencyList[this.nodesList[vertexIndex]]) {
-        if (this.adjacencyList[this.nodesList[vertexIndex]].contains(vertex)) {
-          this.adjacencyList[this.nodesList[vertexIndex]].removeNode(vertex);
-        }
-      }
-    }
+    this.removeEdge(vertex);
 
     return removed;
   }
