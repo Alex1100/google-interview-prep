@@ -371,35 +371,35 @@ class HashTable {
 }
 
 
-let a = new HashTable(10);
+let ht = new HashTable(10);
 
 console.log(a.hash(78))
-a.insert("Doug", "Manager");
+ht.insert("Doug", "Manager");
 console.log(a.get("Doug"));
-a.insert("Alex", "Software Engineer");
-console.log(a.get("Alex"));
-a.insert("Will", "UX/UI Designer");
-console.log(a.get("Will"));
-a.insert("Steve", "Designer");
-console.log(a.get("Steve"));
-a.insert("Frank", "Doctor");
-console.log(a.get("Frank"));
-a.insert("Alex", "Mechanic")
-console.log(a.get("Alex"));
-console.log(a.get("Q"));
-console.log(a.contains("Q"));
-console.log(a.contains("Alex"));
-console.log(a.insert("John", "Pastor"));
-console.log(a.insert("Jean", "Artist"))
-console.log(a.insert("Jenna", "Jeweler"))
-console.log(a.remove("Alex"));
-console.log("\n\n\n", a.storage);
-console.log("\n\nSIZE: ", a.size, a.storageLimit);
-a.remove("Jenna");
-a.remove("John");
-a.remove("Jean");
-a.remove("Steve");
-a.remove("Will");
-a.remove("Frank");
-console.log("\n\n\n", a.storage);
-console.log("\n\nSIZE: ", a.size, a.storageLimit);
+ht.insert("Alex", "Software Engineer");
+console.log(ht.get("Alex"));
+ht.insert("Will", "UX/UI Designer");
+console.log(ht.get("Will"));
+ht.insert("Steve", "Designer");
+console.log(ht.get("Steve"));
+ht.insert("Frank", "Doctor");
+console.log(ht.get("Frank"));
+ht.insert("Alex", "Mechanic")
+console.log(ht.get("Alex"));
+console.log(ht.get("Q"));
+console.log(ht.contains("Q"));
+console.log(ht.contains("Alex"));
+console.log(ht.insert("John", "Pastor"));
+console.log(ht.insert("Jean", "Artist"))
+console.log(ht.insert("Jenna", "Jeweler"))
+console.log(ht.remove("Alex"));
+console.log("\n\n\n", ht.storage);
+console.log("\n\nSIZE: ", ht.size, ht.storageLimit);
+ht.remove("Jenna");
+ht.remove("John");
+ht.remove("Jean");
+ht.remove("Steve");
+ht.remove("Will");
+ht.remove("Frank");
+console.log("\n\n\n", ht.storage);
+console.log("\n\nSIZE: ", ht.size, a.storageLimit);
