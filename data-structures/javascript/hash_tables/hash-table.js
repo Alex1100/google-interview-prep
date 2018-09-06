@@ -1,3 +1,6 @@
+const EventEmitter = require('events');
+class ResizeHashEmitter extends EventEmitter {};
+
 class Node {
   constructor(data) {
     this.data = data;
@@ -191,11 +194,7 @@ class LinkedList {
   }
 }
 
-// need to add resizing of storage
-// aka open addressing
-
-// already added closed-addressing
-// aka seperational chaining
+// With open and closed addressing
 class HashTable {
   constructor(initialSize) {
     this.storage = [];
@@ -225,12 +224,64 @@ class HashTable {
 
       return hash % this.storageLimit;
     }
+
+    this.resizingModule = new ResizeHashEmitter();
+    this.resizingModule.on('expand', () => {
+      let tempVals = [];
+
+      for (let i = 0; i < this.storage.length; i++) {
+        if (this.storage[i].head) {
+          tempVals.push(...this.storage[i].listToArray());
+        }
+      }
+
+      this.storage = [];
+
+      for (let j = 0; j < this.storageLimit * 2; j++) {
+        this.storage[j] = new LinkedList();
+      }
+
+      this.storageLimit *= 2;
+      this.size = 0;
+
+      for (let z = 0; z < tempVals.length; z++) {
+        this.insert(...tempVals[z]);
+      }
+    });
+
+    this.resizingModule.on('shrink', () => {
+      let tempVals = [];
+
+      for (let i = 0; i < this.storage.length; i++) {
+        if (this.storage[i].head) {
+          tempVals.push(...this.storage[i].listToArray());
+        }
+      }
+
+      this.storage = [];
+      this.size = 0;
+
+      for (let j = 0; j < Math.floor(this.storageLimit / 2); j++) {
+        this.storage[j] = new LinkedList();
+      }
+
+      this.storageLimit = Math.floor(this.storageLimit / 2);
+
+      for (let z = 0; z < tempVals.length; z++) {
+        this.insert(...tempVals[z]);
+      }
+    });
   }
 
   insert(key, val) {
+    if (this.size === Math.floor(this.storageLimit * 0.625)) {
+      this.expand();
+    }
+
     let bucketIndex = this.hash(key);
     if (this.storage[bucketIndex].head === null) {
       this.storage[bucketIndex].addNode([key, val])
+      this.size++;
       return true;
     }
 
@@ -247,11 +298,15 @@ class HashTable {
     }
 
     this.storage[bucketIndex].addNode([key, val]);
+    this.size++;
     return true;
   }
 
 
   remove(key) {
+    if (this.size <= Math.floor(this.storageLimit * 0.40)) {
+      this.shrink();
+    }
     const bucketIndex = this.hash(key);
     if (bucketIndex > this.storageLimit) {
       return false;
@@ -272,6 +327,7 @@ class HashTable {
 
     if (target) {
       const removed = currentBucket.removeNode(target);
+      this.size--;
       return removed;
     } else {
       return false;
@@ -298,11 +354,19 @@ class HashTable {
   }
 
   contains(key) {
-    return !a.get(key) === false
+    return !this.get(key) === false
   }
 
   hash(key) {
     return this.x(key)
+  }
+
+  expand() {
+    this.resizingModule.emit('expand');
+  }
+
+  shrink() {
+    this.resizingModule.emit('shrink');
   }
 }
 
@@ -325,5 +389,17 @@ console.log(a.get("Alex"));
 console.log(a.get("Q"));
 console.log(a.contains("Q"));
 console.log(a.contains("Alex"));
+console.log(a.insert("John", "Pastor"));
+console.log(a.insert("Jean", "Artist"))
+console.log(a.insert("Jenna", "Jeweler"))
 console.log(a.remove("Alex"));
-
+console.log("\n\n\n", a.storage);
+console.log("\n\nSIZE: ", a.size, a.storageLimit);
+a.remove("Jenna");
+a.remove("John");
+a.remove("Jean");
+a.remove("Steve");
+a.remove("Will");
+a.remove("Frank");
+console.log("\n\n\n", a.storage);
+console.log("\n\nSIZE: ", a.size, a.storageLimit);
