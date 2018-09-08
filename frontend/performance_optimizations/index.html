@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <ul>Hello</ul>
+  <script>
+    setTimeout(() => {
+        // Insert 20,000 items
+      const total = 20000;
+        // Insert 20 at a time. If you feel that performance is not good, reduce it.
+      const once = 20;
+        // Calculate the number of times it needs to render the all data
+      const loopCount = total / once;
+      let countOfRender = 0;
+      let ul = document.querySelector("ul");
+      function add() {
+          // Optimize performance, inserting data does not cause reflow
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < once; i++) {
+          const li = document.createElement("li");
+          li.innerText = Math.floor(Math.random() * total) + " " + countOfRender;
+          fragment.appendChild(li);
+        }
+        ul.appendChild(fragment);
+        countOfRender += 1;
+        loop();
+      }
+      function loop() {
+        if (countOfRender < loopCount) {
+          console.log("COUNT: ", countOfRender, loopCount)
+          window.requestAnimationFrame(add);
+        }
+      }
+      loop();
+    }, 0);
+  </script>
+</body>
+</html>
