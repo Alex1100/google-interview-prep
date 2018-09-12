@@ -340,7 +340,18 @@ class Graph {
     return this.hasEdge(fromNode, toNode) && this.hasEdge(toNode, fromNode);
   }
 
-  addEdge(fromNode, toNode){
+  addEdge(fromNode, toNode) {
+    let args = [fromNode, toNode];
+    if (this.sameNodes(...args) || this.hasAllEdges(...args)) {
+      return;
+    }
+
+    this.vertexes[fromNode][toNode] = {};
+    this.addEdgeWeight(...args);
+    this.addHeuristicCost(...args);
+  }
+
+  addEdges(fromNode, toNode){
     // Add an Edge between two Vertexes/Nodes
     let args = [fromNode, toNode]
     if (this.sameNodes(...args) || this.hasAllEdges(...args)) {
@@ -353,11 +364,21 @@ class Graph {
     this.addHeuristicCosts(...args);
   }
 
+  addEdgeWeight(fromNode, toNode) {
+    let weight = Math.floor(Math.random() * Math.floor(200) + 1);
+    this.vertexes[fromNode][toNode]['weight'] = weight;
+  }
+
   addEdgeWeights(fromNode, toNode) {
     // Assign a random Weight/Cost/Distance between to Vertexes/Nodes
     let weight = Math.floor(Math.random() * Math.floor(200) + 1);
     this.vertexes[fromNode][toNode]['weight'] = weight;
     this.vertexes[toNode][fromNode]['weight'] = weight;
+  }
+
+  addHeuristicCost(fromNode, toNode) {
+    let weight = Math.floor(Math.random() * (-400, 50) + 1);
+    this.vertexes[fromNode][toNode]['heuristic'] = weight;
   }
 
   addHeuristicCosts(fromNode, toNode) {
@@ -969,6 +990,96 @@ class Graph {
 
     return Object.values(vertexEdgesMap);
   }
+
+  DFSUtil(source_node, visited, visited_data){
+    if (visited_data.size === this.nodesArray.length) {
+      return;
+    }
+
+    if (!visited[source_node]) {
+      visited_data.insert(source_node);
+      visited[source_node] = true;
+    }
+
+    for(let node in this.vertexes) {
+      if(!visited[node]){
+        this.DFSUtil(node, visited, visited_data);
+      }
+    }
+  }
+
+  DFS(node){
+    let visited = {};
+    let visited_data = new Stack();
+
+    /**
+      * DFS checks a node and then jumps into the node it checked form it's parent
+      * to see the next edged node and it will keep doing this for all
+      * unvisited_nodes
+      *
+      * DFS likes to jump between Vertexes through a Node's edges
+      * While BFS likes to go through each edge for a given Node/Vertex before moving
+      * on to another Node that might or might not be included in the current Node/Vertex
+      *
+      * Typically we would use a Stack for Depth First Search (LIFO)
+      */
+
+
+    this.DFSUtil(node.toString(), visited, visited_data);
+    return visited_data.items;
+  }
+
+  hasCycleUtil(source_node, visited, visited_data) {
+    if (!visited[source_node]) {
+      visited_data.insert(source_node);
+      visited[source_node] = true;
+
+      for(let node in this.vertexes[source_node]) {
+        if(!visited[node] && this.hasCycleUtil(node, visited, visited_data)) {
+          return true;
+        } else if (visited_data.contains(node)){
+          return true;
+        }
+      }
+    }
+
+    visited_data.pop();
+    return false;
+  }
+
+  hasCycle() {
+    let source_node = this.nodesArray[0];
+    let visited = {};
+    let visited_data = new Stack();
+
+    return this.hasCycleUtil(source_node.toString(), visited, visited_data);
+  }
+
+  findCycleUtil(source_node, visited, visited_data) {
+    if (!visited[source_node]) {
+      visited_data.insert(source_node);
+      visited[source_node] = true;
+
+      for (let node in this.vertexes[source_node]) {
+        if (!visited[node] && this.findCycleUtil(node, visited, visited_data)) {
+          return node;
+        } else if (visited_data.contains(node)) {
+          return node;
+        }
+      }
+    }
+
+    visited_data.pop();
+    return null;
+  }
+
+  findCycle() {
+    let source_node = this.nodesArray[0];
+    let visited = {};
+    let visited_data = new Stack();
+
+    return this.findCycleUtil(source_node.toString(), visited, visited_data);
+  }
 }
 
 
@@ -1023,18 +1134,18 @@ console.log(zeNewGraph);
   */
 
 
-g.addEdge(0, 1);
-g.addEdge(0, 3);
-g.addEdge(0, 2);
-g.addEdge(1, 2);
-// g.addEdge(1, 3);
-g.addEdge(1, 100);
-g.addEdge(1, 5);
-g.addEdge(1, 3)
-g.addEdge(2, 3);
-g.addEdge(2, 6);
-g.addEdge(6, 5);
-g.addEdge(3, 5);
+g.addEdges(0, 1);
+g.addEdges(0, 3);
+g.addEdges(0, 2);
+g.addEdges(1, 2);
+// g.addEdges(1, 3);
+g.addEdges(1, 100);
+g.addEdges(1, 5);
+g.addEdges(1, 3)
+g.addEdges(2, 3);
+g.addEdges(2, 6);
+g.addEdges(6, 5);
+g.addEdges(3, 5);
 console.log("\n\n", g.vertexes, "\n\n")
 /**
   * actual vertex->edge weights/costs/distances will be randomly generated
@@ -1084,3 +1195,30 @@ console.log("\n\n\n\nPRIM MST IS: ", g.PrimMST(100));
 console.log("GRAPH BEFORE REMOVING: ", g);
 console.log(g.removeNode(5));
 console.log('GRAPH AFTER REMOVING: ', g);
+
+console.log("\n\nGRAPH HAS A CYCLE?: ", g.hasCycle());
+console.log("\n\nFIND CYCLE NODE: ", g.findCycle());
+
+let newGraph = new Graph();
+
+newGraph.addNode(10);
+newGraph.addNode(12);
+newGraph.addNode(14);
+newGraph.addNode(16);
+newGraph.addNode(100);
+
+newGraph.addEdge(10, 100);
+newGraph.addEdge(10, 12);
+newGraph.addEdge(12, 14);
+newGraph.addEdge(100, 16);
+
+console.log("\n\nNEW GRAPH IS: ", newGraph);
+console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
+console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
+
+newGraph.addEdge(100, 12);
+newGraph.addEdge(14, 100);
+
+console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
+console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
+
