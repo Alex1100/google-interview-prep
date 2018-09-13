@@ -79,7 +79,7 @@ Just like functional instantiation, we start with a function with an empty objec
     }
 
 
-    // implementation of functional instantiation
+    // implementation of functional shared instantiation
     let cat = Animal('cat', 'whiskers');
     cat.eat();
     cat.makeSound();
@@ -121,7 +121,7 @@ To start you will create all the methods on a separate object. Then you create a
     }
 
 
-    // implementation of functional instantiation
+    // implementation of prototypal instantiation
     let cat = Animal('cat', 'whiskers');
     cat.eat();
     cat.makeSound();
