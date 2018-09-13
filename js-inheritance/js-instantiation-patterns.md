@@ -6,6 +6,7 @@
 - [Functional Shared](#functional-shared)
 - [Prototypal](#prototypal)
 - [Psuedoclassical](#psuedoclassical)
+- [Classical](#classical)
 
 # Functional
 
