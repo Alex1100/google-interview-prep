@@ -173,9 +173,9 @@ To start you create a new function and create properties using the “this” ke
 ```
 
 
-# ES6 `Classical`
+# Classical
 
-JavaScript classes, introduced in ECMAScript 2015, are primarily syntactical sugar over JavaScript’s existing prototype-based inheritance. The class syntax does not introduce a new object-oriented inheritance model to JavaScript.
+JavaScript classes, introduced in ECMAScript 2015 (ES6), are primarily syntactical sugar over JavaScript’s existing prototype-based inheritance. The class syntax does not introduce a new object-oriented inheritance model to JavaScript.
 
 You instantiate it using `new Animal` instead of `Object.create(animal)` — this is the shorter and more idiomatic way.
 
