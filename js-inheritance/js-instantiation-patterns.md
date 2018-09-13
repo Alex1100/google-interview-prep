@@ -12,7 +12,7 @@ With functional instantiation, we first create a function. Inside the function w
 Every time the function is called we will have access to the methods that were created. Here is an example of functional instantiation:
 
 ```js
-    const Animal = function(species, name) => {
+    const Animal = (species, name) => {
         let obj = {};
         obj.species = species;
         obj.name = name;
@@ -52,7 +52,7 @@ One of the downsides of functional instantiation is that you duplicate methods i
 Just like functional instantiation, we start with a function with an empty object inside and define properties within the function. Methods are defined in another object. We then extend our object with these methods. In the end, we return the object. Every object created by functional shared instantiation will have a pointer to the same methods without duplication. Here is an example of functional shared instantiation.
 
 ```js
-    const Animal = function(species, name) => {
+    const Animal = (species, name) => {
         let obj = {};
         obj.species = species;
         obj.name = name;
@@ -101,7 +101,7 @@ To start you will create all the methods on a separate object. Then you create a
 
 
 ```js
-    const Animal = function(species, name) => {
+    const Animal = (species, name) => {
         let obj = Object.create(objMethods);
         obj.species = species;
         obj.name = name;
