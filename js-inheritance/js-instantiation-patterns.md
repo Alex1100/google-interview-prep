@@ -1,4 +1,5 @@
 <a href="https://medium.com/dailyjs/instantiation-patterns-in-javascript-8fdcf69e8f9b">Thanks Jennifer Bland</a>
+
 **Table of Contents**
 
 - [Functional](#functional)
