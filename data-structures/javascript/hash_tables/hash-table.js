@@ -373,9 +373,9 @@ class HashTable {
 
 let ht = new HashTable(10);
 
-console.log(a.hash(78))
+console.log(ht.hash(78))
 ht.insert("Doug", "Manager");
-console.log(a.get("Doug"));
+console.log(ht.get("Doug"));
 ht.insert("Alex", "Software Engineer");
 console.log(ht.get("Alex"));
 ht.insert("Will", "UX/UI Designer");
@@ -402,4 +402,4 @@ ht.remove("Steve");
 ht.remove("Will");
 ht.remove("Frank");
 console.log("\n\n\n", ht.storage);
-console.log("\n\nSIZE: ", ht.size, a.storageLimit);
+console.log("\n\nSIZE: ", ht.size, ht.storageLimit);
