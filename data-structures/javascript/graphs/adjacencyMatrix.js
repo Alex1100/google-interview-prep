@@ -138,7 +138,12 @@ class Graph {
     this.adjacencyMatrix.push(this.nodesArray.map(el => el = 0));
   }
 
+
   addEdge(fromVertex, toVertex) {
+    this.adjacencyMatrix[this.vertexIndexList[fromVertex]][this.vertexIndexList[toVertex]] = 1;
+  }
+
+  addEdges(fromVertex, toVertex) {
     this.adjacencyMatrix[this.vertexIndexList[fromVertex]][this.vertexIndexList[toVertex]] = 1;
     this.adjacencyMatrix[this.vertexIndexList[toVertex]][this.vertexIndexList[fromVertex]] = 1;
   }
@@ -248,6 +253,66 @@ class Graph {
     this.BFSUtil(source_node, visited, queue, result);
     return result.items;
   }
+
+  hasCycleUtil(source_node, visited, visited_stack) {
+    if (!visited[source_node]) {
+      visited_stack.insert(source_node);
+      visited[source_node] = true;
+
+      let currentEdges = this.adjacencyMatrix[this.vertexIndexList[source_node]];
+
+      for (let node = 0; node < currentEdges.length; node++) {
+        if (currentEdges[node] === 1) {
+          if (!visited[this.nodesArray[node]] && this.hasCycleUtil(this.nodesArray[node], visited, visited_stack)) {
+            return true;
+          } else if (visited_stack.contains(this.nodesArray[node])) {
+            return true;
+          }
+        }
+      }
+    }
+
+    visited_stack.pop();
+    return false;
+  }
+
+  hasCycle() {
+    let source_node = this.nodesArray[0];
+    let visited = {};
+    let visited_stack = new Stack();
+
+    return this.hasCycleUtil(source_node, visited, visited_stack);
+  }
+
+  findCycleUtil(source_node, visited, visited_stack) {
+    if (!visited[source_node]) {
+      visited_stack.insert(source_node);
+      visited[source_node] = true;
+
+      let currentEdges = this.adjacencyMatrix[this.vertexIndexList[source_node]];
+
+      for (let node = 0; node < currentEdges.length; node++) {
+        if (currentEdges[node] === 1) {
+          if (!visited[this.nodesArray[node]] && this.findCycleUtil(this.nodesArray[node], visited, visited_stack)) {
+            return this.nodesArray[node];
+          } else if (visited_stack.contains(this.nodesArray[node])) {
+            return this.nodesArray[node];
+          }
+        }
+      }
+    }
+
+    visited_stack.pop();
+    return null;
+  }
+
+  findCycle() {
+    let source_node = this.nodesArray[0];
+    let visited = {};
+    let visited_stack = new Stack();
+
+    return this.findCycleUtil(source_node, visited, visited_stack)
+  }
 }
 
 
@@ -261,16 +326,16 @@ adjList.addVertex('F');
 adjList.addVertex('G');
 adjList.addVertex('H');
 console.log("ADJ MATRIX IS: ", adjList.adjacencyMatrix);
-adjList.addEdge('A', 'B');
-adjList.addEdge('A', 'C');
-adjList.addEdge('A', 'D');
-adjList.addEdge('C', 'G');
-adjList.addEdge('G', 'H');
-adjList.addEdge('D', 'H');
-adjList.addEdge('H', 'F');
-adjList.addEdge('B', 'E');
-adjList.addEdge('E', 'H');
-adjList.addEdge('F', 'B');
+adjList.addEdges('A', 'B');
+adjList.addEdges('A', 'C');
+adjList.addEdges('A', 'D');
+adjList.addEdges('C', 'G');
+adjList.addEdges('G', 'H');
+adjList.addEdges('D', 'H');
+adjList.addEdges('H', 'F');
+adjList.addEdges('B', 'E');
+adjList.addEdges('E', 'H');
+adjList.addEdges('F', 'B');
 console.log("\nADJ MATRIX IS: ", adjList);
 console.log("\n\nSHOULD BE: [ 'E', 'B', 'C', 'D', 'A', 'F', 'G', 'H' ]");
 console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
@@ -285,3 +350,20 @@ console.log(adjList.hasEdge('H', 'E'))
 console.log(`should be [ 'E', 'F', 'G', 'H', 'B', 'D' ]`);
 console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
 console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+console.log("\n\nGRAPH CONTAINS CYCLE: ", adjList.hasCycle());
+console.log("\n\nGRAPH CYCLES AT: ", adjList.findCycle());
+
+let newGraph = new Graph();
+
+newGraph.addVertex(10);
+newGraph.addVertex(12);
+newGraph.addVertex(14);
+newGraph.addVertex(16);
+newGraph.addVertex(100);
+
+newGraph.addEdge(10, 100);
+newGraph.addEdge(10, 12);
+newGraph.addEdge(12, 14);
+console.log("\n\n\nGRAPH CONTAINS CYCLE SHOULD BE FALSE: ", newGraph, "\n\n\n\n", newGraph.hasCycle());
+console.log("\n\nGRAPH CYCLES AT: ", newGraph.findCycle());
+
