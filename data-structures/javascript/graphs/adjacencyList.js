@@ -312,6 +312,16 @@ class Graph {
     }
 
     this.adjacencyList[fromVertex].addNode(toVertex);
+  }
+
+  addEdges(fromVertex, toVertex) {
+    let args = [fromVertex, toVertex]
+
+    if (this.sameVertexes(...args) || this.hasEdges(...args)) {
+      return;
+    }
+
+    this.adjacencyList[fromVertex].addNode(toVertex);
     this.adjacencyList[toVertex].addNode(fromVertex);
   }
 
@@ -322,6 +332,7 @@ class Graph {
 
     let removed = this.adjacencyList[vertex];
     delete this.adjacencyList[vertex];
+    this.nodesList = this.nodesList.filter(el => el !== vertex)
     this.removeEdge(vertex);
 
     return removed;
@@ -411,6 +422,73 @@ class Graph {
     this.BFSUtil(source_node, visited, queue, result_queue);
     return result_queue.items;
   }
+
+  hasCycleUtil(source_node, visited, visited_stack) {
+    if (this.adjacencyList[source_node].head === null) {
+      return;
+    }
+
+    if (!visited[source_node]) {
+      visited_stack.insert(source_node);
+      visited[source_node] = true;
+
+      let arr = this.adjacencyList[source_node]
+      .listToArray()
+
+      for (let node = 0; node < arr.length; node++) {
+        if (!visited[arr[node]] && this.hasCycleUtil(arr[node], visited, visited_stack)) {
+          return true;
+        } else if (visited_stack.contains(arr[node])) {
+          return true;
+        }
+      }
+    }
+
+    visited_stack.pop();
+    return false;
+  }
+
+  hasCycle() {
+    let source_node = this.nodesList[0];
+    let visited = {};
+    let visited_stack = new Stack();
+
+    return this.hasCycleUtil(source_node, visited, visited_stack);
+  }
+
+
+  findCycleUtil(source_node, visited, visited_stack) {
+    if (this.adjacencyList[source_node].head === null) {
+      return;
+    }
+
+    if (!visited[source_node]) {
+      visited_stack.insert(source_node);
+      visited[source_node] = true;
+
+      let arr = this.adjacencyList[source_node]
+      .listToArray();
+
+      for (let node = 0; node < arr.length; node++) {
+        if (!visited[arr[node]] && this.findCycleUtil(arr[node], visited, visited_stack)) {
+          return arr[node];
+        } else if (visited_stack.contains(arr[node])) {
+          return arr[node];
+        }
+      }
+    }
+
+    visited_stack.pop();
+    return null;
+  }
+
+  findCycle() {
+    let source_node = this.nodesList[0];
+    let visited = {};
+    let visited_stack = new Stack();
+
+    return this.findCycleUtil(source_node, visited, visited_stack);
+  }
 }
 
 
@@ -425,16 +503,16 @@ adjList.addVertex('F');
 adjList.addVertex('G');
 adjList.addVertex('H');
 console.log("ADJ LIST IS: ", adjList.adjacencyList);
-adjList.addEdge('A', 'B');
-adjList.addEdge('A', 'C');
-adjList.addEdge('A', 'D');
-adjList.addEdge('C', 'G');
-adjList.addEdge('G', 'H');
-adjList.addEdge('D', 'H');
-adjList.addEdge('H', 'F');
-adjList.addEdge('B', 'E');
-adjList.addEdge('E', 'H');
-adjList.addEdge('F', 'B');
+adjList.addEdges('A', 'B');
+adjList.addEdges('A', 'C');
+adjList.addEdges('A', 'D');
+adjList.addEdges('C', 'G');
+adjList.addEdges('G', 'H');
+adjList.addEdges('D', 'H');
+adjList.addEdges('H', 'F');
+adjList.addEdges('B', 'E');
+adjList.addEdges('E', 'H');
+adjList.addEdges('F', 'B');
 console.log("\nADJ LIST IS: ", adjList);
 console.log("\n\nSHOULD BE: [ 'E', 'B', 'C', 'D', 'A', 'F', 'G', 'H' ]");
 console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
@@ -449,3 +527,29 @@ console.log(adjList.hasEdge('H', 'E'))
 console.log(`should be [ 'E', 'F', 'G', 'H', 'B', 'D' ]`);
 console.log("\n\nDFS IS: ", adjList.depthFirstSearch('E'));
 console.log("\n\nBFS IS: ", adjList.breadthFirstSearch('E'));
+console.log("\n\nGRAPH CONTAINS CYCLE: ", adjList.hasCycle());
+console.log("\n\nGRAPH CYCLES AT: ", adjList.findCycle());
+
+
+let newGraph = new Graph();
+
+newGraph.addVertex(10);
+newGraph.addVertex(12);
+newGraph.addVertex(14);
+newGraph.addVertex(16);
+newGraph.addVertex(100);
+
+newGraph.addEdge(10, 100);
+newGraph.addEdge(10, 12);
+newGraph.addEdge(12, 14);
+
+console.log("\n\nGRAPH CONTAINS CYCLE: ", newGraph.hasCycle());
+console.log("\n\nGRAPH CYCLES AT: ", newGraph.findCycle());
+
+newGraph.addEdge(100, 16);
+newGraph.addEdge(100, 12);
+newGraph.addEdge(14, 100);
+
+console.log("\n\nGRAPH CONTAINS CYCLE: ", newGraph.hasCycle());
+console.log("\n\nGRAPH CYCLES AT: ", newGraph.findCycle());
+
