@@ -172,6 +172,12 @@ To start you create a new function and create properties using the “this” ke
     cat.makeSound();
 ```
 
+Pros:
+By utilizing functionality built into JavaScript, Pseudoclassical instantiation is the most optimized method of object creation.
+
+Cons:
+It is a little more complex in its design when compared to the other three methods.
+
 
 # Classical
 
