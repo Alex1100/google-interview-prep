@@ -119,7 +119,7 @@ Although pre-rendering can improve the loading speed of a website, it must be 10
 
 # Optimizing the rendering process
 
-As for the optimization about code, you can refer to [the relevant content](../Browser/browser-en.md#rendering-machanism) in the browser series
+As for the optimization about code, you can refer to [the relevant content](../dom-events/xhr_and_http_headers/browser.md#rendering-machanism) in the browser series
 
 ## Lazy execution
 
