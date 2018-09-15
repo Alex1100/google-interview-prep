@@ -193,7 +193,7 @@ You instantiate it using `new Animal` instead of `Object.create(animal)` —�
             this.name = name;
         }
 
-        makeSound = () {
+        makeSound = () => {
             return 'enter animal sound here';
         }
 
@@ -201,7 +201,7 @@ You instantiate it using `new Animal` instead of `Object.create(animal)` —�
             return 'food eaten';
         }
 
-        sleep = () {
+        sleep = () => {
             return 'slept';
         }
     }
