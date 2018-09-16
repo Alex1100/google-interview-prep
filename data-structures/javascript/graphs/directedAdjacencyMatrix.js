@@ -1,5 +1,5 @@
 /*
- * Adjacency Matrices are only good
+ * Directed Adjacency Matrices are only good
  * when our graph is dense, meaning if
  * the number of edges is close to
  * the number of vertexes^2, or
@@ -7,7 +7,7 @@
  * to matter
  *
  * In the real world, i.e (Social Network,
- * Web Crawlers, etc...), Adjacency
+ * Web Crawlers, etc...), Directed Adjacency
  * Matrices are inefficient. We are
  * better off using an Edge List,
  * or in other words, objects and
@@ -15,7 +15,7 @@
  *
  * Drawback could be that
  * we use an inefficient amount of
- * space with Adjacency Matrix
+ * space with the Directed Adjacency Matrix
  * All the non edge indeces where
  * we have either Weight Infinity,
  * or a zero to signify it's not
@@ -23,7 +23,19 @@
  * index, will take up more space
  * relative to the amount of actual
  * weighted/1-valued indeces in
- * our Ajacency Matrix
+ * our Directed Ajacency Matrix
+ *
+ * One difference between a DAG (Directed Acyclic Graph)
+ * and a UDAG(Undirected Acyclic Graph)
+ * is that the direction
+ * of the edges is noted by 1 or -1.
+ *
+ * 1 = from This vertex draws/connects
+ * and edge to another vertex
+ *
+ * -1 = another node
+ * is drawing/connecting an edge
+ * to the vertex with -1.
  */
 
 class Stack {
@@ -141,6 +153,7 @@ class Graph {
 
   addEdge(fromVertex, toVertex) {
     this.adjacencyMatrix[this.vertexIndexList[fromVertex]][this.vertexIndexList[toVertex]] = 1;
+    this.adjacencyMatrix[this.vertexIndexList[toVertex]][this.vertexIndexList[fromVertex]] = -1;
   }
 
   addEdges(fromVertex, toVertex) {
@@ -185,10 +198,11 @@ class Graph {
   }
 
   hasEdge(fromVertex, toVertex) {
-    return (
-      this.adjacencyMatrix[this.vertexIndexList[fromVertex]][this.vertexIndexList[toVertex]] &&
-      this.adjacencyMatrix[this.vertexIndexList[toVertex]][this.vertexIndexList[fromVertex]]
-    ) ? true : false;
+    if (this.adjacencyMatrix[this.vertexIndexList[fromVertex]][this.vertexIndexList[toVertex]]) {
+      return true;
+    }
+
+    return false;
   }
 
   DFSUtil(source_node, visited, stack){
@@ -315,40 +329,16 @@ class Graph {
   }
 }
 
+let DAG = new Graph();
 
-let undirectedCyclicAdjacencyMatrix = new Graph();
-undirectedCyclicAdjacencyMatrix.addVertex('A');
-undirectedCyclicAdjacencyMatrix.addVertex('B');
-undirectedCyclicAdjacencyMatrix.addVertex('C');
-undirectedCyclicAdjacencyMatrix.addVertex('D');
-undirectedCyclicAdjacencyMatrix.addVertex('E');
-undirectedCyclicAdjacencyMatrix.addVertex('F');
-undirectedCyclicAdjacencyMatrix.addVertex('G');
-undirectedCyclicAdjacencyMatrix.addVertex('H');
-console.log("ADJ MATRIX IS: ", undirectedCyclicAdjacencyMatrix.adjacencyMatrix);
-undirectedCyclicAdjacencyMatrix.addEdges('A', 'B');
-undirectedCyclicAdjacencyMatrix.addEdges('A', 'C');
-undirectedCyclicAdjacencyMatrix.addEdges('A', 'D');
-undirectedCyclicAdjacencyMatrix.addEdges('C', 'G');
-undirectedCyclicAdjacencyMatrix.addEdges('G', 'H');
-undirectedCyclicAdjacencyMatrix.addEdges('D', 'H');
-undirectedCyclicAdjacencyMatrix.addEdges('H', 'F');
-undirectedCyclicAdjacencyMatrix.addEdges('B', 'E');
-undirectedCyclicAdjacencyMatrix.addEdges('E', 'H');
-undirectedCyclicAdjacencyMatrix.addEdges('F', 'B');
-console.log("\nADJ MATRIX IS: ", undirectedCyclicAdjacencyMatrix);
-console.log("\n\nSHOULD BE: [ 'E', 'B', 'C', 'D', 'A', 'F', 'G', 'H' ]");
-console.log("\n\nDFS IS: ", undirectedCyclicAdjacencyMatrix.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", undirectedCyclicAdjacencyMatrix.breadthFirstSearch('E'));
-undirectedCyclicAdjacencyMatrix.removeVertex('A');
-console.log("\nADJ MATRIX IS: ", undirectedCyclicAdjacencyMatrix.adjacencyMatrix);
-console.log("\n\nDFS IS: ", undirectedCyclicAdjacencyMatrix.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", undirectedCyclicAdjacencyMatrix.breadthFirstSearch('E'));
-undirectedCyclicAdjacencyMatrix.removeEdge('C', 'G');
-console.log("\n\nADJ MATRIX IS: ", undirectedCyclicAdjacencyMatrix);
-console.log(undirectedCyclicAdjacencyMatrix.hasEdge('H', 'E'))
-console.log(`should be [ 'E', 'F', 'G', 'H', 'B', 'D' ]`);
-console.log("\n\nDFS IS: ", undirectedCyclicAdjacencyMatrix.depthFirstSearch('E'));
-console.log("\n\nBFS IS: ", undirectedCyclicAdjacencyMatrix.breadthFirstSearch('E'));
-console.log("\n\nGRAPH CONTAINS CYCLE: ", undirectedCyclicAdjacencyMatrix.hasCycle());
-console.log("\n\nGRAPH CYCLES AT: ", undirectedCyclicAdjacencyMatrix.findCycle());
+DAG.addVertex(10);
+DAG.addVertex(12);
+DAG.addVertex(14);
+DAG.addVertex(16);
+DAG.addVertex(100);
+
+DAG.addEdge(10, 100);
+DAG.addEdge(10, 12);
+DAG.addEdge(12, 14);
+console.log("\n\nNEW ACYCLIC GRAPH IS: ", DAG);
+console.log("\n\n\nIF `false` then GRAPH IS ACYCLIC ELSE IT IS CYCLIC: ", DAG.hasCycle(), DAG.findCycle());
