@@ -59,4 +59,20 @@ console.log(trie.contains('abc'));
 console.log(trie.contains('der'));
 console.log(trie.contains('abra'))
 console.log(trie.contains('abcd'))
+trie.addString('hello world');
+console.log(trie.contains('hello world'))
+console.log(
+  trie
+  .children['h']
+  .children['e']
+  .children['l']
+  .children['l']
+  .children['o']
+  .children[' ']
+  .children['w']
+  .children['o']
+  .children['r']
+  .children['l']
+  .children['d']
+)
 
