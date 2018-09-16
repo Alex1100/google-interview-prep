@@ -327,6 +327,54 @@ class Graph {
 
     return this.findCycleUtil(source_node, visited, visited_stack)
   }
+
+  topologicalSort() {
+    let vertexStack = new Stack();
+    let nonDependentVertexes = [];
+    let visited = {};
+
+    this.nodesArray.forEach((node, index) => {
+      if (this.adjacencyMatrix[this.vertexIndexList[node]].filter(edge => edge === 1).length >= 1) {
+        nonDependentVertexes.push(node);
+      }
+    });
+
+
+    let current = nonDependentVertexes[nonDependentVertexes.length - 1];
+
+    while(nonDependentVertexes.length) {
+      let currentEdges = this.adjacencyMatrix[this.vertexIndexList[current]];
+      currentEdges.forEach((edge, index) => {
+        if (edge === 1 && !visited[this.vertexList[index]]) {
+          vertexStack.insert(this.vertexList[index]);
+          visited[this.vertexList[index]] = true;
+        }
+      });
+
+      let removedNonDependentVertex = nonDependentVertexes.pop();
+      vertexStack.insert(removedNonDependentVertex);
+      visited[removedNonDependentVertex] = true;
+      current = nonDependentVertexes[nonDependentVertexes.length - 1];
+    }
+
+
+    // at this point,
+    // the stack has the
+    // elements in proper order
+    // however, for visual
+    // purposes I will
+    // push them into an array
+    // essentially reversing it
+
+    let result = [];
+    let count = vertexStack.items.length;
+
+    for (let i = 0; i < count; i++) {
+      result.push(vertexStack.pop());
+    }
+
+    return result;
+  }
 }
 
 let DAG = new Graph();
@@ -342,3 +390,6 @@ DAG.addEdge(10, 12);
 DAG.addEdge(12, 14);
 console.log("\n\nNEW ACYCLIC GRAPH IS: ", DAG);
 console.log("\n\n\nIF `false` then GRAPH IS ACYCLIC ELSE IT IS CYCLIC: ", DAG.hasCycle(), DAG.findCycle());
+
+
+console.log("\n\nTOPOLOGICAL SORT: ", DAG.topologicalSort())
