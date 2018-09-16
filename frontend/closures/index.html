@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Closures</title>
+</head>
+<body>
+  <ul id="test" />
+
+  <button id="target">Start Function Containing Closure</button>
+
+  <script type="text/javascript">
+    document.addEventListener('click', () => {
+      let $test = document.querySelector('#test');
+      $test.innerHTML = '';
+
+      for(let i = 0; i < "closure".length; i++) {
+        setTimeout(function(id) {
+          return function() {
+            let li = document.createElement('LI');
+            let newNode = li.appendChild(document.createTextNode("closure"[id]));
+            $test.appendChild(newNode);
+            $test.appendChild(document.createElement('BR'));
+          }
+        }(i), 1000 * i);
+      }
+    });
+  </script>
+</body>
+</html>
