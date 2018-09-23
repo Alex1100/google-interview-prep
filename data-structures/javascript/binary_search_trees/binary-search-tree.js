@@ -519,19 +519,19 @@ class BinarySearchTree {
   }
 
 
-  isValidBST(min = -Infinity, max = Infinity){
-    if (this === null) {
+  isValidBST(node = this, min = -Infinity, max = Infinity){
+    if (node === null) {
       return true;
     }
 
     // false if this node violates min/max constraint
-    if (this.data < min || this.data > max) {
+    if (node.data < min || node.data > max) {
       return false;
     }
 
     // Otherwise check the subtrees recursively
     // tightening the min or max constraint
-    return (this.left.isValidBST(min, this.data -1) && this.right.isValidBST(this.data + 1, max))
+    return (this.isValidBST(node.left, min, this.data -1) && this.isValidBST(node.right, this.data + 1, max))
   }
 
   closestValueRecursive(target, currentDistance = Infinity, closestNode = Infinity) {

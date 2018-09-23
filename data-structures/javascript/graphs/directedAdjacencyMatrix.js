@@ -329,12 +329,16 @@ class Graph {
   }
 
   topologicalSort() {
+    if (this.hasCycle()) {
+      throw new Error("Can't Topologically Sort a Cyclic Graph")
+    }
     let vertexStack = new Stack();
     let nonDependentVertexes = [];
     let visited = {};
 
     this.nodesArray.forEach((node, index) => {
       if (this.adjacencyMatrix[this.vertexIndexList[node]].filter(edge => edge === 1).length >= 1) {
+        visited[node] = true
         nonDependentVertexes.push(node);
       }
     });

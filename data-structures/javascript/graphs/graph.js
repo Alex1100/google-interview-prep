@@ -399,6 +399,7 @@ class Graph {
   }
 
   DFSUtil(source_node, visited, visited_data){
+
     if (visited_data.size === this.nodesArray.length) {
       return;
     }
@@ -408,9 +409,9 @@ class Graph {
       visited[source_node] = true;
     }
 
-    for(let node in this.vertexes) {
-      if(!visited[node]){
-        this.DFSUtil(node, visited, visited_data);
+    for(let edge in this.vertexes[source_node]) {
+      if(!visited[edge]){
+        this.DFSUtil(edge, visited, visited_data);
       }
     }
   }
@@ -431,8 +432,11 @@ class Graph {
       * Typically we would use a Stack for Depth First Search (LIFO)
       */
 
-
-    this.DFSUtil(node.toString(), visited, visited_data);
+    for(let node in this.vertexes) {
+      if(!visited[node]) {
+        this.DFSUtil(node, visited, visited_data);
+      }
+    }
     return visited_data.items;
   }
 
@@ -451,10 +455,11 @@ class Graph {
     }
 
     for(let node in this.vertexes[source_node]) {
+      console.log("NODE IS: ", node)
       if (!visited[node]) {
-        visited[node] = true;
+        // visited[node] = true;
         node_queue.enqueue(node);
-        result.enqueue(node);
+        // result.enqueue(node);
       }
     }
 
@@ -477,7 +482,11 @@ class Graph {
     let result = new Queue, node_queue = new Queue();
 
     this.BFSUtil(source_node.toString(), result, visited, node_queue);
-
+    for (let vertex in this.vertexes) {
+      if (!visited[vertex]) {
+        this.BFSUtil(vertex, result, visited, node_queue);
+      }
+    }
     return result.items;
   }
 
@@ -494,7 +503,7 @@ class Graph {
     // inintialize the minimumDistance to Infinity
     let minimumDistance = Infinity;
     let nodeWithMinimumDistance;
-
+    console.log("DJ SET IS: ", djSet, dist)
     djSet.forEach((k, v) => {
       /**
         * if the known min distance of a node
@@ -992,6 +1001,7 @@ class Graph {
   }
 
   DFSUtil(source_node, visited, visited_data){
+
     if (visited_data.size === this.nodesArray.length) {
       return;
     }
@@ -1001,9 +1011,9 @@ class Graph {
       visited[source_node] = true;
     }
 
-    for(let node in this.vertexes) {
-      if(!visited[node]){
-        this.DFSUtil(node, visited, visited_data);
+    for(let edge in this.vertexes[source_node]) {
+      if(!visited[edge]){
+        this.DFSUtil(edge, visited, visited_data);
       }
     }
   }
@@ -1023,9 +1033,12 @@ class Graph {
       *
       * Typically we would use a Stack for Depth First Search (LIFO)
       */
-
-
     this.DFSUtil(node.toString(), visited, visited_data);
+    for(let node in this.vertexes) {
+      if(!visited[node]) {
+        this.DFSUtil(node, visited, visited_data);
+      }
+    }
     return visited_data.items;
   }
 
@@ -1098,11 +1111,11 @@ const getCircularReplacer = () => {
 
 
 
-let zeNewGraph = new Graph();
+// let zeNewGraph = new Graph();
 
-let squareNodes = function(el){
-  zeNewGraph.addNode(el * el);
-};
+// let squareNodes = function(el){
+//   zeNewGraph.addNode(el * el);
+// };
 
 g = new Graph();
 g.addNode(0);
@@ -1112,8 +1125,8 @@ g.addNode(3);
 g.addNode(5);
 g.addNode(6);
 g.addNode(100);
-g.forEachNode(squareNodes)
-console.log(zeNewGraph);
+// g.forEachNode(squareNodes)
+// console.log(zeNewGraph);
 /**
   * actual vertex->edge weights/costs/distances will be randomly generated
   * each time. This just shows the structure it is generated in
@@ -1146,79 +1159,134 @@ g.addEdges(2, 3);
 g.addEdges(2, 6);
 g.addEdges(6, 5);
 g.addEdges(3, 5);
-console.log("\n\n", g.vertexes, "\n\n")
-/**
-  * actual vertex->edge weights/costs/distances will be randomly generated
-  * each time. This just shows the structure it is generated in
-  *
-  *
-  * Graph {
-  *   vertexes: {
-  *     '0': { '1': 6, '2': 9, '100': 8 },
-  *     '1': { '0': 6, '2': 3, '5': 1 },
-  *     '2': { '0': 9, '1': 3, '3': 9, '6': 2 },
-  *     '3': { '2': 9 },
-  *     '5': { '1': 1, '6': 3 },
-  *     '6': { '2': 2, '5': 3 },
-  *     '100': { '0': 8 } },
-  *   nodesArray: [ 0, 1, 2, 3, 5, 6, 100 ]
-  * }
-  */
+// console.log("\n\n", g.vertexes, "\n\n")
+// /**
+//   * actual vertex->edge weights/costs/distances will be randomly generated
+//   * each time. This just shows the structure it is generated in
+//   *
+//   *
+//   * Graph {
+//   *   vertexes: {
+//   *     '0': { '1': 6, '2': 9, '100': 8 },
+//   *     '1': { '0': 6, '2': 3, '5': 1 },
+//   *     '2': { '0': 9, '1': 3, '3': 9, '6': 2 },
+//   *     '3': { '2': 9 },
+//   *     '5': { '1': 1, '6': 3 },
+//   *     '6': { '2': 2, '5': 3 },
+//   *     '100': { '0': 8 } },
+//   *   nodesArray: [ 0, 1, 2, 3, 5, 6, 100 ]
+//   * }
+//   */
 
 
 
-console.log(g.DFS(0));
-console.log(g.BFS(0));
-console.log(g.DFS(1))
-console.log(g.BFS(1))
-console.log(g.DFS(2))
-console.log(g.BFS(2))
-console.log(g.DFS(3))
-console.log(g.BFS(3))
-console.log(g.DFS(5))
-console.log(g.BFS(5))
-console.log(g.DFS(6))
-console.log(g.BFS(6))
-console.log(g.DFS(100))
-console.log(g.BFS(100))
+// console.log(g.DFS(0));
+// console.log(g.BFS(0));
+// console.log(g.DFS(1))
+// console.log(g.BFS(1))
+// console.log(g.DFS(2))
+// console.log(g.BFS(2))
+// console.log(g.DFS(3))
+// console.log(g.BFS(3))
+// console.log(g.DFS(5))
+// console.log(g.BFS(5))
+// console.log(g.DFS(6))
+// console.log(g.BFS(6))
+// console.log(g.DFS(100))
+// console.log(g.BFS(100))
 
-console.log("\n\n\n", g.Dijkstra(1, 5))
-console.log(g.allDijkstra(1))
-console.log(g.shortestDistanceToAndFrom(1, 5))
-console.log(g.allDijkstra(6))
+// console.log("\n\n\n", g.Dijkstra(1, 5))
+// console.log(g.allDijkstra(1))
+// console.log(g.shortestDistanceToAndFrom(1, 5))
+// console.log(g.allDijkstra(6))
 console.log(g.Dijkstra(6, 100))
-console.log(g.A_Star_Search(6, 100))
-console.log(g.each_A_Star_Search(6))
-console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
-console.log("\n\n\n\nPRIM MST IS: ", g.PrimMST(100));
+// console.log(g.A_Star_Search(6, 100))
+// console.log(g.each_A_Star_Search(6))
+// console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
+// console.log("\n\n\n\nPRIM MST IS: ", g.PrimMST(100));
 
-console.log("GRAPH BEFORE REMOVING: ", g);
-console.log(g.removeNode(5));
-console.log('GRAPH AFTER REMOVING: ', g);
+// console.log("GRAPH BEFORE REMOVING: ", g);
+// console.log(g.removeNode(5));
+// console.log('GRAPH AFTER REMOVING: ', g);
 
-console.log("\n\nGRAPH HAS A CYCLE?: ", g.hasCycle());
-console.log("\n\nFIND CYCLE NODE: ", g.findCycle());
+// console.log("\n\nGRAPH HAS A CYCLE?: ", g.hasCycle());
+// console.log("\n\nFIND CYCLE NODE: ", g.findCycle());
 
-let newGraph = new Graph();
+// let newGraph = new Graph();
 
-newGraph.addNode(10);
-newGraph.addNode(12);
-newGraph.addNode(14);
-newGraph.addNode(16);
-newGraph.addNode(100);
+// newGraph.addNode(10);
+// newGraph.addNode(12);
+// newGraph.addNode(14);
+// newGraph.addNode(16);
+// newGraph.addNode(100);
 
-newGraph.addEdge(10, 100);
-newGraph.addEdge(10, 12);
-newGraph.addEdge(12, 14);
-newGraph.addEdge(100, 16);
+// newGraph.addEdge(10, 100);
+// newGraph.addEdge(10, 12);
+// newGraph.addEdge(12, 14);
+// newGraph.addEdge(100, 16);
 
-console.log("\n\nNEW GRAPH IS: ", newGraph);
-console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
-console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
+// console.log("\n\nNEW GRAPH IS: ", newGraph);
+// console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
+// console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
 
-newGraph.addEdge(100, 12);
-newGraph.addEdge(14, 100);
+// newGraph.addEdge(100, 12);
+// newGraph.addEdge(14, 100);
 
-console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
-console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
+// console.log("\n\n\nNEW GRAPH HAS CYCLES: ", newGraph.hasCycle());
+// console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
 
+
+let testGraph = new Graph()
+
+testGraph.addNode(100);
+testGraph.addNode(10);
+testGraph.addNode(300);
+testGraph.addNode(400);
+testGraph.addNode(2000);
+testGraph.addNode(20);
+
+testGraph.addEdge(100, 10);
+testGraph.addEdge(400, 100);
+testGraph.addEdge(10, 100);
+testGraph.addEdge(100, 400)
+testGraph.addEdge(300, 10);
+testGraph.addEdge(10, 300);
+testGraph.addEdges(20, 2000)
+testGraph.addEdge(10, 2000)
+testGraph.addEdge(400, 20)
+
+function iter(item) {
+  for (let edge in item) {
+    console.log("EDGE IS: ", edge);
+  }
+  console.log(testGraph.vertexes)
+}
+console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.DFS(100));
+console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.BFS(100));
+
+
+
+// let x = new Graph();
+// x.addNode("A");
+// x.addNode("B");
+// x.addNode("C");
+// x.addNode("D");
+// x.addNode("E");
+// x.addNode("F");
+// x.addNode("G");
+// x.addNode("H");
+
+
+// x.addEdges("B", "A");
+// x.addEdge("A", "D");
+// x.addEdges("A", "G");
+// x.addEdges("B", "E");
+// x.addEdges("E", "G");
+// x.addEdges("B", "F");
+// x.addEdges("F", "C");
+// x.addEdges("H", "C");
+// x.addEdges("D", "F");
+
+
+// console.log("ALRIGHT TEST DFS IS: ", x.DFS("A"))
+// console.log("ALRIGHT TEST DFS IS: ", x.BFS("A"))
