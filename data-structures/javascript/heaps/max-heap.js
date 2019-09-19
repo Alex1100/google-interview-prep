@@ -1,3 +1,5 @@
+// https://medium.com/basecs/learning-to-love-heaps-cef2b273a238
+
 class BinaryMaxHeap {
   constructor(data = []) {
     this.array = [];
@@ -140,5 +142,3 @@ console.log(c.hasNode(33))
 console.log(c.hasNode(10))
 
 module.exports = BinaryMaxHeap;
-
-

@@ -1,3 +1,4 @@
+// https://medium.com/basecs/learning-to-love-heaps-cef2b273a238
 class BinarySearchTree {
   constructor(data) {
     this.data = data;
@@ -430,6 +431,3 @@ console.log(c.hasNode(9))
 console.log(c.removeHead())
 console.log("\n\nMINHEAP IS: ", c);
 module.exports = BinaryMinHeap;
-
-
-
