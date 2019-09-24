@@ -6,7 +6,7 @@ import (
 )
 
 func maxProductSubarray(nums []int) int {
-    res := math.Inf(-1)
+    result := math.Inf(-1)
     min := 1.0
     max := 1.0
 
@@ -16,10 +16,10 @@ func maxProductSubarray(nums []int) int {
         tempMin := min
         min = math.Min(math.Min(n, tempMin * n), tempMax * n)
         max = math.Max(math.Max(n, tempMin * n), tempMax * n)
-        res = math.Max(res, max)
+        result = math.Max(result, max)
     }
 
-    return int(res);
+    return int(result);
 }
 
 
