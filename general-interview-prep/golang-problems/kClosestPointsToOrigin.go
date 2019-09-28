@@ -34,21 +34,21 @@ func retrieveVal(point []int)int{
 
 // Less efficient approach
 func kClosest(points [][]int, K int) [][]int {
-    //sorts the array in place
-    sort.Slice(points, func(i, j int) bool {
-        distanceFromOrigin1 := getDistanceFromOrigin(points[i])
-        distanceFromOrigin2 := getDistanceFromOrigin(points[j])
-        return distanceFromOrigin1 < distanceFromOrigin2
+  //sorts the array in place
+  sort.Slice(points, func(i, j int) bool {
+    distanceFromOrigin1 := getDistanceFromOrigin(points[i])
+    distanceFromOrigin2 := getDistanceFromOrigin(points[j])
+    return distanceFromOrigin1 < distanceFromOrigin2
 	})
 
-    //returns first k elements
-    return points[0:K];
+  //returns first k elements
+  return points[0:K];
 }
 
 func getDistanceFromOrigin(point []int) int {
-    x := point[0]
-    y := point[1]
-    return (x*x) + (y*y);
+  x := point[0]
+  y := point[1]
+  return (x*x) + (y*y);
 }
 
 
