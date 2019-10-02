@@ -48,7 +48,49 @@ func checkAnagram(str string, tracker map[string][]string) {
 }
 
 
+/*
+  Optimal Solution
+
+  No sorting needed so we remove the log(K) time complexity
+
+  Time: O(NK)
+  Space: O(NK)
+*/
+
+func groupAnagramsOptimal(strs []string) [][]string {
+  result := make([][]string, 0)
+
+  if len(strs) == 0 {
+    return result
+  }
+
+  tracker := make(map[string][]string)
+
+  for _, s := range strs {
+    count := make([]int, 26)
+    for _, char := range s {
+      count[char - 'a']++
+    }
+
+    sb := ""
+    for i := 0; i < 26; i++ {
+      sb += "#"
+      sb += string(count[i])
+    }
+
+    tracker[sb] = append(tracker[sb], s)
+  }
+
+  for _, val := range tracker {
+    result = append(result, val)
+  }
+
+  return result
+}
+
+
 func main() {
   input := []string{"eat", "tea", "tan", "ate", "nat", "bat"}
   fmt.Printf("Grouped Anagrams from %s is \n\n%s\n", input, groupAnagrams(input))
+  fmt.Printf("Grouped Anagrams from %s is \n\n%s\n", input, groupAnagramsOptimal(input))
 }
