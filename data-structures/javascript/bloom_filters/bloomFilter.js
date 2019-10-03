@@ -109,10 +109,15 @@ class BloomFilter {
 }
 
 
-const myBloomFilter = new BloomFilter(100);
+const myBloomFilter = new BloomFilter(1000);
 
 myBloomFilter.add("Alex")
 myBloomFilter.add("Drew");
+myBloomFilter.add(12);
 console.log(myBloomFilter.contains("Alex"));
 console.log(myBloomFilter.contains("Drew"));
 console.log(myBloomFilter.contains("DREWW"));
+console.log(myBloomFilter.contains("Dre"));
+console.log(myBloomFilter.contains("Alexx"));
+console.log(myBloomFilter.contains(21));
+console.log(myBloomFilter.contains(12));
