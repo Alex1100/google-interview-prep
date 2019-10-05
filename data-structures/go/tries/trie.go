@@ -16,11 +16,12 @@ func (t *Trie) Insert(str string) {
   isEnd := len(str) == 1
   str = str[1:]
   counter--
-
-  t.Children[firstLetter] = &TrieNode{
-    Letter: firstLetter,
-    Children: make(map[string]*TrieNode),
-    IsWord: isEnd,
+  if t.Chidlren[firstLetter] == nil {
+    t.Children[firstLetter] = &TrieNode{
+      Letter: firstLetter,
+      Children: make(map[string]*TrieNode),
+      IsWord: isEnd,
+    }
   }
 
   curr := t.Children[firstLetter]
