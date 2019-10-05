@@ -13,17 +13,16 @@ func TestTrie_Insert(t *testing.T) {
   }
 
   trieInstance.Insert("apple")
-
   if trieInstance.Children["a"] == nil {
     t.Error("Item was not properly Inserted: ", trieInstance.Children["a"])
   }
+
   trieInstance.Insert("atom")
   if trieInstance.Children["a"].Children["t"] == nil {
     t.Error("Item was not properly Inserted: ", trieInstance.Children["a"].Children["t"])
   }
 
   isWord := trieInstance.Children["a"].Children["t"].Children["o"].Children["m"].IsWord
-
   if !isWord {
     t.Error("Item was not properly Inserted and end of word is not marked: ", isWord)
   }
@@ -38,7 +37,6 @@ func TestTrie_HasWord(t *testing.T) {
 
 func TestTrie_Contains(t *testing.T) {
   contained := trieInstance.Contains("app")
-
   if !contained {
     t.Error("Item was not properly Inserted and can't be found: ", contained)
   }
