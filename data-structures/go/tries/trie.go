@@ -16,7 +16,7 @@ func (t *Trie) Insert(str string) {
   isEnd := len(str) == 1
   str = str[1:]
   counter--
-  if t.Chidlren[firstLetter] == nil {
+  if t.Children[firstLetter] == nil {
     t.Children[firstLetter] = &TrieNode{
       Letter: firstLetter,
       Children: make(map[string]*TrieNode),
