@@ -37,7 +37,7 @@ func TestTrie_HasWord(t *testing.T) {
 }
 
 func TestTrie_Contains(t *testing.T) {
-  contained := trieInstance.Contains("at")
+  contained := trieInstance.Contains("app")
 
   if !contained {
     t.Error("Item was not properly Inserted and can't be found: ", contained)
