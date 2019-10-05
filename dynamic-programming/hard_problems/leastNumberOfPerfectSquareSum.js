@@ -22,8 +22,8 @@ var numSquares = function(n) {
         return n;
     }
 
-        // Create a dynamic programming table
-        // to store sq
+    // Create a dynamic programming table
+    // to store sq
     let dp = [];
 
     // getMinSquares table for base case entries
