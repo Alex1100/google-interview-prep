@@ -59,22 +59,29 @@ func TestSinglyLinkedList_Append(t *testing.T) {
 
 func TestSinglyLinkedList_Delete(t *testing.T) {
   t.Run("Delete - with type `int`", func(t *testing.T) {
-    deleted = intLinkedList.DeleteInt(2)
-    if deleted != 2 && intLinkedList.Val != 1 {
+    var modified *linked_lists.SinglyIntListNode
+    deleted, modified = intLinkedList.DeleteInt(2)
+    intLinkedList = modified
+    if deleted != 2 || intLinkedList.Val != 1 {
       t.Error("Failed to Delete from Int Linked List: ", deleted, intLinkedList.Val)
     }
   })
 
   t.Run("Delete - with type `string`", func(t *testing.T) {
-    deleted = stringLinkedList.DeleteString("C")
-    if deleted != "C" && stringLinkedList.Val != "A" {
+    var modified *linked_lists.SinglyStringListNode
+    deleted, modified = stringLinkedList.DeleteString("C")
+    stringLinkedList = modified
+    if deleted != "C" || stringLinkedList.Val != "A" {
       t.Error("Failed to Delete from String Linked List: ", deleted, stringLinkedList.Val)
     }
   })
 
   t.Run("Delete - with type `interface{}`", func(t *testing.T) {
-    deleted = interfaceLinkedList.Delete(1)
-    if deleted != 1 && interfaceLinkedList.Val != "2" {
+    var modified *linked_lists.SinglyInterfaceListNode
+    deleted, modified = interfaceLinkedList.Delete(1)
+    interfaceLinkedList = modified
+
+    if deleted != 1 || interfaceLinkedList.Val != "2" {
       t.Error("Failed to Delete from Interface Linked List: ", deleted, interfaceLinkedList.Val)
     }
   })
@@ -86,6 +93,10 @@ func TestSinglyLinkedList_Contains(t *testing.T) {
     if !contained {
       t.Error("Failed to Find existing node from Int Linked List: ", contained, intLinkedList.Val)
     }
+    contained = intLinkedList.ContainsInt(2)
+    if contained {
+      t.Error("Found non-existing node from Int Linked List: ", contained)
+    }
   })
 
   t.Run("Contains - with type `string`", func(t *testing.T) {
@@ -93,12 +104,21 @@ func TestSinglyLinkedList_Contains(t *testing.T) {
     if !contained {
       t.Error("Failed to Find existing node from String Linked List: ", contained, stringLinkedList.Val)
     }
+    contained = stringLinkedList.ContainsString("C")
+    if contained {
+      t.Error("Found non-existing node from String Linked List: ", contained)
+    }
   })
 
   t.Run("Contains - with type `interface{}`", func(t *testing.T) {
     contained = interfaceLinkedList.Contains("2")
     if !contained {
       t.Error("Failed to Find existing node from Interface Linked List: ", contained, interfaceLinkedList.Val)
+    }
+
+    contained = interfaceLinkedList.Contains(1)
+    if contained {
+      t.Error("Found non-existing node from Interface Linked List: ", contained)
     }
   })
 }

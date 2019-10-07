@@ -73,19 +73,20 @@ func (ln *SinglyInterfaceListNode) Append(node interface{}) {
   }
 }
 
-func (ln *SinglyIntListNode) DeleteInt(node int) int {
+func (ln *SinglyIntListNode) DeleteInt(node int) (int, *SinglyIntListNode) {
   if ln == nil {
-    return -1
+    return -1, ln
   }
 
   curr := ln
+  head := curr
   toDelete := curr
   prev := curr
 
   if curr.Val == node {
     toDelete = curr
     curr = curr.Next
-    return toDelete.Val
+    return toDelete.Val, curr
   }
 
   for curr != nil {
@@ -99,22 +100,23 @@ func (ln *SinglyIntListNode) DeleteInt(node int) int {
     }
   }
 
-  return toDelete.Val
+  return toDelete.Val, head
 }
 
-func (ln *SinglyStringListNode) DeleteString(node string) string {
+func (ln *SinglyStringListNode) DeleteString(node string) (string, *SinglyStringListNode) {
   if ln == nil {
-    return ""
+    return "", ln
   }
 
   curr := ln
+  head := curr
   toDelete := curr
   prev := curr
 
   if curr.Val == node {
     toDelete = curr
     curr = curr.Next
-    return toDelete.Val
+    return toDelete.Val, curr
   }
 
   for curr != nil {
@@ -128,22 +130,23 @@ func (ln *SinglyStringListNode) DeleteString(node string) string {
     }
   }
 
-  return toDelete.Val
+  return toDelete.Val, head
 }
 
-func (ln *SinglyInterfaceListNode) Delete(node interface{}) interface{} {
+func (ln *SinglyInterfaceListNode) Delete(node interface{}) (interface{}, *SinglyInterfaceListNode) {
   if ln == nil {
-    return nil
+    return nil, ln
   }
 
   curr := ln
+  head := curr
   toDelete := curr
   prev := curr
 
   if curr.Val == node {
     toDelete = curr
     curr = curr.Next
-    return toDelete.Val
+    return toDelete.Val, curr
   }
 
   for curr != nil {
@@ -157,7 +160,7 @@ func (ln *SinglyInterfaceListNode) Delete(node interface{}) interface{} {
     }
   }
 
-  return toDelete.Val
+  return toDelete.Val, head
 }
 
 func (ln *SinglyIntListNode) ContainsInt(node int) bool {
