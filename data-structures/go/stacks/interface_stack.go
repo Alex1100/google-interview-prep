@@ -7,12 +7,14 @@ type InterfaceStack struct {
 
 func (s *InterfaceStack) Push(item interface{}) {
   s.Items = append(s.Items, item)
+  s.Size++
 }
 
 func (s *InterfaceStack) Pop() interface{} {
   if s.Size > 0 {
     popped := s.Items[s.Size - 1]
     s.Items = s.Items[:s.Size - 1]
+    s.Size--
     return popped
   } else {
     return nil
@@ -39,12 +41,12 @@ func (s *InterfaceStack) Peek() interface{} {
 }
 
 func (s *InterfaceStack) Clone() *InterfaceStack {
-  clonedStack := &Stack{
+  clonedStack := &InterfaceStack{
     Items: make([]interface{}, 0),
     Size: 0,
   }
 
-  for i := s.Size - 1; i > 0; i-- {
+  for i := s.Size; i > 0; i-- {
       clonedStack.Push(s.Pop())
   }
 
