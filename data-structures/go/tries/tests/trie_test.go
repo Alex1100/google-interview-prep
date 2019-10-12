@@ -2,7 +2,7 @@ package tries
 
 import (
   "testing"
-  tries "google-interview-prep/data-structures/go/tries"
+  "google-interview-prep/data-structures/go/tries"
 )
 
 var trieInstance *tries.Trie

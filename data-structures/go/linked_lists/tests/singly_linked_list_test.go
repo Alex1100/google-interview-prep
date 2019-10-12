@@ -2,7 +2,7 @@ package tests
 
 import (
   "testing"
-  linked_lists "google-interview-prep/data-structures/go/linked_lists"
+  "google-interview-prep/data-structures/go/linked_lists"
 )
 
 var intLinkedList *linked_lists.SinglyIntListNode

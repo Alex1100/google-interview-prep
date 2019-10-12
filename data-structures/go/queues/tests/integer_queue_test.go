@@ -1,8 +1,8 @@
-package queues
+package tests
 
 import (
   "testing"
-  queues "google-interview-prep/data-structures/go/queues"
+  "google-interview-prep/data-structures/go/queues"
 )
 
 var intQueueInstance *queues.IntQueue

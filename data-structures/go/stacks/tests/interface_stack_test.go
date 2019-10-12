@@ -2,7 +2,7 @@ package tests
 
 import (
   "testing"
-  stacks "google-interview-prep/data-structures/go/stacks"
+  "google-interview-prep/data-structures/go/stacks"
 )
 
 var interfaceStack *stacks.InterfaceStack

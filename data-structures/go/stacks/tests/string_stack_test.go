@@ -3,7 +3,7 @@ package tests
 import (
   "testing"
   "strconv"
-  stacks "google-interview-prep/data-structures/go/stacks"
+  "google-interview-prep/data-structures/go/stacks"
 )
 
 var stringStack *stacks.StringStack
