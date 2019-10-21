@@ -18,15 +18,6 @@ type DoublyInterfaceListNode struct {
   Prev *DoublyInterfaceListNode
 }
 
-
-
-type DoublyIntListNode struct {
-  Val int
-  Next *DoublyIntListNode
-  Prev *DoublyIntListNode
-}
-
-
 func (ln *DoublyIntListNode) AppendInt(node int) {
   if ln == nil {
     ln = &DoublyIntListNode{
@@ -54,7 +45,7 @@ func (ln *DoublyIntListNode) AppendInt(node int) {
   }
 }
 
-func (ln *DoublyIntListNode) AppendString(node string) {
+func (ln *DoublyStringListNode) AppendString(node string) {
   if ln == nil {
     ln = &DoublyStringListNode{
       Val: node,
@@ -81,9 +72,9 @@ func (ln *DoublyIntListNode) AppendString(node string) {
   }
 }
 
-func (ln *DoublyIntListNode) Append(node interface{}) {
+func (ln *DoublyInterfaceListNode) Append(node interface{}) {
   if ln == nil {
-    ln = &DoublyIntListNode{
+    ln = &DoublyInterfaceListNode{
       Val: node,
       Next: nil,
       Prev: nil,
@@ -125,7 +116,7 @@ func (ln *DoublyIntListNode) DeleteInt(node int) (int, *DoublyIntListNode) {
     return toDelete.Val, ln.Next
   }
 
-  for curr != nil {
+  for curr.Next != nil {
     prev = curr.Prev
     if curr.Val == node {
       toDelete = curr
@@ -137,10 +128,17 @@ func (ln *DoublyIntListNode) DeleteInt(node int) (int, *DoublyIntListNode) {
     }
   }
 
+  if node == curr.Val {
+    toDelete = curr
+    temp := curr.Prev
+    curr.Prev.Next = nil
+    curr.Prev.Prev.Next = temp
+  }
+
   return toDelete.Val, head
 }
 
-func (ln *DoublyIntListNode) DeleteString(node string) (string, *DoublyStringListNode) {
+func (ln *DoublyStringListNode) DeleteString(node string) (string, *DoublyStringListNode) {
   if ln == nil {
     return "", ln
   }
@@ -157,7 +155,7 @@ func (ln *DoublyIntListNode) DeleteString(node string) (string, *DoublyStringLis
     return toDelete.Val, ln.Next
   }
 
-  for curr != nil {
+  for curr.Next != nil {
     prev = curr.Prev
     if curr.Val == node {
       toDelete = curr
@@ -169,10 +167,17 @@ func (ln *DoublyIntListNode) DeleteString(node string) (string, *DoublyStringLis
     }
   }
 
+  if node == curr.Val {
+    toDelete = curr
+    temp := curr.Prev
+    curr.Prev.Next = nil
+    curr.Prev.Prev.Next = temp
+  }
+
   return toDelete.Val, head
 }
 
-func (ln *DoublyIntListNode) Delete(node interface{}) (interface{}, *DoublyInterfaceListNode) {
+func (ln *DoublyInterfaceListNode) Delete(node interface{}) (interface{}, *DoublyInterfaceListNode) {
   if ln == nil {
     return nil, ln
   }
@@ -199,6 +204,13 @@ func (ln *DoublyIntListNode) Delete(node interface{}) (interface{}, *DoublyInter
     } else {
       curr = curr.Next
     }
+  }
+
+  if node == curr.Val {
+    toDelete = curr
+    temp := curr.Prev
+    curr.Prev.Next = nil
+    curr.Prev.Prev.Next = temp
   }
 
   return toDelete.Val, head
