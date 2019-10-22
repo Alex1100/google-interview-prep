@@ -59,7 +59,7 @@ func (bf *StringBloomFilter) Hash860(x string, size int) int {
     hash = int(math.Abs(float64(hash << secret2)))
   }
 
-  return (677 * hash + 241) % 860
+  return (677 * hash + 241) % 859
 }
 
 func (bf *StringBloomFilter) Hash998(x string, size int) int {

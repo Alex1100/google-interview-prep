@@ -50,7 +50,7 @@ func (bf *IntBloomFilter) Hash860(x int, size int) int {
   hash = hash & hash
   hash = int(math.Abs(float64(hash >> secret1)))
 
-  return (677 * hash + 241) % 860
+  return (677 * hash + 241) % 859
 }
 
 func (bf *IntBloomFilter) Hash998(x int, size int) int {
