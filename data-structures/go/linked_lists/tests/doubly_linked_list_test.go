@@ -100,7 +100,7 @@ func TestDoublyLinkedList_Delete(t *testing.T) {
   t.Run("Delete - with type `interface{}`", func(t *testing.T) {
     doubly_deleted, modified := interfaceDoublyLinkedList.Delete(1)
     interfaceDoublyLinkedList = modified
-    
+
     if doubly_deleted != 1 || modified.Val != "2" {
       t.Error("Failed to Delete from Interface Linked List: ", doubly_deleted, modified.Val)
     }
