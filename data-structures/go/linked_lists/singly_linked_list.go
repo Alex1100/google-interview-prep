@@ -27,21 +27,30 @@ type SinglyInterfaceListNode struct {
   Next *SinglyInterfaceListNode
 }
 
-func ConstructIntLinkedList() *IntLinkedList {
+func ConstructIntLinkedList(val int) *IntLinkedList {
   return &IntLinkedList{
-    Head: &SinglyIntListNode{},
+    Head: &SinglyIntListNode{
+      Val: val,
+      Next: nil,
+    },
   }
 }
 
-func ConstructStringLinkedList() *StringLinkedList {
+func ConstructStringLinkedList(val string) *StringLinkedList {
   return &StringLinkedList{
-    Head: &SinglyStringListNode{},
+    Head: &SinglyStringListNode{
+      Val: val,
+      Next: nil,
+    },
   }
 }
 
-func ConstructInterfaceLinkedList() *InterfaceLinkedList {
+func ConstructInterfaceLinkedList(val interface{}) *InterfaceLinkedList {
   return &InterfaceLinkedList{
-    Head: &SinglyInterfaceListNode{},
+    Head: &SinglyInterfaceListNode{
+      Val: val,
+      Next: nil,
+    },
   }
 }
 
@@ -103,97 +112,76 @@ func (ln *InterfaceLinkedList) Append(node interface{}) {
   }
 }
 
-func (ln *IntLinkedList) DeleteInt(node int) (int, *IntLinkedList) {
-  if ln.Head == nil {
-    return -1, ln
-  }
+func (ln *IntLinkedList) DeleteInt(node int) *SinglyIntListNode {
+  current := ln.Head
+	prev := ln.Head
+	var removed *SinglyIntListNode
 
-  curr := ln.Head
-  head := curr
-  toDelete := curr
-  prev := curr
+  if current.Val == node && current.Next != nil {
+		ln.Head = current.Next
+		ln.Head.Next = current.Next.Next
+		return current
+	} else {
+		for current.Next != nil {
+			prev = current
+			current = current.Next
+			if current.Val == node {
+				prev.Next = current.Next
+				removed = current
+				return removed
+			}
+		}
 
-  if curr.Val == node {
-    toDelete = curr
-    curr = curr.Next
-    return toDelete.Val, ln
-  }
-
-  for curr != nil {
-    if curr.Val == node {
-      toDelete = curr
-      prev.Next = curr.Next
-      curr = curr.Next
-    } else {
-      prev = curr
-      curr = curr.Next
-    }
-  }
-
-  // return toDelete.Val, head
-  return toDelete.Val, ln
+		return removed
+	}
 }
 
-func (ln *StringLinkedList) DeleteString(node string) (string, *StringLinkedList) {
-  if ln.Head == nil {
-    return "", ln
-  }
+func (ln *StringLinkedList) DeleteString(node string) *SinglyStringListNode {
+  current := ln.Head
+	prev := ln.Head
+	var removed *SinglyStringListNode
 
-  curr := ln.Head
-  head := curr
-  toDelete := curr
-  prev := curr
+  if current.Val == node && current.Next != nil {
+		ln.Head = current.Next
+		ln.Head.Next = current.Next.Next
+		return current
+	} else {
+		for current.Next != nil {
+			prev = current
+			current = current.Next
+			if current.Val == node {
+				prev.Next = current.Next
+				removed = current
+				return removed
+			}
+		}
 
-  if curr.Val == node {
-    toDelete = curr
-    curr = curr.Next
-    return toDelete.Val, ln
-  }
-
-  for curr != nil {
-    if curr.Val == node {
-      toDelete = curr
-      prev.Next = curr.Next
-      curr = curr.Next
-    } else {
-      prev = curr
-      curr = curr.Next
-    }
-  }
-
-  // return toDelete.Val, head
-  return toDelete.Val, ln
+		return removed
+	}
 }
 
-func (ln *InterfaceLinkedList) Delete(node interface{}) (interface{}, *InterfaceLinkedList) {
-  if ln.Head == nil {
-    return nil, ln
-  }
+func (ln *InterfaceLinkedList) Delete(node interface{}) *SinglyInterfaceListNode {
+  current := ln.Head
+	prev := ln.Head
+	var removed *SinglyInterfaceListNode
 
-  curr := ln.Head
-  head := curr
-  toDelete := curr
-  prev := curr
+  if current.Val == node && current.Next != nil {
+		ln.Head = current.Next
+		ln.Head.Next = current.Next.Next
+		return current
+	} else {
+		for current.Next != nil {
+			prev = current
+			current = current.Next
+			if current.Val == node {
+				prev.Next = current.Next
+				removed = current
+				return removed
+			}
+		}
 
-  if curr.Val == node {
-    toDelete = curr
-    curr = curr.Next
-    return toDelete.Val, ln
-  }
-
-  for curr != nil {
-    if curr.Val == node {
-      toDelete = curr
-      prev.Next = curr.Next
-      curr = curr.Next
-    } else {
-      prev = curr
-      curr = curr.Next
-    }
-  }
-
-  // return toDelete.Val, head
-  return toDelete.Val, ln
+		return removed
+	}
 }
 
 func (ln *IntLinkedList) ContainsInt(node int) bool {

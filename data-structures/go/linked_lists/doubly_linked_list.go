@@ -1,4 +1,4 @@
-// package linked_lists
+package linked_lists
 //
 // // add struct that holds structure
 // // so pointers to head and tail are

@@ -9,12 +9,11 @@ var intLinkedList *linked_lists.IntLinkedList
 var stringLinkedList *linked_lists.StringLinkedList
 var interfaceLinkedList *linked_lists.InterfaceLinkedList
 var contained bool
-var deleted interface{}
 
 func TestSinglyLinkedList_Append(t *testing.T) {
   t.Run("Append - with type `int`", func(t *testing.T) {
-    intLinkedList = ConstructIntLinkedList()
-    intLinkedList.AppendInt(1)
+    intLinkedList = linked_lists.ConstructIntLinkedList(1)
+
     intLinkedList.AppendInt(2)
     if intLinkedList.Head.Next.Val != 2 {
       t.Error("Failed to Append to Int Linked List: ", intLinkedList.Head.Val)
@@ -23,8 +22,7 @@ func TestSinglyLinkedList_Append(t *testing.T) {
   })
 
   t.Run("Append - with type `string`", func(t *testing.T) {
-    stringLinkedList = ConstructStringLinkedList()
-    stringLinkedList.AppendString("A")
+    stringLinkedList = linked_lists.ConstructStringLinkedList("A")
     stringLinkedList.AppendString("B")
     if stringLinkedList.Head.Next.Val != "B" {
       t.Error("Failed to Append to String Linked List: ", stringLinkedList.Head.Val)
@@ -33,8 +31,7 @@ func TestSinglyLinkedList_Append(t *testing.T) {
   })
 
   t.Run("Append - with type `interface{}`", func(t *testing.T) {
-    interfaceLinkedList = ConstructInterfaceLinkedList()
-    interfaceLinkedList.Append(1)
+    interfaceLinkedList = linked_lists.ConstructInterfaceLinkedList(1)
     interfaceLinkedList.Append("2")
     if interfaceLinkedList.Head.Next.Val != "2" {
       t.Error("Failed to Append to Interface Linked List: ", interfaceLinkedList.Head.Next.Val)
@@ -53,29 +50,28 @@ func TestSinglyLinkedList_Append(t *testing.T) {
 
 func TestSinglyLinkedList_Delete(t *testing.T) {
   t.Run("Delete - with type `int`", func(t *testing.T) {
-    var modified *linked_lists.IntLinkedList
-    deleted, modified = intLinkedList.DeleteInt(2)
-    intLinkedList = modified
-    if deleted != 2 || intLinkedList.Head.Val != 1 {
+    var deleted *linked_lists.SinglyIntListNode
+    deleted = intLinkedList.DeleteInt(2)
+
+    if deleted.Val != 2 || intLinkedList.Head.Val != 1 {
       t.Error("Failed to Delete from Int Linked List: ", deleted, intLinkedList.Head.Val)
     }
   })
 
   t.Run("Delete - with type `string`", func(t *testing.T) {
-    var modified *linked_lists.StringLinkedList
-    deleted, modified = stringLinkedList.DeleteString("C")
-    stringLinkedList = modified
-    if deleted != "C" || stringLinkedList.Head.Val != "A" {
+    var deleted *linked_lists.SinglyStringListNode
+    deleted = stringLinkedList.DeleteString("C")
+
+    if deleted.Val != "C" || stringLinkedList.Head.Val != "A" {
       t.Error("Failed to Delete from String Linked List: ", deleted, stringLinkedList.Head.Val)
     }
   })
 
   t.Run("Delete - with type `interface{}`", func(t *testing.T) {
-    var modified *linked_lists.InterfaceLinkedList
-    deleted, modified = interfaceLinkedList.Delete(1)
-    interfaceLinkedList = modified
+    var deleted *linked_lists.SinglyInterfaceListNode
+    deleted = interfaceLinkedList.Delete(1)
 
-    if deleted != 1 || interfaceLinkedList.Head.Val != "2" {
+    if deleted.Val != 1 || interfaceLinkedList.Head.Val != "2" {
       t.Error("Failed to Delete from Interface Linked List: ", deleted, interfaceLinkedList.Head.Val)
     }
   })
