@@ -1,41 +1,38 @@
 package sets
 
 type DisjointIntSet struct {
-  Rank []int
-  Parent []int
-  Capacity int
+  Parent *DisjointIntSet
+  Data int
+  Rank int
+  Children map[*DisjointIntSet]*DisjointIntSet
 }
 
-func ConstructSet(capacity int) *DisjointIntSet {
+func ConstructIntSet(data int) *DisjointIntSet {
   return &DisjointIntSet{
-    Rank: make([]int, 0, capacity),
-    Parent: make([]int, 0, capacity),
-    Capacity: capacity,
+    Rank: 0,
+    Parent: nil,
+    Data: data,
+    Children: make(map[*DisjointIntSet]*DisjointIntSet),
   }
 }
 
-func (dj *DisjointIntSet) Find(x int) int {
-  if dj.Parent[x] != x {
-    dj.Parent[x] = dj.Find(parent[x])
-  }
-
-  return dj.Parent[x]
-}
-
-func (dj *DisjointIntSet) Union(x, y int) {
-  xset = dj.Find(x)
-  yset = dj.Find(y)
-
-  if xset == yset {
-    return
-  }
-
-  if dj.Rank[xset] < dj.Rank[yset] {
-    dj.Parent[xset] = yset
-  } else if dj.Rank[xset] > dj.Rank[yset] {
-    dj.Parent[yset] = xset
+func (dj *DisjointIntSet) Find(x *DisjointIntSet) *DisjointIntSet {
+  if dj.Parent == x {
+    return x
   } else {
-    dj.Parent[yset] = xset
-    dj.Rank[xset] = dj.Rank[xset] + 1
+    return dj.Find(dj.Parent)
+  }
+}
+
+func (dj *DisjointIntSet) Union(set *DisjointIntSet) {
+  if dj.Rank > set.Rank {
+    set.Parent = dj
+  } else if dj.Rank < set.Rank {
+    set.Children[dj.Parent] = dj
+    dj.Parent = set
+  } else {
+    set.Children[dj.Parent] = dj
+    dj.Parent = set
+    set.Rank++
   }
 }
