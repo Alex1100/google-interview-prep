@@ -1,5 +1,7 @@
 package graphs
 
+import "errors"
+
 type Edge struct {
   To *Vertex
   From *Vertex
@@ -32,8 +34,23 @@ func (g *Graph) Contains(node string) bool {
   return g.Vertexes[node] != nil
 }
 
-func (g *Graph) RemoveNode(node string) (Vertex, error) {
-  // TODO
+func (g *Graph) RemoveNode(node string) (*Vertex, error) {
+  var v *Vertex
+  
+  if g.Contains(node) {
+    v = g.Vertexes[node]
+  } else {
+    return nil, errors.New("Vertex doesn't exist")
+  }
+
+  for _, vert := range g.Vertexes {
+    if g.HasEdge(vert.Point, node) {
+      g.RemoveEdge(vert.Point, node)
+    }
+  }
+
+  delete(g.Vertexes, node)
+  return v, nil
 }
 
 func (g *Graph) HasEdge(fromNode, toNode string) bool {
@@ -64,4 +81,8 @@ func (g *Graph) AddEdge(fromNode, toNode string) {
 func (g *Graph) AddEdges(fromNode, toNode string) {
   g.AddEdge(fromNode, toNode)
   g.AddEdge(toNode, fromNode)
+}
+
+func (g *Graph) RemoveEdge(fromNode, toNode string) {
+  delete(g.Vertexes[fromNode].Edges, toNode)
 }
