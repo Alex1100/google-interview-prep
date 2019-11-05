@@ -3,6 +3,7 @@ package graphs
 import (
   "errors"
   "google-interview-prep/data-structures/go/stacks"
+  "google-interview-prep/data-structures/go/queues"
 )
 
 type Edge struct {
@@ -127,10 +128,41 @@ func (g *Graph) DepthFistSearch(node string, s *stacks.StringStack, seen map[str
 	return s
 }
 
-func (g *Graph) BFS() []string {
-  //TODO
+func (g *Graph) BFS(fromNode string) []string {
+	q := &StringQueue{
+		Items: make([]string, 0),
+		Size:  0,
+	}
+	s := &StringStack{
+		Items: make([]string, 0),
+		Size:  0,
+	}
+	seen := make(map[string]bool)
+
+	s = g.BreadthFirstSearch(fromNode, q, s, seen)
+	return s.Items
 }
 
-func (g *Graph) BreadthFirstSearch(queue *Queue) *Queue {
-  //TODO
+func (g *Graph) BreadthFirstSearch(node string, q *StringQueue, s *StringStack, seen map[string]bool) *StringStack {
+	if s.Size == len(g.Vertexes) {
+		return s
+	}
+
+	if !seen[node] {
+		seen[node] = true
+		s.Push(node)
+	}
+
+	for _, edge := range g.Vertexes[node].Edges {
+		if !seen[edge.To.Point] {
+			q.Enqueue(edge.To.Point)
+		}
+	}
+
+	for q.Size != 0 {
+		popped := q.Dequeue()
+		s = g.BreadthFirstSearch(popped, q, s, seen)
+	}
+
+	return s
 }
