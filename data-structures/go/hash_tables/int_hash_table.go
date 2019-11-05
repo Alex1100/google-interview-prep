@@ -28,14 +28,9 @@ func (ln *IntLinkedList) AppendInt(key string, node int) {
     ln.Head.Key = key
     ln.Head.Val = node
     ln.Initialized = true
-  }
-
-  if ln.Head.Key == key {
+  } else if ln.Head.Key == key {
     ln.Head.Val = node
-    return
-  }
-
-  if ln.Head == nil {
+  } else if ln.Head == nil {
     ln.Head = &SinglyIntListNode{
       Key: key,
       Val: node,
@@ -47,6 +42,7 @@ func (ln *IntLinkedList) AppendInt(key string, node int) {
       curr.Val = node
       return
     }
+
     for curr.Next != nil {
       curr = curr.Next
     }
@@ -115,7 +111,7 @@ type IntHashTable struct {
   Size int
 }
 
-func constructStorage(limit int) []*IntLinkedList {
+func constructIntStorage(limit int) []*IntLinkedList {
   storage := make([]*IntLinkedList, 0)
   for i := 0; i < limit; i++ {
     storage = append(storage, ConstructIntLinkedList())
@@ -126,7 +122,7 @@ func constructStorage(limit int) []*IntLinkedList {
 
 func ConstructIntHashTable(limit int) *IntHashTable {
   return &IntHashTable{
-    Storage: constructStorage(limit),
+    Storage: constructIntStorage(limit),
     StorageLimit: limit,
     Size: 0,
   }
@@ -164,7 +160,7 @@ func (ht *IntHashTable) Insert(key string, item int) {
 }
 
 func (ht *IntHashTable) Remove(key string) (*SinglyIntListNode, error) {
-  if float64(ht.Size) <= float64(ht.StorageLimit) * 0.3 {
+  if float64(ht.Size) > float64(ht.StorageLimit) * 0.25 && float64(ht.Size) <= float64(ht.StorageLimit) * 0.3 {
     ht = ht.Shrink()
   }
 
@@ -180,7 +176,7 @@ func (ht *IntHashTable) Remove(key string) (*SinglyIntListNode, error) {
 
 func (ht *IntHashTable) Contains(key string) bool {
   idx := ht.hashify(key)
-  if idx >= ht.StorageLimit {
+  if (idx >= ht.StorageLimit) == true {
     return false
   }
 
