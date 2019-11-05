@@ -1,6 +1,9 @@
 package graphs
 
-import "errors"
+import (
+  "errors"
+  "google-interview-prep/data-structures/go/stacks"
+)
 
 type Edge struct {
   To *Vertex
@@ -36,7 +39,7 @@ func (g *Graph) Contains(node string) bool {
 
 func (g *Graph) RemoveNode(node string) (*Vertex, error) {
   var v *Vertex
-  
+
   if g.Contains(node) {
     v = g.Vertexes[node]
   } else {
@@ -85,4 +88,49 @@ func (g *Graph) AddEdges(fromNode, toNode string) {
 
 func (g *Graph) RemoveEdge(fromNode, toNode string) {
   delete(g.Vertexes[fromNode].Edges, toNode)
+}
+
+func (g *Graph) DFS(fromNode string) []string {
+	s := &stacks.StringStack{
+		Items: make([]string, 0),
+		Size:  0,
+	}
+	seen := make(map[string]bool)
+	// start off at the fromNode
+	// then for each edge found on the current node
+	// call the dfs function on the edge and it's edges
+	// do this until the original vertex's edges dfs
+	// calls have popped off the call stack
+	// stack should now be full
+	// return the stacks items
+
+	s = g.DepthFistSearch(fromNode, s, seen)
+	return s.Items
+}
+
+func (g *Graph) DepthFistSearch(node string, s *stacks.StringStack, seen map[string]bool) *stacks.StringStack {
+	if s.Size == len(g.Vertexes) {
+		return s
+	}
+
+	if !seen[node] {
+		seen[node] = true
+		s.Push(node)
+	}
+
+	for _, edge := range g.Vertexes[node].Edges {
+		if seen[edge.To.Point] == false {
+			s = g.DepthFistSearch(edge.To.Point, s, seen)
+		}
+	}
+
+	return s
+}
+
+func (g *Graph) BFS() []string {
+  //TODO
+}
+
+func (g *Graph) BreadthFirstSearch(queue *Queue) *Queue {
+  //TODO
 }
