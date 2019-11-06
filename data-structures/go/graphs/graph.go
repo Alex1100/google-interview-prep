@@ -27,7 +27,7 @@ func ConstructGraph() *Graph {
 	}
 }
 
-func (g *Graph) AddNode(node string) {
+func (g *Graph) AddVertex(node string) {
   g.Vertexes[node] = &Vertex{
     Point: node,
     Edges: make(map[string]*Edge),
@@ -38,7 +38,7 @@ func (g *Graph) Contains(node string) bool {
   return g.Vertexes[node] != nil
 }
 
-func (g *Graph) RemoveNode(node string) (*Vertex, error) {
+func (g *Graph) RemoveVertex(node string) (*Vertex, error) {
   var v *Vertex
 
   if g.Contains(node) {
@@ -110,7 +110,7 @@ func (g *Graph) DFS(fromNode string) []string {
 }
 
 func (g *Graph) DepthFistSearch(node string, s *stacks.StringStack, seen map[string]bool) *stacks.StringStack {
-	if s.Size == len(g.Vertexes) {
+  if s.Size == len(g.Vertexes) {
 		return s
 	}
 
@@ -129,11 +129,11 @@ func (g *Graph) DepthFistSearch(node string, s *stacks.StringStack, seen map[str
 }
 
 func (g *Graph) BFS(fromNode string) []string {
-	q := &StringQueue{
+	q := &queues.StringQueue{
 		Items: make([]string, 0),
 		Size:  0,
 	}
-	s := &StringStack{
+	s := &stacks.StringStack{
 		Items: make([]string, 0),
 		Size:  0,
 	}
@@ -143,7 +143,7 @@ func (g *Graph) BFS(fromNode string) []string {
 	return s.Items
 }
 
-func (g *Graph) BreadthFirstSearch(node string, q *StringQueue, s *StringStack, seen map[string]bool) *StringStack {
+func (g *Graph) BreadthFirstSearch(node string, q *queues.StringQueue, s *stacks.StringStack, seen map[string]bool) *stacks.StringStack {
 	if s.Size == len(g.Vertexes) {
 		return s
 	}
