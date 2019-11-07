@@ -60,33 +60,29 @@ func (g *DAM) RemoveVertex(node string) (bool, error) {
 
 	fromIdx := g.GetEdgeIndex(node)
 
-	if fromIdx == 0 {
-		g.VertexList = g.VertexList[1 : len(g.VertexList)-1]
-	} else {
-		start := g.VertexList[0:fromIdx]
-		end := g.VertexList[fromIdx+1 : len(g.VertexList)-1]
-		g.VertexList = make([]string, 0)
-		g.VertexList = append(g.VertexList, start...)
-		g.VertexList = append(g.VertexList, end...)
-	}
-
 	for _, vert := range g.Vertexes {
 		for j, _ := range vert {
-
 			g.RemoveEdges(g.VertexList[fromIdx], g.VertexList[j])
-
-			if fromIdx == 0 {
-				vert = vert[1 : len(vert)-1]
-			} else {
-				start := vert[0:fromIdx]
-				end := vert[fromIdx+1 : len(vert)-1]
-				vert = make([]int, 0)
-				vert = append(vert, start...)
-				vert = append(vert, end...)
-			}
-
 		}
 	}
+
+  for i, _ := range g.Vertexes {
+    if fromIdx == 0 {
+      g.Vertexes[i] = g.Vertexes[i][1:len(g.Vertexes[i])]
+    } else if fromIdx == len(g.VertexList) - 1 {
+      g.Vertexes[i] = g.Vertexes[i][0:len(g.Vertexes[i]) - 1]
+    } else {
+      g.Vertexes[i] = append(g.Vertexes[i][:fromIdx], g.Vertexes[i][fromIdx+1:]...)
+    }
+  }
+
+  if fromIdx == 0 {
+    g.VertexList = g.VertexList[1:len(g.VertexList)]
+  } else if fromIdx == len(g.VertexList) - 1 {
+    g.VertexList = g.VertexList[0:len(g.VertexList) - 1]
+  } else {
+    g.VertexList = append(g.VertexList[:fromIdx], g.VertexList[fromIdx+1:]...)
+  }
 
 	return v, nil
 }
@@ -105,18 +101,15 @@ func (g *DAM) SameNodes(fromNode, toNode string) bool {
 	return fromNode == toNode
 }
 
-func (g *DAM) HasAllEdges(fromNode, toNode string) bool {
-	return g.HasEdge(fromNode, toNode) && g.HasEdge(toNode, fromNode)
-}
-
 func (g *DAM) AddEdge(fromNode, toNode string) {
 	fromIdx, toIdx := g.GetEdgeIndex(fromNode), g.GetEdgeIndex(toNode)
 	g.Vertexes[fromIdx][toIdx] = 1
 }
 
 func (g *DAM) AddEdges(fromNode, toNode string) {
-	g.AddEdge(fromNode, toNode)
-	g.AddEdge(toNode, fromNode)
+  fromIdx, toIdx := g.GetEdgeIndex(fromNode), g.GetEdgeIndex(toNode)
+  g.Vertexes[fromIdx][toIdx] = 1
+  g.Vertexes[toIdx][fromIdx] = -1
 }
 
 func (g *DAM) RemoveEdge(fromNode, toNode string) {
@@ -127,6 +120,39 @@ func (g *DAM) RemoveEdge(fromNode, toNode string) {
 func (g *DAM) RemoveEdges(fromNode, toNode string) {
 	g.RemoveEdge(fromNode, toNode)
 	g.RemoveEdge(toNode, fromNode)
+}
+
+func (g *DAM) hasCycleUtil(sourceNode string, visited map[string]bool, visitedStack *stacks.StringStack) bool {
+  if !visited[sourceNode] {
+    visitedStack.Push(sourceNode)
+    visited[sourceNode] = true
+    fromIdx := g.GetEdgeIndex(sourceNode)
+    currentEdges := g.Vertexes[fromIdx]
+
+    for node := 0; node < len(currentEdges); node++ {
+      if currentEdges[node] == 1 {
+        if visited[g.VertexList[node]] == false && g.hasCycleUtil(g.VertexList[node], visited, visitedStack) == true {
+          return true
+        } else if visitedStack.Contains(g.VertexList[node]) == true {
+          return true
+        }
+      }
+    }
+  }
+
+  visitedStack.Pop()
+  return false
+}
+
+func (g *DAM) HasCycle() bool {
+  sourceNode := g.VertexList[0]
+  visited := make(map[string]bool)
+  visitedStack := &stacks.StringStack{
+      Items: make([]string, 0),
+      Size: 0,
+  }
+
+  return g.hasCycleUtil(sourceNode, visited, visitedStack);
 }
 
 func (g *DAM) DFS(fromNode string) []string {
@@ -153,7 +179,7 @@ func (g *DAM) DepthFistSearch(node string, s *stacks.StringStack, seen map[strin
 	fromIdx := g.GetEdgeIndex(node)
 
 	for i, _ := range g.Vertexes[fromIdx] {
-		if seen[g.VertexList[i]] == false && g.Vertexes[fromIdx][i] == 1 {
+		if seen[g.VertexList[i]] == false && g.Vertexes[fromIdx][i] != 0 {
 			s = g.DepthFistSearch(g.VertexList[i], s, seen)
 		}
 	}
@@ -176,7 +202,7 @@ func (g *DAM) BFS(fromNode string) []string {
 	return s.Items
 }
 
-func (g *DAM) BreadthFirstSearch(node string, q *queues.StringQueue, s *stacks.StringStack, seen map[string]bool) *stacks.StringStack {
+func (g *DAM) BreadthFirstSearch( node string, q *queues.StringQueue, s *stacks.StringStack, seen map[string]bool) *stacks.StringStack {
 	if s.Size == len(g.Vertexes) {
 		return s
 	}
@@ -189,7 +215,7 @@ func (g *DAM) BreadthFirstSearch(node string, q *queues.StringQueue, s *stacks.S
 	fromIdx := g.GetEdgeIndex(node)
 
 	for i, _ := range g.Vertexes[fromIdx] {
-		if !seen[g.VertexList[i]] && g.Vertexes[fromIdx][i] == 1 {
+		if !seen[g.VertexList[i]] && g.Vertexes[fromIdx][i] != 0 {
 			q.Enqueue(g.VertexList[i])
 		}
 	}
