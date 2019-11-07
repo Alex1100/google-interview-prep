@@ -60,33 +60,29 @@ func (g *AM) RemoveVertex(node string) (bool, error) {
 
 	fromIdx := g.GetEdgeIndex(node)
 
-	if fromIdx == 0 {
-		g.VertexList = g.VertexList[1 : len(g.VertexList)-1]
-	} else {
-		start := g.VertexList[0:fromIdx]
-		end := g.VertexList[fromIdx+1 : len(g.VertexList)-1]
-		g.VertexList = make([]string, 0)
-		g.VertexList = append(g.VertexList, start...)
-		g.VertexList = append(g.VertexList, end...)
-	}
-
 	for _, vert := range g.Vertexes {
 		for j, _ := range vert {
-
 			g.RemoveEdges(g.VertexList[fromIdx], g.VertexList[j])
-
-			if fromIdx == 0 {
-				vert = vert[1 : len(vert)-1]
-			} else {
-				start := vert[0:fromIdx]
-				end := vert[fromIdx+1 : len(vert)-1]
-				vert = make([]int, 0)
-				vert = append(vert, start...)
-				vert = append(vert, end...)
-			}
-
 		}
 	}
+
+  for i, _ := range g.Vertexes {
+    if fromIdx == 0 {
+      g.Vertexes[i] = g.Vertexes[i][1:len(g.Vertexes[i])]
+    } else if fromIdx == len(g.VertexList) - 1 {
+      g.Vertexes[i] = g.Vertexes[i][0:len(g.Vertexes[i]) - 1]
+    } else {
+      g.Vertexes[i] = append(g.Vertexes[i][:fromIdx], g.Vertexes[i][fromIdx+1:]...)
+    }
+  }
+
+  if fromIdx == 0 {
+    g.VertexList = g.VertexList[1:len(g.VertexList)]
+  } else if fromIdx == len(g.VertexList) - 1 {
+    g.VertexList = g.VertexList[0:len(g.VertexList) - 1]
+  } else {
+    g.VertexList = append(g.VertexList[:fromIdx], g.VertexList[fromIdx+1:]...)
+  }
 
 	return v, nil
 }
