@@ -632,7 +632,7 @@ a.addNode(13);
 a.addNode(180);
 a.addNode(77);
 a.addNode(75);
-console.log("75 FOUND: ??: ", a.findNode(75));
+// console.log("75 FOUND: ??: ", a.findNode(75));
 console.log("BFS: ", a.breadthFirstSearch());
 console.log("IN: ", a.depthFirstSearch('in_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
@@ -653,6 +653,9 @@ a.reverseTreeRecursive(a.parent);
 console.log("MAX IS: ", a.findMax());
 console.log("MIN IS: ", a.findMin());
 console.log(a.depthFirstSearch('in_order'));
+console.log("PREL ", a.depthFirstSearch('pre_order'));
+console.log("POST: ", a.depthFirstSearch('post_order'));
+
 console.log(a.BFSIterative());
 console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
