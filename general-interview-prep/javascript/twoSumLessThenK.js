@@ -23,3 +23,27 @@ var twoSumLessThanK = function(A, K) {
 
     return closestSum
 };
+
+
+/**
+ * @param {number[]} A
+ * @param {number} K
+ * @return {number}
+ */
+var twoSumLessThanK = function(A, K) {
+    let ans = -1;
+    let l = 0;
+    let r = A.length - 1;
+    A.sort((a, b) => a - b);
+
+    while(l < r) {
+        if (A[l] + A[r] >= K) {
+            r--;
+        } else {
+            ans = Math.max(ans, A[l] + A[r]);
+            l++;
+        }
+    }
+
+    return ans;
+};
