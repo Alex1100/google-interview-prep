@@ -142,7 +142,7 @@ class BinarySearchTree {
     if (root.data === null) {
       return;
     }
-    let searchedResult = this.findNode(node);
+    let searchedResult = this.findNodeRecursive(node);
 
     if (!searchedResult) {
       return false;
@@ -580,6 +580,23 @@ class BinarySearchTree {
     return closestNode;
   }
 
+  diameterOfBinaryTree() {
+      let ans = 1;
+
+      const depth = function(node) {
+          if (!node) {
+              return 0;
+          }
+          let L = depth(node.left);
+          let R = depth(node.right);
+          ans = Math.max(ans, (L + R + 1));
+          return Math.max(L, R) + 1;
+      };
+
+      depth(this);
+      return ans - 1;
+  };
+
   closestValueIterative(target) {
     let diff = Infinity;
     let answer = null;
@@ -632,7 +649,7 @@ a.addNode(13);
 a.addNode(180);
 a.addNode(77);
 a.addNode(75);
-// console.log("75 FOUND: ??: ", a.findNode(75));
+// console.log("75 FOUND: ??: ", a.findNodeRecursive(75));
 console.log("BFS: ", a.breadthFirstSearch());
 console.log("IN: ", a.depthFirstSearch('in_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
@@ -655,11 +672,12 @@ console.log("MIN IS: ", a.findMin());
 console.log(a.depthFirstSearch('in_order'));
 console.log("PREL ", a.depthFirstSearch('pre_order'));
 console.log("POST: ", a.depthFirstSearch('post_order'));
+console.log('DIAMETER OF BST IS: ', a.diameterOfBinaryTree());
 
 console.log(a.BFSIterative());
 console.log(a.breadthFirstSearch());
 console.log("DEPTH IS: ", a.getDepth());
-console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.findNode(75)))
+console.log("IN ORDER SUCCESSOR IS: ", a.findInOrderSuccessor(a.findNodeRecursive(75)))
 console.log("LCA IS: ", a.lowestCommonAncestor(45, 77))
 console.log("MIN DEPTH IS: ", a.getMinDepth(), "\n\n\n\n");
 console.log("DELETING FIRST TIME: ", a.deleteNode(100, 100));
