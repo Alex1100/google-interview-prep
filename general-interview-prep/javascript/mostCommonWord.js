@@ -7,14 +7,6 @@ var mostCommonWord = function(paragraph, banned) {
     const seen = {};
     paragraph.split(/\W+/).forEach(word => {
         let w = word.toLowerCase();
-        if (
-            w.includes(".")
-            || w.includes("!")
-            || w.includes("?")
-            || w.includes(",")
-        ) {
-            w = w.slice(0, w.length - 1);
-        }
 
         if (!banned.includes(w)) {
             if (seen[w] === undefined) {

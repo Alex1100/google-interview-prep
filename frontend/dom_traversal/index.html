@@ -6,7 +6,7 @@
   <body>
     <a href="#">My Link</a>
     <h1> My header </h1>
-    <ul>
+    <ul class="list-container">
       <li>One</li>
       <li>Two</li>
       <li>Three</li>
@@ -19,9 +19,13 @@
     </div>
     <script type="text/javascript" src="./bfs.js"></script>
     <script type="text/javascript" src="./dfs.js"></script>
+    <script type="text/javascript" src="./getElementsByClassName.js"></script>
+    <script type="text/javascript" src="./getElementsByID.js"></script>
     <script type="text/javascript">
-      console.log("DFS DOM TRAVERSAL: ", dfs(document));
-      console.log('BFS DOM TRAVERSAL: ', bfs(document));
+      console.log("DFS DOM TRAVERSAL: \n", dfs(document));
+      console.log('BFS DOM TRAVERSAL: \n', bfs(document));
+      console.log('DFS TO GRAB ALL DOM NODES WITH A CERTAIN CLASS: \n', getElementsByClassName(document, "list-container"));
+      console.log('DFS TO GRAB ALL DOM NODES WITH A CERTAIN ID: \n', getElementsByID(document, "sample"));
     </script>
   </body>
 </html>

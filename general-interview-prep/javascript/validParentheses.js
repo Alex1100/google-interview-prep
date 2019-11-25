@@ -30,3 +30,39 @@ var isValid = function(s) {
     }
     return false;
 };
+
+
+
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+    let stack = [];
+    const counterPart = {
+        "}": "{",
+        "]": "[",
+        ")": "(",
+    };
+
+
+    for (let char of s) {
+        let top = stack[stack.length - 1];
+        if (counterPart[char]) {
+            if (counterPart[char] === top) {
+                stack.pop();
+            } else {
+                return false;
+            }
+        } else {
+            stack.push(char);
+        }
+    }
+
+    if (!stack.length) {
+        return true;
+    }
+
+    return false;
+};

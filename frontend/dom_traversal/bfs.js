@@ -2,19 +2,22 @@
  * BFS of All DOM Nodes
  */
 
-function bfs(node) {
-  var nodes = [];
-  if (node != null) {
-    var queue = [];
+function bfs(node, nodes = []) {
+  if (node !== null) {
+    let queue = [];
     queue.unshift(node);
-    while (queue.length != 0) {
-      var item = queue.shift();
+    // add to front of queue
+
+    while(queue.length) {
+      let item = queue.shift();
+      // pop off from front of queue
       nodes.push(item);
-      var children = item.children;
-      for (var i = 0; i < children.length; i++) {
-        queue.push(children[i]);
-      }
+      // push into results array
+      [...item.children].forEach(child => queue.push(child));
+      // for each child in the currently popped off item from the queue,
+      // push it to the back of the line in the queue
     }
   }
+
   return nodes;
 }
