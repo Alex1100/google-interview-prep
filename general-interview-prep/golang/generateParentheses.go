@@ -26,6 +26,34 @@ func generateParenthesis(n int) []string {
     return backtrack(s, result, n,  0, 0)
 }
 
+
+
+/*
+ * another option
+
+     func backtrack (ans []string, cur string, open, closed, max int) []string {
+        if len(cur) == (max * 2) {
+            ans = append(ans, cur);
+            return ans;
+        }
+
+        if open < max {
+            ans = backtrack(ans, cur + "(", open + 1, closed, max)
+        }
+
+        if closed < open {
+            ans = backtrack(ans, cur + ")", open, closed + 1, max)
+        }
+
+        return ans
+    }
+
+    func generateParenthesis(n int) []string {
+        ans := make([]string, 0)
+        return backtrack(ans, "", 0, 0, n)
+    }
+ */
+
 func main() {
   fmt.Println(generateParenthesis(3))
   fmt.Println("\n\n", generateParenthesis(4))
