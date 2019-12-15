@@ -15,7 +15,6 @@ func backtrack(board [][]byte, row, col int, word, accumulatedWord string, visit
     // matching current string character needed at the current index
     // we return false
     currentString := strconv.Itoa(row) + "," + strconv.Itoa(col)
-    fmt.Println("CURRENT STRING: ", exists, accumulatedWord, word, currentString, row, col)
     visited[currentString] = true
 
     if len(accumulatedWord) != len(word) {
@@ -109,5 +108,6 @@ func main() {
     []byte{97,97,98,97,97,98},
   }
 
-  fmt.Println("WORD EXISTS: ", exist(board, "ABCCED"))
+
+  fmt.Println("WORD EXISTS: ", exist(board, "aabbbbabbaababaaaabababbaaba"))
 }
