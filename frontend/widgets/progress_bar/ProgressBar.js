@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-const ProgressBar = ({ displayPercentageNumber = false, progressPercentage, defaultColor }) => (
+const ProgressBar = ({ displayPercentageNumber = false, progressPercentage, defaultColor = "darkseagreen" }) => (
   <Fragment>
     {displayPercentageNumber && <h1 style={{ textAlign: "center" }}>{progressPercentage}% complete</h1>}
     <div style={{
