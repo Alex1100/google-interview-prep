@@ -23,7 +23,34 @@ import (
   "strings"
 )
 
+// ALSO BRUTE FORCE
 func groupAnagrams(strs []string) [][]string {
+    result := [][]string{}
+    seen := map[string]bool{}
+    seenStrings := map[string][]string{}
+
+    for _, word := range strs {
+        wordStr := strings.Split(string(word), "")
+        sort.Strings(wordStr)
+        joined := strings.Join(wordStr, "")
+
+        if seen[joined] == false {
+            seen[joined] = true
+            seenStrings[joined] = []string{string(word)}
+        } else {
+            seenStrings[joined] = append(seenStrings[joined], string(word))
+        }
+    }
+
+    for _, val := range seenStrings {
+        result = append(result, val)
+    }
+
+    return result
+}
+
+
+func groupAnagrams2(strs []string) [][]string {
   result := make([][]string, 0)
   tracker := make(map[string][]string)
 

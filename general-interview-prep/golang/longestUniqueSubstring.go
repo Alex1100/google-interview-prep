@@ -9,19 +9,19 @@ func lengthOfLongestSubstring(s string) int {
 
     substringMap := make(map[byte]int)
     max := 0
-    p1 := 0
+    currentByte := 0
 
     for i := 0; i < len(s); i++ {
         if substringMap[s[i]] != 0 {
-            if p1 < substringMap[s[i]] {
-                p1 = substringMap[s[i]]
+            if currentByte < substringMap[s[i]] {
+                currentByte = substringMap[s[i]]
             }
         }
 
         substringMap[s[i]] = i+1;
 
-        if (i - p1 + 1)  > max {
-            max = i - p1 + 1
+        if (i - currentByte + 1)  > max {
+            max = i - currentByte + 1
         }
     }
 

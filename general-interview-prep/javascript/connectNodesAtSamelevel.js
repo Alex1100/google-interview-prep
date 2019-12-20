@@ -11,6 +11,8 @@
  * @param {Node} root
  * @return {Node}
  */
+
+ // BFS
 var connect = function(root) {
     let og = root;
     while(root && root.left) {

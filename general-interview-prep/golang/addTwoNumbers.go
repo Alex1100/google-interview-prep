@@ -27,71 +27,62 @@ func (li *ListNode) printOutList() []int {
  *     Next *ListNode
  * }
  */
-
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-    carryOver := 0
-    currentVal := 0
-    a := l1
-    b := l2
+    l1Stack := []int{}
+    l2Stack := []int{}
 
-    current := &ListNode{
+    current := l1
+    for current != nil {
+        l1Stack = append(l1Stack, current.Val)
+        current = current.Next
+    }
+
+    current = l2
+    for current != nil {
+        l2Stack = append(l2Stack, current.Val)
+        current = current.Next
+    }
+
+    carryOver := 0
+    maxLength := int(math.Max(float64(len(l1Stack)), float64(len(l2Stack))))
+    res := &ListNode{
         Val: 0,
         Next: nil,
     }
 
-    result := current
-    keepIterating := true
+    result := res
 
-    for keepIterating {
-        aVal := 0
-        bVal := 0
-
-        if a != nil {
-            aVal = a.Val
+    for i := 0; i < maxLength; i++ {
+        aVal, bVal := 0, 0
+        if len(l1Stack) > i {
+            aVal = l1Stack[i]
         }
 
-        if b != nil {
-            bVal = b.Val
+        if len(l2Stack) > i {
+            bVal = l2Stack[i]
         }
 
-        currentVal = carryOver + aVal + bVal
+        calc := carryOver + aVal + bVal
         carryOver = 0
 
-        if currentVal >= 10 {
-            currentVal = currentVal - 10
+        if calc > 9 {
+            calc -= 10
             carryOver++
         }
 
-        current.Val = currentVal
-        if a != nil {
-            a = a.Next
-        } else {
-            a = nil
-        }
-        if b != nil {
-            b = b.Next
-        } else {
-            b = nil
-        }
-        if a == nil && b == nil {
-            keepIterating = false
-        } else {
-            current.Next = &ListNode{
+        res.Val = calc
+
+        if i < maxLength - 1 {
+            res.Next = &ListNode{
                 Val: 0,
                 Next: nil,
             }
-            current = current.Next
+            res = res.Next
         }
     }
 
-    curr := result
-    if carryOver > 0 {
-
-        for curr.Next != nil {
-            curr = curr.Next
-        }
-
-        curr.Next = &ListNode{
+    if carryOver == 1 {
+        res.Next = &ListNode{
             Val: carryOver,
             Next: nil,
         }
