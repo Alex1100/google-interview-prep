@@ -67,3 +67,7 @@ func (t *BST) IsValidBST() int {
 func (t *BST) FindParent(leaf int) int {
 
 }
+
+func (t *BST) GetMaxPathSum(root *BST) {
+  
+}
