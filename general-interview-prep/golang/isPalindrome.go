@@ -5,6 +5,61 @@ import (
     "strings"
 )
 
+// Suboptimal Way
+
+func isPalindrome(s string) bool {
+    if len(s) < 2 {
+        return true
+    }
+
+    reversed := ""
+    og := ""
+    nonAlpha := map[string]int{
+        ",": 1,
+        "_": 1,
+        " ": 1,
+        ":": 1,
+        "?": 1,
+        "!": 1,
+        ".": 1,
+        "@": 1,
+        "#": 1,
+        "-": 1,
+        "\\": 1,
+        "'": 1,
+        "\"": 1,
+        ";": 1,
+        "(": 1,
+        ")": 1,
+        "`": 1,
+    }
+    j := 0
+
+    for i := len(s) - 1; i >= 0; i-- {
+        lower := strings.ToLower(string(s[i]))
+        if nonAlpha[lower] != 1 {
+            reversed += lower
+        }
+
+        ogLower := strings.ToLower(string(s[j]))
+        if nonAlpha[ogLower] != 1 {
+            og += ogLower
+        }
+
+        j++
+    }
+
+    fmt.Println("REVERSED: ", reversed)
+    fmt.Println("OG: ", og)
+
+    if reversed == og {
+        return true
+    }
+
+    return false
+}
+
+// Optimal Way
 
 func isPalindrome(s string) bool {
 	s = strings.ToLower(s)
