@@ -9,11 +9,10 @@ type TreeNode struct {
 }
 
 
-var m []int
 func rightSideView(root *TreeNode) []int {
     m := []int{}
     if root == nil {
-        return nil
+        return m
     }
     return helper(root, 0, m)
 }

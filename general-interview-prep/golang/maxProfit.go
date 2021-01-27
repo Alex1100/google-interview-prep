@@ -47,6 +47,27 @@ func maxProfit(prices []int) int {
     return max
 }
 
+func maxProfit(prices []int) int {
+    maxProfit := 0
+    minPurchase := math.MaxInt64
+
+    for i := range prices {
+        currentPrice := prices[i]
+        if currentPrice < minPurchase {
+            minPurchase = currentPrice
+        }
+
+        if minPurchase <= currentPrice {
+            profit := currentPrice - minPurchase
+            if profit >= maxProfit {
+                maxProfit = profit
+            }
+        }
+    }
+
+    return maxProfit
+}
+
 func main() {
   var stockWindow []int
   stockWindow = []int{7, 1, 5, 3, 6, 4}
