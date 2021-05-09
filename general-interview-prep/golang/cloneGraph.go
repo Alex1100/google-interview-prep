@@ -1,5 +1,7 @@
 package main
 
+// FB
+
 // Given a reference of a node in a connected undirected graph.
 //
 // Return a deep copy (clone) of the graph.
@@ -59,7 +61,6 @@ package main
 // The Graph is connected and all nodes can be visited starting from the given node.
 //
 
-
 /**
  * Definition for a Node.
  * type Node struct {
@@ -69,76 +70,76 @@ package main
  */
 
 func dfs(node *Node, visited map[int]*Node) *Node {
-    if node == nil {
-        return node
-    }
+	if node == nil {
+		return node
+	}
 
-    // If the node was already visited before.
-    // Return the clone from the visited dictionary.
-    if visited[node.Val] != nil {
-        return visited[node.Val]
-    }
+	// If the node was already visited before.
+	// Return the clone from the visited dictionary.
+	if visited[node.Val] != nil {
+		return visited[node.Val]
+	}
 
-    // Create a clone for the given node.
-    // Note that we don't have cloned neighbors as of now, hence [].
-    clone_node := &Node{Val: node.Val, Neighbors: make([]*Node, 0)}
+	// Create a clone for the given node.
+	// Note that we don't have cloned neighbors as of now, hence [].
+	clone_node := &Node{Val: node.Val, Neighbors: make([]*Node, 0)}
 
-    // The key is original node and value being the clone node.
-    visited[node.Val] = clone_node
+	// The key is original node and value being the clone node.
+	visited[node.Val] = clone_node
 
-    // Iterate through the neighbors to generate their clones
-    // and prepare a list of cloned neighbors to be added to the cloned node.
-    if len(node.Neighbors) > 0 {
-        for _, n := range node.Neighbors {
-            clone_node.Neighbors = append(clone_node.Neighbors, dfs(n, visited))
-        }
-    }
-    return clone_node
+	// Iterate through the neighbors to generate their clones
+	// and prepare a list of cloned neighbors to be added to the cloned node.
+	if len(node.Neighbors) > 0 {
+		for _, n := range node.Neighbors {
+			clone_node.Neighbors = append(clone_node.Neighbors, dfs(n, visited))
+		}
+	}
+	return clone_node
 }
 
 func bfs(node *Node, visited map[int]*Node) *Node {
 
-    if node == nil {
-        return node
-    }
+	if node == nil {
+		return node
+	}
 
-    // Put the first node in the queue
-    queue := []*Node{node}
-    // Clone the node and put it in the visited dictionary.
-    visited[node.Val] = &Node{Val: node.Val, Neighbors: make([]*Node, 0)}
+	// Put the first node in the queue
+	queue := []*Node{node}
+	// Clone the node and put it in the visited dictionary.
+	visited[node.Val] = &Node{Val: node.Val, Neighbors: make([]*Node, 0)}
 
-    // Start BFS traversal
-    for len(queue) > 0 {
-        // Pop a node say "n" from the from the front of the queue.
-        n := queue[0]
-        queue = queue[1:]
-        // Iterate through all the neighbors of the node
-        for _, neighbor := range n.Neighbors {
-            if visited[neighbor.Val] == nil {
-                // Clone the neighbor and put in the visited, if not present already
-                visited[neighbor.Val] = &Node{Val: neighbor.Val, Neighbors: make([]*Node, 0)}
-                // Add the newly encountered node to the queue.
-                queue = append(queue, neighbor)
-            }
-            // Add the clone of the neighbor to the neighbors of the clone node "n".
-            visited[n.Val].Neighbors = append(visited[n.Val].Neighbors, visited[neighbor.Val])
-        }
-    }
+	// Start BFS traversal
+	for len(queue) > 0 {
+		// Pop a node say "n" from the from the front of the queue.
+		n := queue[0]
+		queue = queue[1:]
+		// Iterate through all the neighbors of the node
+		for _, neighbor := range n.Neighbors {
+			if visited[neighbor.Val] == nil {
+				// Clone the neighbor and put in the visited, if not present already
+				visited[neighbor.Val] = &Node{Val: neighbor.Val, Neighbors: make([]*Node, 0)}
+				// Add the newly encountered node to the queue.
+				queue = append(queue, neighbor)
+			}
+			// Add the clone of the neighbor to the neighbors of the clone node "n".
+			visited[n.Val].Neighbors = append(visited[n.Val].Neighbors, visited[neighbor.Val])
+		}
+	}
 
-    // Return the clone of the node from visited.
-    return visited[node.Val]
+	// Return the clone of the node from visited.
+	return visited[node.Val]
 }
 
 func cloneGraphDFS(node *Node) *Node {
-    visited := make(map[int]*Node)
-    cloned_node := dfs(node, visited)
-    return cloned_node
+	visited := make(map[int]*Node)
+	cloned_node := dfs(node, visited)
+	return cloned_node
 }
 
 func cloneGraphBFS(node *Node) *Node {
-    visited := make(map[int]*Node)
-    cloned_node := bfs(node, visited)
-    return cloned_node
+	visited := make(map[int]*Node)
+	cloned_node := bfs(node, visited)
+	return cloned_node
 }
 
 func main() {

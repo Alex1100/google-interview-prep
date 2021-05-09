@@ -9,76 +9,78 @@ import "fmt"
  *     Next *ListNode
  * }
  */
-
- type ListNode struct {
-   Val int
-   Next *ListNode
- }
-
 func reverseList(head *ListNode) *ListNode {
-  if head == nil {
-    return nil
-  }
+	if head == nil || head.Next == nil {
+		return head
+	}
 
-  stack := make([]int, 0)
-  curr := head
-  var resultList *ListNode
+	stack := []int{}
+	current := head
 
-  for curr != nil {
-    stack = append(stack, curr.Val)
-    curr = curr.Next
-  }
+	for current != nil {
+		stack = append(stack, current.Val)
+		current = current.Next
+	}
 
-  resultList = &ListNode{
-    Val: stack[len(stack) - 1],
-    Next: nil,
-  }
+	reversedStack := reverseSlice(stack)
 
-  result := resultList
+	newHead := &ListNode{
+		Val:  reversedStack[0],
+		Next: nil,
+	}
 
-  stack = stack[:len(stack) - 1]
-  for len(stack) > 0 {
-    resultList.Next = &ListNode{
-      Val: stack[len(stack) - 1],
-      Next: nil,
-    }
-    stack = stack[:len(stack) - 1]
-    resultList = resultList.Next
-  }
+	newNode := newHead
 
-  return result
+	for i := 1; i < len(reversedStack); i++ {
+		newNode.Next = &ListNode{
+			Val:  reversedStack[i],
+			Next: nil,
+		}
+		newNode = newNode.Next
+	}
+
+	return newHead
+}
+
+func reverseSlice(arr []int) []int {
+	temp := make([]int, 0)
+
+	for i := len(arr) - 1; i >= 0; i-- {
+		temp = append(temp, arr[i])
+	}
+
+	return temp
 }
 
 func (l *ListNode) printOutList() []int {
-  head := l
-  result := make([]int, 0)
+	head := l
+	result := make([]int, 0)
 
-  for head != nil {
-    result = append(result, head.Val)
-    head = head.Next
-  }
+	for head != nil {
+		result = append(result, head.Val)
+		head = head.Next
+	}
 
-  return result
+	return result
 }
 
-
 func main() {
-  list := &ListNode{
-    Val: 1,
-    Next: &ListNode{
-      Val: 2,
-      Next: &ListNode{
-        Val: 3,
-        Next: &ListNode{
-          Val: 4,
-          Next: &ListNode{
-            Val: 5,
-            Next: nil,
-          },
-        },
-      },
-    },
-  }
+	list := &ListNode{
+		Val: 1,
+		Next: &ListNode{
+			Val: 2,
+			Next: &ListNode{
+				Val: 3,
+				Next: &ListNode{
+					Val: 4,
+					Next: &ListNode{
+						Val:  5,
+						Next: nil,
+					},
+				},
+			},
+		},
+	}
 
-  fmt.Println(reverseList(list).printOutList())
+	fmt.Println(reverseList(list).printOutList())
 }

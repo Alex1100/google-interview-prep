@@ -44,3 +44,28 @@ const plusOne = (digits) => {
 
   return result;
 };
+
+/**
+ * @param {number[]} digits
+ * @return {number[]}
+ */
+ var plusOne = function(digits) {
+  let carry = 0;
+  let plus = 1;
+  let result = [];
+  for (let i = digits.length - 1; i >= 0; i--) {
+      let newCurr = digits[i] + plus + carry;
+      plus = 0;
+      carry = 0
+      if (newCurr > 9) {
+          carry = 1;
+          newCurr = 0;
+      }
+      result.push(newCurr);
+  }
+  
+  if (carry) {
+      result.push(1);
+  }
+  return result.reverse();
+};

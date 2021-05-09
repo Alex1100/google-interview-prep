@@ -32,3 +32,13 @@ var backspaceCompare = function(S, T) {
 
     return true;
 };
+
+
+
+ const format = (A, str = []) => {
+    for(let a of A) a == '#'? str.pop() : str.push(a);     
+    return str.join("");
+}
+var backspaceCompare = function(s, t) {
+    return format(s) == format(t);
+};
