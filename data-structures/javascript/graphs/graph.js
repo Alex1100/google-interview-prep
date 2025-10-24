@@ -1117,14 +1117,14 @@ const getCircularReplacer = () => {
 //   zeNewGraph.addNode(el * el);
 // };
 
-g = new Graph();
-g.addNode(0);
-g.addNode(1);
-g.addNode(2);
-g.addNode(3);
-g.addNode(5);
-g.addNode(6);
-g.addNode(100);
+// g = new Graph();
+// g.addNode(0);
+// g.addNode(1);
+// g.addNode(2);
+// g.addNode(3);
+// g.addNode(5);
+// g.addNode(6);
+// g.addNode(100);
 // g.forEachNode(squareNodes)
 // console.log(zeNewGraph);
 /**
@@ -1147,18 +1147,18 @@ g.addNode(100);
   */
 
 
-g.addEdges(0, 1);
-g.addEdges(0, 3);
-g.addEdges(0, 2);
-g.addEdges(1, 2);
-// g.addEdges(1, 3);
-g.addEdges(1, 100);
-g.addEdges(1, 5);
-g.addEdges(1, 3)
-g.addEdges(2, 3);
-g.addEdges(2, 6);
-g.addEdges(6, 5);
-g.addEdges(3, 5);
+// g.addEdges(0, 1);
+// g.addEdges(0, 3);
+// g.addEdges(0, 2);
+// g.addEdges(1, 2);
+// // g.addEdges(1, 3);
+// g.addEdges(1, 100);
+// g.addEdges(1, 5);
+// g.addEdges(1, 3)
+// g.addEdges(2, 3);
+// g.addEdges(2, 6);
+// g.addEdges(6, 5);
+// g.addEdges(3, 5);
 // console.log("\n\n", g.vertexes, "\n\n")
 // /**
 //   * actual vertex->edge weights/costs/distances will be randomly generated
@@ -1199,7 +1199,7 @@ g.addEdges(3, 5);
 // console.log(g.allDijkstra(1))
 // console.log(g.shortestDistanceToAndFrom(1, 5))
 // console.log(g.allDijkstra(6))
-console.log(g.Dijkstra(6, 100))
+// console.log(g.Dijkstra(6, 100))
 // console.log(g.A_Star_Search(6, 100))
 // console.log(g.each_A_Star_Search(6))
 // console.log("\n\n\n\nKruskalMST IS: ", g.KruskalMST())
@@ -1236,57 +1236,54 @@ console.log(g.Dijkstra(6, 100))
 // console.log("\n\n\nNEW GRAPH CYCLE?: ", newGraph.findCycle());
 
 
-let testGraph = new Graph()
+// let testGraph = new Graph()
 
-testGraph.addNode(100);
-testGraph.addNode(10);
-testGraph.addNode(300);
-testGraph.addNode(400);
-testGraph.addNode(2000);
-testGraph.addNode(20);
+// testGraph.addNode(100);
+// testGraph.addNode(10);
+// testGraph.addNode(300);
+// testGraph.addNode(400);
+// testGraph.addNode(2000);
+// testGraph.addNode(20);
 
-testGraph.addEdge(100, 10);
-testGraph.addEdge(400, 100);
-testGraph.addEdge(10, 100);
-testGraph.addEdge(100, 400)
-testGraph.addEdge(300, 10);
-testGraph.addEdge(10, 300);
-testGraph.addEdges(20, 2000)
-testGraph.addEdge(10, 2000)
-testGraph.addEdge(400, 20)
+// testGraph.addEdge(100, 10);
+// testGraph.addEdge(400, 100);
+// testGraph.addEdge(10, 100);
+// testGraph.addEdge(100, 400)
+// testGraph.addEdge(300, 10);
+// testGraph.addEdge(10, 300);
+// testGraph.addEdges(20, 2000)
+// testGraph.addEdge(10, 2000)
+// testGraph.addEdge(400, 20)
 
-function iter(item) {
-  for (let edge in item) {
-    console.log("EDGE IS: ", edge);
-  }
-  console.log(testGraph.vertexes)
-}
-console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.DFS(100));
-console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.BFS(100));
-
-
-
-// let x = new Graph();
-// x.addNode("A");
-// x.addNode("B");
-// x.addNode("C");
-// x.addNode("D");
-// x.addNode("E");
-// x.addNode("F");
-// x.addNode("G");
-// x.addNode("H");
-//
-//
-// x.addEdges("B", "A");
-// x.addEdge("A", "D");
-// x.addEdges("A", "G");
-// x.addEdges("B", "E");
-// x.addEdges("E", "G");
-// x.addEdges("B", "F");
-// x.addEdges("F", "C");
-// x.addEdges("H", "C");
-// x.addEdges("D", "F");
+// function iter(item) {
+//   for (let edge in item) {
+//     console.log("EDGE IS: ", edge);
+//   }
+//   console.log(testGraph.vertexes)
+// }
+// console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.DFS(100));
+// console.log("\n\nTEST IT OUT: ", iter(testGraph.vertexes['100']), testGraph.BFS(100));
 
 
-// console.log("ALRIGHT TEST DFS IS: ", x.DFS("A"))
-// console.log("ALRIGHT TEST DFS IS: ", x.BFS("A"))
+
+let x = new Graph();
+x.addNode("A");
+x.addNode("B");
+x.addNode("C");
+x.addNode("D");
+x.addNode("E");
+x.addNode("F");
+x.addNode("G");
+x.addNode("H");
+x.addEdges("B", "A");
+x.addEdge("A", "D");
+x.addEdges("A", "G");
+x.addEdges("B", "E");
+x.addEdges("E", "G");
+x.addEdges("B", "F");
+x.addEdges("F", "C");
+x.addEdges("H", "C");
+x.addEdges("D", "F");
+
+console.log("ALRIGHT TEST DFS IS: ", x.DFS("A"))
+console.log("ALRIGHT TEST DFS IS: ", x.BFS("A"))

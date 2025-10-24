@@ -85,3 +85,61 @@ const dfs = (node, visited) => {
 var cloneGraph = function(node) {
   return bfs(node, {});
 };
+
+/**
+ * // Definition for a Node.
+ * function Node(val, neighbors) {
+ *    this.val = val === undefined ? 0 : val;
+ *    this.neighbors = neighbors === undefined ? [] : neighbors;
+ * };
+ */
+
+ const recurse = function (node, visited) {
+    if (!node || !node.val) {
+        return node;
+    }
+    
+    if (visited[node.val]) {
+        return visited[node.val];
+    }
+    
+    let clonedNode = new Node(node.val, []);
+
+    if (node.neighbors.length === 0) return clonedNode;
+    visited[node.val] = clonedNode;
+    
+    if (node.neighbors.length) {
+        for (let n of node.neighbors) {
+            clonedNode.neighbors.push(recurse(n, visited));
+        }
+    }
+    return clonedNode;
+}
+
+/**
+ * @param {Node} node
+ * @return {Node}
+ */
+var cloneGraphRecurse = function(node) {
+    const visited = {};
+
+    if (!node || !node.val) {
+        return node;
+    }
+    
+    if (visited[node.val]) {
+        return visited[node.val];
+    }
+    
+    let clonedNode = new Node(node.val, []);
+    if (node.neighbors.length === 0) return clonedNode;
+    visited[node.val] = clonedNode;
+    
+    if (node.neighbors.length) {
+        for (let n of node.neighbors) {
+            clonedNode.neighbors.push(recurse(n, visited));
+        }
+    }
+
+    return clonedNode;
+};

@@ -12,7 +12,7 @@
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function(root, p, q) {
-    return search(root, p, q);
+  return search(root, p, q);
 };
 
 const search = (node, p, q) => {

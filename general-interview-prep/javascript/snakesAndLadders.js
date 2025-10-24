@@ -3,7 +3,7 @@
  * @return {number}
  */
 
- //BFS
+// BFS
 var snakesAndLadders = function(board) {
     const N = board.length;
     const getLoc = (pos) => {

@@ -3,6 +3,7 @@
  * @param {number[][]} prerequisites
  * @return {boolean}
  */
+// less efficient but easier to reason about
 var canFinish = function(numCourses, prerequisites) {
   // generates graph for top sort
   const graph = [...new Array(numCourses)].map(() => []);
@@ -36,8 +37,7 @@ var canFinish = function(numCourses, prerequisites) {
 };
 
 
-
-
+// more efficient
 const dfs = (prerequisites, visit, precourse) => {
     if (visit[precourse] == 1) return false;
     if (visit[precourse] == 2) return true;
@@ -53,9 +53,6 @@ const dfs = (prerequisites, visit, precourse) => {
 }
 
 var canFinish = function(numCourses, prerequisites) {
-    // let graph = constructGraph(prerequisites);
-
-
     if (prerequisites.length === 0) return true;
     let visit = new Array(numCourses).fill(0);
     for (let i = 0; i < prerequisites.length; i++){

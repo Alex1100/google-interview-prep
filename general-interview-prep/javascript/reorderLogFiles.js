@@ -2,27 +2,29 @@
  * @param {string[]} logs
  * @return {string[]}
  */
-var reorderLogFiles = function(logs) {
-    const regexAlpha = /[A-Za-z]/;
-    const alphaTest = new RegExp(regexAlpha, "i");
-    let alphaLogs = [];
-    let digiLogs = [];
+ var reorderLogFiles = function(logs) {
+    let [digits, letters] = [[], []];
 
-    logs.forEach(log => {
-        if (alphaTest.test(log.split(' ').slice(1).join(''))) {
-            alphaLogs.push(log);
+    for(let i = 0; i < logs.length; i++) {
+        const str = logs[i].slice(logs[i].indexOf(' ') + 1);
+        if(str.slice(0,1).match(/[a-z]/i)) {
+            letters.push(logs[i]);
         } else {
-            digiLogs.push(log);
+            digits.push(logs[i]);
         }
-    });
+    }
 
-    alphaLogs.sort((a, b) => {
-        if (a.split(' ').slice(1) < b.split(' ').slice(1)) {
-            return -1
-        } else {
-            return 1;
-        }
-    });
 
-    return [...alphaLogs, ...digiLogs];
+    const sortedLets = letters.sort((a,b) => {
+        const idA = a.split(" ",1);
+        const idB = b.split(" ",1);
+        const contentA = a.split(/^[^\s]*\s/);
+        const contentB = b.split(/^[^\s]*\s/)
+
+        if(contentA[1] !== contentB[1]) return contentA[1].localeCompare(contentB[1]); 
+        else return idA[0].localeCompare(idB[0]); 
+
+    });
+    sortedLets.push(...digits);
+    return sortedLets;
 };
